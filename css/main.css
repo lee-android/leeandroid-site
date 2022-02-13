@@ -1,0 +1,98 @@
+*{
+    overflow: hidden;
+}
+
+body{
+    background-color: #fff;
+}
+
+p{
+    font-family: 'Rock Salt', sans-serif;
+    font-size: 12px;
+    letter-spacing: .8px;
+}
+
+.header{
+    width: 100vw;
+    text-align: center;
+    margin: 200px auto;
+}
+
+h1{
+    font-family: 'Bebas Neue', sans-serif;
+    text-align: center;
+    font-size: 90px;
+    letter-spacing: .03em;
+}
+
+.name {
+    max-width: 600px;
+    color: #eee;
+    text-align: center;
+    margin-bottom: -3px;
+    margin: 0 auto;
+    background: url('https://68.media.tumblr.com/tumblr_mbjwlvwO5R1reeolao1_500.gif');
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-animation: animate 15s linear infinite;
+}
+
+.triangle {
+    cursor: pointer;
+    transition: 0.4s;
+    width: 0;
+    height: 0;
+    border: solid 7px;
+    border-color: #444 transparent transparent transparent;
+    margin: 0 auto;
+    padding-bottom: 0px;
+    -webkit-transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+}
+
+ul{
+    list-style: none;
+    text-align: center;
+}
+
+li{
+    font-family: 'Rock Salt', sans-serif;
+}
+
+label {  
+    cursor: pointer;
+  }
+
+  #menu-toggle {
+    display: none; /* hide the checkbox */
+  }
+
+  #menu a {
+      text-decoration: none;
+      color: #444;
+  }
+
+  #menu{
+      text-align: center;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 2;
+      font-size: 20px;
+      display: none;
+  }
+
+  #menu-toggle:checked + #menu {
+    display: block;
+  }
+  
+  #menu-toggle:checked + .triangle {
+    display: none;
+  }
+
+  .footer{
+      text-align: center;
+      top: 0;
+  }
