@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
+
 *{
     overflow-x: hidden;
 }
@@ -7,15 +9,15 @@
 } */
 
 p{
-    /* font-family: 'Rock Salt', sans-serif; */
-    /* font-size: 12px; */
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
     letter-spacing: .8px;
 }
 
 .header{
     width: 100%;
     text-align: center;
-    margin: 200px auto;
+    margin: 0 auto 20px;
 }
 
 h1{
@@ -61,7 +63,7 @@ ul{
 }
 
 li{
-    font-family: 'Rock Salt', sans-serif;
+  font-family: 'Share Tech Mono', monospace;
 }
 
 label {  
@@ -74,7 +76,7 @@ label {
 
   #menu a {
       text-decoration: none;
-      color: #444;
+      color: #db0e15;
   }
 
   #menu{
