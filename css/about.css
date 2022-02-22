@@ -222,7 +222,7 @@ body {
     margin: 0 5px
   }
   .content {
-    height: 440px
+    height: 100%
   }
   .box::after,
   .box::before {
