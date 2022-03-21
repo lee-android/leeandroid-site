@@ -6,7 +6,7 @@ body {
 	padding: 0px;
 }
 .cover {
-	background: url('https://image.ibb.co/ji1q4p/amy_shamblen_679727_unsplash.jpg');
+	background: url('/imgs/burger-of-the-day.png');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
