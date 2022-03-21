@@ -36,7 +36,7 @@ h4 {
 	transition: 1s;
 }
 
-.card:active {
+.card:hover, .card:active {
 	transform: translate(-50%,-50%) perspective(2000px) rotate(15deg) scale(1.2);
 	box-shadow: inset 20px 0 50px rgba(0,0,0,.5), 0 10px 100px rgba(0,0,0,.5);
 }
@@ -87,11 +87,11 @@ h4 {
 	max-height: 400px;
 }
 
-.card:active .imgBox {
+.card:hover .imgBox {
 	transform: rotateY(-135deg);
 }
 
-.card:active .bark {
+.card:hover .bark {
 	opacity: 1;
 	transition: .6s;
   box-shadow: 300px 200px 100px rgba(0, 0, 0, .4) inset;
