@@ -57,11 +57,10 @@ body {
 	transform: rotateY(-130deg);
 }
 
-@media (hover: hover) and (pointer:fine){
-  card:hover{
+.card:focus .cover {
 	transform: rotateY(-130deg);
-  }
 }
+
 
 
 
