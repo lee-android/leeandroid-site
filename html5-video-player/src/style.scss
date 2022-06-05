@@ -1,0 +1,213 @@
+.svg-icon {
+    stroke-width: 3;
+}
+ 
+.video {
+    width: 30em;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.2em;
+    box-shadow: 0 2.5em 2.5em -1.875em rgba(0, 0, 0, .5),
+                0 1.25em 5em 1em rgba(0, 0, 0, .2);
+    &__player {
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+    }
+    &__control {
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        position: absolute;
+        box-sizing: border-box;
+        padding: 0 1em;
+        background-color: rgba($black, .65);
+        @media (min-width: 65.000em) {
+            opacity: 0;
+            transform: translate(0, 100%);
+        }
+        transition: all $fastDuration ease-in-out;
+        &__button {
+            padding: 1em .5em;
+            display: flex;
+            cursor: pointer;
+            position: relative;
+            transition: all $fastDuration ease-in-out;
+            &:before {
+                content: '';
+                display: inline-block;
+                width: 100%;
+                height: 1.9em;
+                z-index: -1;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                border-radius: 1.9em;
+                background-color: $red;
+                transition: all $ultraFastDuration $bezier;
+            }
+            &.volume {
+                flex-basis: 2em;
+            }
+            &:hover,
+            &.active {
+                &:before {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                > .video__track__range__sound {
+                    padding-left: .5em;
+                    pointer-events: all;
+                    opacity: 1;
+                    flex: 1;
+                }
+            }
+        }
+        > .video__control__button.volume {
+            @media (-webkit-min-device-pixel-ratio: 2) {
+                display: none;
+            }
+            &:hover {
+                flex-basis: 5em;
+            }
+        }
+    }
+    &__duration {
+        padding-right: .5em;
+        font-size: .5em;
+        color: rgba($white, .5);
+    }
+    &__track {
+        &__range {
+            &[type=range] {
+                -webkit-appearance: inherit; /* WebKit */
+                width: 100%;
+                background-color: transparent;
+            }
+            &[type=range]:focus {
+                outline: none;
+            }
+            &[type=range]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 1.5em;
+                box-sizing: border-box;
+                cursor: pointer;
+                box-shadow: none;
+                background: transparent;
+                border-radius: 1.5em;
+                border: 2px solid $white;
+            }
+            &[type=range]::-webkit-slider-thumb {
+                box-shadow: none;
+                height: 1.5em;
+                width: 1.5em;
+                border-radius: 50%;
+                box-sizing: border-box;
+                border: 2px solid $white;
+                background: transparent;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -2px;
+            }
+            &[type=range]:focus::-webkit-slider-runnable-track {
+                // background: $red;
+            }
+            &[type=range]::-moz-range-track {
+                width: 100%;
+                height: 1.5em;
+                box-sizing: border-box;
+                cursor: pointer;
+                box-shadow: none;
+                background: transparent;
+                border-radius: 1.5em;
+                border: 2px solid $white;
+            }
+            &[type=range]:focus::-moz-range-track {
+                // background: $red;
+            }
+            &[type=range]::-moz-range-thumb {
+                box-shadow: none;
+                border: 0;
+                height: 1.5em;
+                width: 1.5em;
+                border-radius: 50%;
+                box-sizing: border-box;
+                border: 2px solid $white;
+                background: transparent;
+                cursor: pointer;
+            }
+            &[type=range]::-ms-track {
+                width: 100%;
+                height: 1.5em;
+                box-sizing: border-box;
+                cursor: pointer;
+                background: transparent;
+                border-color: transparent;
+                color: transparent;
+                border: 2px solid $white;
+            }
+            &[type=range]::-ms-fill-lower {
+                background: transparent;
+                border: 0;
+                border-radius: 1.5em;
+                box-shadow: none;
+            }
+            &[type=range]::-ms-fill-upper {
+                background: transparent;
+                border: 0;
+                border-radius: 1.5em;
+                box-shadow: none;
+            }
+            &[type=range]::-ms-thumb {
+                box-shadow: none;
+                border: 0;
+                height: 1.5em;
+                width: 1.5em;
+                border-radius: 50%;
+                box-sizing: border-box;
+                border: 2px solid $white;
+                background: transparent;
+                cursor: pointer;
+            }
+            &[type=range]:focus::-ms-fill-lower {
+                background: transparent;
+            }
+            &[type=range]:focus::-ms-fill-upper {
+                background: transparent;
+            }
+            &__sound {
+                display: flex;
+                width: 0;
+                opacity: 0;
+                padding-left: 0;
+                pointer-events: none;
+                transition: all $ultraFastDuration $bezier;
+            }
+        }
+    }
+    &:hover .video__control {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+.tooltip {
+    position: relative;
+    &:after {
+        content: attr(data-tooltip-content);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        padding: 1em;
+        font-size: 12px;
+        color: $white;
+        background-color: $red;
+        opacity: 0;
+        transition: all $fastDuration $bezier;
+    }
+    &:hover:after {
+        opacity: 1;
+    }
+}
