@@ -6,7 +6,7 @@ body {
 	padding: 0px;
 }
 .cover {
-	background: url('/imgs/hellokittycover.png');
+	background: url('/imgs/card.png');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
@@ -62,14 +62,14 @@ body {
 	top: 0;
 	left: 0;
 	box-sizing: border-box;
-	padding: 0 0 0 10px;
+	padding: 0 0 0 0px;
 	z-index: -1;
-	margin-top: 70px;
+	margin: 50px 10px 0 0px;
 }
 .card .text p {
-	line-height: 5px;
+	line-height: .3;
 	transform: rotate(-5deg);
-	padding: 0 0 0 20px;
+	padding: 0 0 0 15px;
 }
 .right {
 	text-align: right;
