@@ -1,76 +1,40 @@
-const region = document.getElementById('region');
-const subRegion = document.getElementById('subRegion');
-const thisPath = document.getElementById('layer1');
+window.onload = function () {
+  var c = document.getElementById('c');
+  var ctx = c.getContext('2d');
+  W = c.width = innerWidth;
+  H = c.height = innerHeight;
+  msg = ["BE MY VALENTINE", "SAY YES..."];
+  s = 10;
+  var Y = Array(Math.ceil(W / s)).fill(H + s);
+  var V = Array(Math.ceil(W / s)).fill(-1);
+  var X = Array(Math.ceil(W / s)).fill(0)
 
+  let draw = function () {
+    ctx.fillStyle = 'rgba(0,0,0,.03)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = s.toString() + 'pt  Courier, monospace';
 
-document.querySelector(".self-esteem").onmouseover = function(){getInfo('Aspiring', this.className.baseVal, this);};
-document.querySelector(".approbativeness").onmouseover = function(){getInfo('Aspiring', this.className.baseVal)};
-document.querySelector(".cautiousness").onmouseover = function(){getInfo('Aspiring', this.className.baseVal)};
-document.querySelector(".firmness").onmouseover = function(){getInfo('Aspiring', this.className.baseVal)};
-document.querySelector(".conscientiousness").onmouseover = function(){getInfo('Aspiring', this.className.baseVal)};
-document.querySelector(".sublimity").onmouseover = function(){getInfo('Aspiring', this.className.baseVal)};
-document.querySelector(".veneration").onmouseover = function(){getInfo('Moral', this.className.baseVal)};
-document.querySelector(".benevolence").onmouseover = function(){getInfo('Moral', this.className.baseVal)};
-document.querySelector(".hope").onmouseover = function(){getInfo('Moral', this.className.baseVal)};
-document.querySelector(".spirituality").onmouseover = function(){getInfo('Moral', this.className.baseVal)};
-document.querySelector(".imitation").onmouseover = function(){getInfo('Moral', this.className.baseVal)};
-document.querySelector(".human-nature").onmouseover = function(){getInfo('Reflectives', this.className.baseVal)};
-document.querySelector(".agreeableness").onmouseover = function(){getInfo('Reflectives', this.className.baseVal)};
-document.querySelector(".causality").onmouseover = function(){getInfo('Reflectives', this.className.baseVal)};
-document.querySelector(".comparativeness").onmouseover = function(){getInfo('Reflectives', this.className.baseVal)};
-document.querySelector(".bibativeness").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".tune").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".time").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".locality").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".eventuality").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".calculation").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".order").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".color").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".weight").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".size").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".individuality").onmouseover = function(){getInfo('Percertives', this.className.baseVal)};
-document.querySelector(".mindfullness").onmouseover = function(){getInfo('Self Perfecting', this.className.baseVal)};
-document.querySelector(".mirthfulness").onmouseover = function(){getInfo('Self Perfecting', this.className.baseVal)};
-document.querySelector(".ideality").onmouseover = function(){getInfo('Self Perfecting', this.className.baseVal)};
-document.querySelector(".constructiveness").onmouseover = function(){getInfo('Self Perfecting', this.className.baseVal)};
-document.querySelector(".continuity").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".freindship").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".conjugality").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".amativeness").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".parental-love").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".inhabitiveness").onmouseover = function(){getInfo('Domest', this.className.baseVal)};
-document.querySelector(".vitativeness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-document.querySelector(".combativeness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-document.querySelector(".secretiveness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-document.querySelector(".aquisitiveness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-document.querySelector(".destructiveness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-document.querySelector(".alimentiveness").onmouseover = function(){getInfo('Animal', this.className.baseVal)};
-
-
-
-
-
-
-
-
-
-function getInfo(regionName, classname, pathBrain){
-
-  //newSvg = document.createElementNS("http://www.w3.org/1999/xhtml", "path");
-  //newSvg.setAttribute("d", pathBrain.getAttribute('d'));
-
-  //newSvg.setAttribute('id', "worksss");
-  //newSvg.setAttribute('inkscape:connector-curvature', "0");
-
-
-  //var x = '<path d="' + pathBrain.getAttribute('d') + '"/>';
-  //node =  document.createElement("path")
-  //console.log(node);
-
-    //thisPath.appendChild(newSvg);
-
-    region.innerHTML = regionName;
-    subRegion.innerHTML = classname;
-    this.onmouseout = function(){region.innerHTML = "Hover over a region"; subRegion.innerHTML = ""}
-
-}
+    for (var i = 0; i < Y.length; i++) {
+      x = (i * s);
+      y = Y[i];
+      if (Math.random() * 1e4 > 1e4 - 15 && V[i] < 0) {
+        X[i] = Math.floor(Math.random() * msg.length);
+        V[i] = msg[X[i]].length - 1;
+      }
+      if (V[i] >= 0) {
+        ctx.fillStyle = "#DFD";
+        ctx.fillText(msg[X[i]][msg[X[i]].length - 1 - V[i]], x, y);
+        V[i] = V[i] - 1;
+      } else {
+        ctx.fillStyle = "#0F0";
+        ctx.fillText(String.fromCharCode(33 + Math.random() * 94), x, y);
+      }
+      if (y > 120 + Math.random() * 1e4 && V[i] <= 0) {
+        Y[i] = 0;
+      } else {
+        Y[i] = y + s;
+      }
+    }
+  };
+  setInterval(draw, 50);
+};
