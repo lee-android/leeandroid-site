@@ -12,6 +12,7 @@ body{
 }
 
 #ad img{
+  margin: 0 0 0 10px;
  width: 60px;
  filter: drop-shadow(1px 1px 2px #000000);
 }
@@ -19,13 +20,13 @@ body{
 #cursor{
  /* background-color: aquamarine; */
  width: auto;
- margin: 700px auto;
+ margin: 820px auto;
  text-align: center;
  opacity: 40%;
 }
 
 #cursor img{
- width: 60px;
+ width: 40px;
  filter: drop-shadow(1px 1px 1px #000000);
 
 }
@@ -49,4 +50,5 @@ div.middle{
 }
 .txt-rotate{
   color:grey;
+  font-size: 45px;
 }
