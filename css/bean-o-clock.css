@@ -19,9 +19,9 @@ body{
 }
 
 #ad img{
-  margin: 0 0 10px 75px;
- width: 30px;
- filter: drop-shadow(1px 1px 2px #000000);
+  /* margin: 0 0 10px 75px; */
+  width: 30px;
+  filter: drop-shadow(1px 1px 2px #000000);
 }
 
 #cursor{
