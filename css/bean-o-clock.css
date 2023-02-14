@@ -6,7 +6,7 @@ body{
 }
 
 #vid{
-  max-width: 500px;
+  max-width: 420px;
   margin: 0 auto 25px;
   
 }
@@ -57,5 +57,5 @@ div.middle{
 }
 .txt-rotate{
   color:grey;
-  font-size: 38px;
+  font-size: 32px;
 }
