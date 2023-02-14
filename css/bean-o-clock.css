@@ -27,7 +27,7 @@ body{
 #cursor{
  /* background-color: aquamarine; */
  width: auto;
- margin: 820px auto;
+ margin: 20px auto;
  text-align: center;
  opacity: 40%;
 }
@@ -46,7 +46,7 @@ div.middle{
   left:0;
   position:absolute;
   margin:auto;
-  height:900px;
+  height:500px;
   width:100%;
   text-align:center;
 }
