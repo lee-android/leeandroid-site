@@ -1,9 +1,8 @@
-// function toggleMenu() {
-//   var menuBox = document.getElementById('menu-box');    
-//   if(menuBox.style.display == "block") { // if is menuBox displayed, hide it
-//     menuBox.style.display = "none";
-//   }
-//   else { // if is menuBox hidden, display it
-//     menuBox.style.display = "block";
-//   }
-// }
+$(function(){
+  for(i=0;i<4;i++){
+    $('.buzz_wrapper .text span').eq(0).clone().prependTo('.buzz_wrapper .text');
+  }
+  for(i=0;i<10;i++){
+    $('.buzz_wrapper .scanline').eq(0).clone().appendTo('.buzz_wrapper');
+  }
+});
