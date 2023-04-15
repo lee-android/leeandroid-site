@@ -21,7 +21,6 @@ html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none
-  
 }
 
 body {
@@ -29,8 +28,8 @@ body {
   font-family: 'Share Tech Mono', monospace;
   font-size: 26px;
   font-weight: 300;
-  text-shadow: 0 0 5px #db0e15cc;
-  background: url(https://image.ibb.co/h2hLAJ/bg.png) rgb(201, 199, 199);
+  text-shadow: 0 0 5px rgba(219, 14, 21, .8);
+  background: url(https://image.ibb.co/h2hLAJ/bg.png) #000;
   position: relative;
   height: 100vh
 }
@@ -59,34 +58,13 @@ body {
   height: 28px
 }
 
-.title {
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 1em;
-  font-weight: 300
-}
-
-.title::after,
-.title::before {
-  content: '';
-  display: inline-block;
-  background: url(https://image.ibb.co/gpxZLJ/top_outer.png);
-  width: 144px;
-  height: 20px;
-  margin: 0 20px
-}
-
-.container:not(.is-success) .title.is-success {
-  color: #22edfc
-}
-
 .box--outer {
   position: relative;
   margin: 0 auto;
   width: 90%;
   max-width: 1080px;
-  /* border-top: rgb(32, 32, 32) 18px solid;
-  border-bottom: rgb(32, 32, 32) 18px solid; */
+  border-top: #000 18px solid;
+  border-bottom: #000 18px solid;
   -o-border-image: url(https://image.ibb.co/kHHeny/hor_line.png) 17 11 17 round;
   border-image: url(https://image.ibb.co/kHHeny/hor_line.png) 17 11 17 round
 }
@@ -120,19 +98,16 @@ body {
   display: block;
   max-height: 600px;
   min-height: 400px;
-  height: 100%;
-  overflow: hidden;
+  height: 100%
 }
 
 .content .holder {
   left: 0;
   right: 0;
   position: absolute;
-  height: 100%;
-  overflow: hidden;
   top: 50%;
   -webkit-transform: translate(0, -50%);
-  transform: translate(0, -50%);
+  transform: translate(0, -50%)
 }
 
 .col.col__center,
@@ -149,48 +124,58 @@ body {
   margin-right: 130px
 }
 
-
-
-
-
-#footnote {
-  font-size: 11px;
-  line-height: 3;
+.label::after {
+  content: ':';
+  margin-left: -15px;
+  display: inline-block
 }
 
-.header .menu {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+#email,
+#login,
+#password {
+  border: 2px solid #d7001e;
+  margin: 10px 0;
+  padding: 10px;
+  width: auto;
+  max-width: 100%;
+  overflow: visible;
+  outline: 0;
+  background: 0 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal
 }
-.header .menu p {
-  margin: 5px 0;
-  font-size: 15px;
+
+#email::-moz-selection,
+#login::-moz-selection,
+#password::-moz-selection {
+  background: #000
 }
-.header .arrow {
-  /* visibility: hidden; */
+
+#email::selection,
+#login::selection,
+#password::selection {
+  background: #000
+}
+
+#submit {
+  border: none;
+  margin: 20px;
+  padding: 10px 40px;
+  width: auto;
+  overflow: visible;
+  outline: 0;
   cursor: pointer;
-  width: 0;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  margin-left: -5px;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
+  background: 0 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+  background: rgba(219, 14, 21, .2);
+  text-transform: uppercase
 }
-.header .down {
-  border-top: 5px solid #000000;
-}
-.header .up {
-  border-bottom: 5px solid #000000;
-}
-.header:hover .arrow {
-  visibility: visible;
-}
-
 
 @media only screen and (max-width:1260px) {
   .title::after,
@@ -213,11 +198,14 @@ body {
     margin: 0 5px
   }
   .content {
-    height: 100%
+    height: 440px
   }
   .box::after,
   .box::before {
     height: 500px
+  }
+  #submit {
+    margin-bottom: 0
   }
 }
 
@@ -243,13 +231,17 @@ body {
   .box--inner {
     width: calc(100% - 44px)
   }
-
+  #email,
+  #login,
+  #password {
+    max-width: 70%
+  }
   .screen::after {
     max-width: 180px
   }
 }
 
-/* .flash {
+.flash {
   -webkit-animation: flashText 1s ease-out alternate infinite;
   animation: flashText 1s ease-out alternate infinite
 }
@@ -424,12 +416,11 @@ body {
   to {
     background: rgba(49, 45, 45, .1)
   }
-} */
+}
 
 body {
   position: relative;
-  overflow: hidden;
-  background-color: azure;
+  overflow: hidden
 }
 
 body::after {
@@ -442,7 +433,7 @@ body::after {
   right: 0;
   z-index: 2;
   pointer-events: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(49, 45, 45, .1);
   opacity: 0;
   pointer-events: none;
   -webkit-animation: flicker .15s infinite, steady 4s;
