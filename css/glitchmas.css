@@ -402,7 +402,7 @@ video:-webkit-full-screen {
 
 /* Hide custom fullscreen button on mobile */
 @media (max-width: 768px) {
-  .fullscreen-btn {
+  #fullscreenBtn {
     display: none !important;
   }
 }
