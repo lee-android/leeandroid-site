@@ -294,4 +294,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const { program, offset } = getLiveProgram();
   loadProgram(program, offset);
+  const tracks = video.textTracks;
+  if (tracks && tracks.length) {
+    const track = tracks[0];
+
+    track.mode = 'hidden'; // required to edit cues safely
+
+    track.addEventListener('cuechange', () => { }, { once: true });
+
+    // Shift all cues backward by the offset
+    for (let i = 0; i < track.cues.length; i++) {
+      const cue = track.cues[i];
+      cue.startTime = Math.max(0, cue.startTime - offset);
+      cue.endTime = Math.max(0, cue.endTime - offset);
+    }
+
+    track.mode = 'showing';
+  }
+
 });

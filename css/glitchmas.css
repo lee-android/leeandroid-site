@@ -183,6 +183,14 @@ body {
   opacity: 1;
 }
 
+video::cue {
+  font-family: "Chicago", system-ui, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(0,0,0,0.65);
+}
+
+
 /* Fullscreen fill */
 video:fullscreen,
 video:-webkit-full-screen {
@@ -426,4 +434,5 @@ video:-webkit-full-screen {
     transform: translate(-28px, 62px);
   }
 }
+
 
