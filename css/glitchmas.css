@@ -406,3 +406,42 @@ video:-webkit-full-screen {
     display: none !important;
   }
 }
+
+/* --- Mobile Fireplace Layout Fix --- */
+@media (max-width: 768px) {
+  .fireplacePanel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #sliders {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    margin-top: 12px;
+  }
+
+  .slider {
+    width: 100%;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .slider input[type="range"] {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  #sliders {
+    background: #f6f6f6;
+    border-radius: 12px;
+    padding: 14px;
+  }
+}
