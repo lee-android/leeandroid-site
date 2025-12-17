@@ -255,6 +255,16 @@ video:-webkit-full-screen {
   gap: 10px;
 }
 
+.hidden { 
+  display: none !important; 
+}
+
+/* extra insurance */
+#sliders.hidden {
+  display: none !important;
+}
+
+
 .sliders.hidden {
   display: none !important;
 }
