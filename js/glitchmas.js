@@ -4,11 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sliders = document.getElementById('sliders');
   const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-  // iOS fullscreen handling (Option A)
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if (isIOS && fullscreenBtn) {
-    fullscreenBtn.textContent = 'Tap video to fullscreen';
-  }
+  
 
   // Update slider value labels (data-val)
   function updateSliderLabel(slider) {

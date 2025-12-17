@@ -399,3 +399,10 @@ video:-webkit-full-screen {
     cursor: default !important;
   }
 }
+
+/* Hide custom fullscreen button on mobile */
+@media (max-width: 768px) {
+  .fullscreen-btn {
+    display: none !important;
+  }
+}
