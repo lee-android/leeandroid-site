@@ -4,31 +4,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const sliders = document.getElementById('sliders');
   const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-  
+  if (!video || !fireToggle || !sliders) return;
 
-  // Update slider value labels (data-val)
+  // ✅ FIX: define iOS flag (this was missing and was breaking fullscreen)
+  const isIOS =
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  // ---------------------------
+  // data-val slider labels
+  // ---------------------------
   function updateSliderLabel(slider) {
     const percent = Math.round(parseFloat(slider.value) * 100);
     const row = slider.closest('.slider');
-    if (row) {
-      row.setAttribute('data-val', percent + '%');
-    }
+    if (row) row.setAttribute('data-val', percent + '%');
   }
 
-  // Initialize + live update
-  ['rumbleVol','crackleVol','snowVol','tapeVol','musicVol','videoVol'].forEach(id => {
-    const slider = document.getElementById(id);
-    if (!slider) return;
+  const sliderIds = ['rumbleVol','crackleVol','snowVol','tapeVol','musicVol','videoVol'];
 
-    updateSliderLabel(slider);
-    slider.addEventListener('input', () => updateSliderLabel(slider));
+  sliderIds.forEach(id => {
+    const s = document.getElementById(id);
+    if (!s) return;
+    updateSliderLabel(s);
+    s.addEventListener('input', () => updateSliderLabel(s));
   });
 
   // Hard enforce: hidden on load
   sliders.classList.add('hidden');
   sliders.setAttribute('aria-hidden', 'true');
 
+  // ---------------------------
   // Audio layers
+  // ---------------------------
   const audioMap = {
     fire: new Audio('/audio/fire.mp3'),
     crackle: new Audio('/audio/crackle.mp3'),
@@ -43,15 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
     a.volume = 0;
   });
 
-  // Randomized start for ambient layers
+  // Randomize start points for ambient layers (stream vibe)
   function randomizeStart(audio, tailSeconds = 5) {
-    audio.addEventListener('loadedmetadata', () => {
+    const handler = () => {
       const d = audio.duration;
       if (!Number.isFinite(d) || d <= 0) return;
       const safeEnd = Math.max(0, d - tailSeconds);
       if (safeEnd <= 1) return;
-      audio.currentTime = Math.random() * safeEnd;
-    });
+      try { audio.currentTime = Math.random() * safeEnd; } catch (e) {}
+    };
+
+    audio.addEventListener('loadedmetadata', handler);
+    audio.addEventListener('canplay', handler, { once: true });
   }
 
   Object.values(audioMap).forEach(a => randomizeStart(a));
@@ -79,6 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (Math.abs(media.volume - t) <= step) {
         media.volume = t;
         stopFade(media);
+
+        // if faded to 0, actually stop audio so iOS doesn't "whisper"
+        if (t === 0 && media !== video) {
+          try { media.pause(); } catch (e) {}
+        }
       }
     }, interval);
 
@@ -90,18 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return el ? parseFloat(el.value) : 0;
   }
 
+  // ✅ kill switch at 0
   function setVolumeWithKill(media, value) {
-    if (value <= 0) {
+    const v = Math.max(0, Math.min(1, value));
+
+    if (v <= 0) {
+      stopFade(media);
       media.volume = 0;
-      if (!media.paused) {
-        try { media.pause(); } catch (e) {}
-      }
-    } else {
-      if (media.paused) {
-        try { media.play(); } catch (e) {}
-      }
-      media.volume = value;
+      try { media.pause(); } catch (e) {}
+      return;
     }
+
+    if (media.paused) {
+      try { media.play(); } catch (e) {}
+    }
+    media.volume = v;
   }
 
   function setAllVolumesLive() {
@@ -125,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function enableFireplace() {
     fireplaceEnabled = true;
+
     sliders.classList.remove('hidden');
     sliders.setAttribute('aria-hidden', 'false');
     fireToggle.textContent = 'Disable Fireplace Sounds';
@@ -137,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fadeTo(audioMap.tape, readSlider('tapeVol'));
     fadeTo(audioMap.music, readSlider('musicVol'));
 
+    // video volume (can't autoplay with sound unless user gesture, so this is best-effort)
     video.muted = false;
     fadeTo(video, readSlider('videoVol'));
   }
@@ -150,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       Object.values(audioMap).forEach(a => {
         try { a.pause(); } catch (e) {}
+        a.volume = 0;
       });
       video.muted = true;
       video.volume = 0;
@@ -164,35 +185,45 @@ document.addEventListener('DOMContentLoaded', () => {
     fireplaceEnabled ? disableFireplace() : enableFireplace();
   });
 
-  ['rumbleVol','crackleVol','snowVol','tapeVol','musicVol','videoVol'].forEach(id => {
+  sliderIds.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', setAllVolumesLive);
   });
 
-  // iOS tap-to-fullscreen (real fullscreen, Apple-approved)
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  // ---------------------------
+  // Fullscreen behavior
+  // ---------------------------
+
+  // iOS: Apple-approved fullscreen (tap video)
+  if (isIOS) {
     video.addEventListener('touchstart', () => {
       if (video.webkitEnterFullscreen) {
-        video.webkitEnterFullscreen();
+        try { video.webkitEnterFullscreen(); } catch (e) {}
       }
     }, { passive: true });
   }
 
-
-  // Desktop fullscreen only (iOS handled by tapping video)
-  fullscreenBtn.addEventListener('click', () => {
-    if (isIOS) return;
-    if (video.requestFullscreen) video.requestFullscreen();
-    else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
-    else if (video.msRequestFullscreen) video.msRequestFullscreen();
-  });
+  // Desktop button: requestFullscreen
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+      if (isIOS) return; // iOS uses native tap behavior
+      if (video.requestFullscreen) video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+      else if (video.msRequestFullscreen) video.msRequestFullscreen();
+    });
+  }
 
   video.addEventListener('contextmenu', e => e.preventDefault());
 
+  // ---------------------------
   // Simulated stream seek
+  // ---------------------------
   const hlsSource = 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8';
   const duration = 5556;
+
+  // Christmas Eve 6pm Central (you can change this date for testing)
   const streamStart = new Date('2024-12-24T18:00:00-06:00').getTime();
+
   const now = Date.now();
   let offset = Math.floor((now - streamStart) / 1000);
   if (offset < 0) offset = 0;
@@ -216,5 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hls.loadSource(hlsSource);
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, () => startAt(position));
+  } else {
+    console.error('HLS not supported in this browser.');
   }
 });
