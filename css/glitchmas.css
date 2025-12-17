@@ -106,6 +106,16 @@ body {
    Mac Window Chrome
 ================================ */
 
+.panelWrap {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
 .window-header {
   height: 34px;
   display: flex;
@@ -126,13 +136,8 @@ body {
     0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
-.window-btn:nth-child(2) {
-  background: #ffbd2e;
-}
-
-.window-btn:nth-child(3) {
-  background: #28c840;
-}
+.window-btn:nth-child(2) { background: #ffbd2e; }
+.window-btn:nth-child(3) { background: #28c840; }
 
 .panel {
   padding: 18px;
@@ -185,7 +190,7 @@ video:-webkit-full-screen {
    Native Video Controls
 ================================ */
 
-/* MOBILE: allow subtle native controls */
+/* Mobile: allow subtle native controls */
 @media (max-width: 768px) {
   video::-webkit-media-controls-panel {
     background: linear-gradient(
@@ -202,13 +207,9 @@ video:-webkit-full-screen {
   video::-webkit-media-controls-timeline {
     display: none;
   }
-
-  video {
-    cursor: pointer;
-  }
 }
 
-/* DESKTOP: suppress native controls completely */
+/* Desktop: suppress native controls completely */
 @media (min-width: 769px) {
   video {
     pointer-events: none !important;
@@ -223,7 +224,7 @@ video:-webkit-full-screen {
   }
 
   .playerWrap {
-    cursor: default !important;
+    cursor: default;
   }
 }
 
@@ -274,16 +275,11 @@ video:-webkit-full-screen {
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
-.sliders.is-hidden {
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-}
-
 .hidden {
   display: none !important;
 }
 
+/* Slider rows */
 .slider {
   display: grid;
   grid-template-columns: 110px 1fr 48px;
@@ -359,7 +355,7 @@ video:-webkit-full-screen {
 }
 
 /* ===============================
-   Footer
+   Footer / Schedule
 ================================ */
 
 .foot {
@@ -377,18 +373,16 @@ video:-webkit-full-screen {
 }
 
 .schedule-posters {
- display: flex;
+  display: flex;
   justify-content: center;
   gap: 50px;
   margin-top: 14px;
 }
 
-
-
 .poster {
   position: relative;
   width: 280px;
-  height: 158px;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #bdbdbd;
@@ -403,17 +397,14 @@ video:-webkit-full-screen {
   object-fit: cover;
 }
 
-/* Default: GIF visible */
 .poster-still {
   opacity: 0;
   transition: opacity 180ms ease;
 }
 
-/* Hover: show still */
 .poster:hover .poster-still {
   opacity: 1;
 }
-
 
 /* ===============================
    Mobile Layout
@@ -428,10 +419,6 @@ video:-webkit-full-screen {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .slider {
-    grid-template-columns: 80px 1fr 40px;
-  }
 }
 
 /* Hide custom fullscreen button on mobile */
@@ -442,42 +429,56 @@ video:-webkit-full-screen {
 }
 
 /* ===============================
-   Mobile: Fireplace Stack
+   Mobile: Fireplace + Slider Fix
 ================================ */
 
 @media (max-width: 768px) {
   .fireplacePanel {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    gap: 12px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 0;
+  }
+
+  /* Add spacing ONLY when sliders are visible */
+  .fireplacePanel:has(#sliders:not(.hidden)) {
+    margin-bottom: 16px;
   }
 
   .fireplacePanel .btn {
-    width: 100% !important;
+    width: 100%;
   }
 
   #sliders {
-    width: 100% !important;
-    margin-top: 12px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Fully collapse sliders when hidden */
+  #sliders.hidden {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
   }
 
   .slider {
-    grid-template-columns: 1fr !important;
-    gap: 6px !important;
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .slider::after {
-    text-align: left !important;
+    text-align: left;
     font-size: 12px;
     color: #666;
   }
 
-   .schedule-posters {
+  /* Schedule posters stack */
+  .schedule-posters {
     flex-direction: column;
     align-items: center;
     gap: 40px;
@@ -486,8 +487,5 @@ video:-webkit-full-screen {
   .poster {
     width: 100%;
     max-width: 340px;
-    height: auto;
-    aspect-ratio: 16 / 9;
   }
 }
-
