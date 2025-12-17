@@ -175,7 +175,14 @@ body {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   background: #000;
+  opacity: 0;
+  transition: opacity 330ms ease-out;
 }
+
+.player.is-ready {
+  opacity: 1;
+}
+
 
 /* Fullscreen fill */
 video:fullscreen,
@@ -240,6 +247,18 @@ video:-webkit-full-screen {
   align-items: center;
 }
 
+.fireplacePanel.fire-on {
+  box-shadow:
+    0 0 0 0 rgba(255,180,90,0.0);
+  animation: ember 6s ease-in-out infinite;
+}
+
+@keyframes ember {
+  0%, 100% { box-shadow: 0 0 0 rgba(255,180,90,0.0); }
+  50% { box-shadow: 0 0 14px rgba(255,180,90,0.15); }
+}
+
+
 .btn {
   appearance: none;
   border: 1px solid #a9a9a9;
@@ -262,18 +281,19 @@ video:-webkit-full-screen {
 ================================ */
 
 .sliders {
-  margin-top: 14px;
-  padding: 14px;
-  border: 1px solid #cfcfcf;
-  border-radius: 12px;
-  background: linear-gradient(#ffffff, #f3f3f3);
-  display: grid;
-  gap: 10px;
-
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition:
+    opacity 180ms ease-out,
+    transform 180ms ease-out;
 }
+
+.sliders.is-hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
 
 .hidden {
   display: none !important;
@@ -387,7 +407,17 @@ video:-webkit-full-screen {
   overflow: hidden;
   border: 1px solid #bdbdbd;
   background: #000;
+  transition:
+    transform 140ms ease-out,
+    box-shadow 140ms ease-out;
 }
+
+
+.poster:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
 
 .poster img {
   position: absolute;
@@ -487,5 +517,39 @@ video:-webkit-full-screen {
   .poster {
     width: 100%;
     max-width: 340px;
+  }
+}
+@media (hover: hover) {
+  .btn {
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out,
+      background 120ms ease-out;
+  }
+
+  .btn:hover {
+    background: linear-gradient(#ffffff, #e6e6e6);
+  }
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    0 0 0 rgba(0,0,0,0);
+}
+.slider input[type="range"]::-webkit-slider-thumb {
+  transition:
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out;
+}
+
+.slider input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+@media (hover: none) {
+  .poster-still {
+    opacity: 1;
   }
 }

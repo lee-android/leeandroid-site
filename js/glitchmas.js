@@ -6,37 +6,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!video || !fireToggle || !sliders) return;
 
-  // ---------------------------
-  // Platform detection
-  // ---------------------------
+  // Video fade-in once stream has data
+  video.addEventListener('loadeddata', () => {
+    setTimeout(() => {
+      video.classList.add('is-ready');
+    }, 120);
+  }, { once: true });
+
+
+  /* rest of your JS continues here */
+
+
+  /* ===========================
+     Platform detection
+  =========================== */
+
   const isIOS =
     /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-  // ---------------------------
-  // Perceptual volume curve
-  // ---------------------------
-  function perceptualVolume(value) {
-    return value <= 0 ? 0 : Math.pow(value, 2);
-  }
+  /* ===========================
+     Perceptual volume curve
+  =========================== */
 
-  // ---------------------------
-  // data-val slider labels
-  // ---------------------------
+  const perceptualVolume = v => (v <= 0 ? 0 : Math.pow(v, 2));
+
+  /* ===========================
+     Slider labels
+  =========================== */
+
+  const sliderIds = ['rumbleVol', 'crackleVol', 'snowVol', 'tapeVol', 'musicVol', 'videoVol'];
+
   function updateSliderLabel(slider) {
     const percent = Math.round(parseFloat(slider.value) * 100);
-    const row = slider.closest('.slider');
-    if (row) row.setAttribute('data-val', percent + '%');
+    slider.closest('.slider')?.setAttribute('data-val', percent + '%');
   }
-
-  const sliderIds = [
-    'rumbleVol',
-    'crackleVol',
-    'snowVol',
-    'tapeVol',
-    'musicVol',
-    'videoVol'
-  ];
 
   sliderIds.forEach(id => {
     const s = document.getElementById(id);
@@ -45,15 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
     s.addEventListener('input', () => updateSliderLabel(s));
   });
 
-  // ---------------------------
-  // Slider visibility (animated)
-  // ---------------------------
+  /* ===========================
+     Slider visibility (animated)
+  =========================== */
+
   sliders.classList.add('hidden', 'is-hidden');
   sliders.setAttribute('aria-hidden', 'true');
 
-  // ---------------------------
-  // Audio layers
-  // ---------------------------
+  /* ===========================
+     Fireplace audio layers
+  =========================== */
+
   const audioMap = {
     fire: new Audio('/audio/fire.mp3'),
     crackle: new Audio('/audio/crackle.mp3'),
@@ -68,31 +74,29 @@ document.addEventListener('DOMContentLoaded', () => {
     a.volume = 0;
   });
 
-  // Randomized start points (stream vibe)
-  function randomizeStart(audio, tailSeconds = 5) {
-    const handler = () => {
-      const d = audio.duration;
-      if (!Number.isFinite(d) || d <= 0) return;
-      const safeEnd = Math.max(0, d - tailSeconds);
-      if (safeEnd <= 1) return;
-      try { audio.currentTime = Math.random() * safeEnd; } catch {}
+  function randomizeStart(audio, tail = 5) {
+    const set = () => {
+      if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+      const max = Math.max(0, audio.duration - tail);
+      try { audio.currentTime = Math.random() * max; } catch {}
     };
-
-    audio.addEventListener('loadedmetadata', handler);
-    audio.addEventListener('canplay', handler, { once: true });
+    audio.addEventListener('loadedmetadata', set);
+    audio.addEventListener('canplay', set, { once: true });
   }
 
   Object.values(audioMap).forEach(randomizeStart);
+
+  /* ===========================
+     Volume + fade helpers
+  =========================== */
 
   let fireplaceEnabled = false;
   const fades = new Map();
 
   function stopFade(media) {
     const id = fades.get(media);
-    if (id) {
-      clearInterval(id);
-      fades.delete(media);
-    }
+    if (id) clearInterval(id);
+    fades.delete(media);
   }
 
   function fadeTo(media, target, step = 0.02, interval = 60) {
@@ -107,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (Math.abs(media.volume - t) <= step) {
         media.volume = t;
         stopFade(media);
-
         if (t === 0 && media !== video) {
           try { media.pause(); } catch {}
         }
@@ -117,75 +120,64 @@ document.addEventListener('DOMContentLoaded', () => {
     fades.set(media, id);
   }
 
-  function readSlider(id) {
-    const el = document.getElementById(id);
-    return el ? parseFloat(el.value) : 0;
-  }
+  const read = id => parseFloat(document.getElementById(id)?.value || 0);
 
-  // Kill-at-zero + perceptual scaling
-  function setVolumeWithKill(media, value) {
-    const v = Math.max(0, Math.min(1, value));
-    const pv = perceptualVolume(v);
-
+  function set(media, value) {
+    const pv = perceptualVolume(Math.max(0, Math.min(1, value)));
     if (pv <= 0) {
       stopFade(media);
       media.volume = 0;
       try { media.pause(); } catch {}
       return;
     }
-
     if (media.paused) {
       try { media.play(); } catch {}
     }
-
     media.volume = pv;
   }
 
   function setAllVolumesLive() {
     if (!fireplaceEnabled) return;
 
-    setVolumeWithKill(audioMap.fire, readSlider('rumbleVol'));
-    setVolumeWithKill(audioMap.crackle, readSlider('crackleVol'));
-    setVolumeWithKill(audioMap.snowfall, readSlider('snowVol'));
-    setVolumeWithKill(audioMap.tape, readSlider('tapeVol'));
-    setVolumeWithKill(audioMap.music, readSlider('musicVol'));
+    set(audioMap.fire, read('rumbleVol'));
+    set(audioMap.crackle, read('crackleVol'));
+    set(audioMap.snowfall, read('snowVol'));
+    set(audioMap.tape, read('tapeVol'));
+    set(audioMap.music, read('musicVol'));
 
-    const v = readSlider('videoVol');
-    const pv = perceptualVolume(v);
-
-    if (pv <= 0) {
-      video.volume = 0;
-      video.muted = true;
-    } else {
-      video.muted = false;
-      video.volume = pv;
-    }
+    const pv = perceptualVolume(read('videoVol'));
+    video.muted = pv <= 0;
+    video.volume = pv;
   }
+
+  /* ===========================
+     Fireplace toggles
+  =========================== */
 
   function enableFireplace() {
     fireplaceEnabled = true;
 
+    // 🔥 add fireplace glow state
+    fireToggle
+    .closest('.fireplacePanel')
+    ?.classList.add('fire-on');
+
     sliders.classList.remove('hidden');
-    requestAnimationFrame(() => {
-      sliders.classList.remove('is-hidden');
-    });
+    requestAnimationFrame(() => sliders.classList.remove('is-hidden'));
     sliders.setAttribute('aria-hidden', 'false');
     fireToggle.textContent = 'Disable Fireplace Sounds';
 
     Object.values(audioMap).forEach(a => a.play().catch(() => {}));
-
-    fadeTo(audioMap.fire, perceptualVolume(readSlider('rumbleVol')));
-    fadeTo(audioMap.crackle, perceptualVolume(readSlider('crackleVol')));
-    fadeTo(audioMap.snowfall, perceptualVolume(readSlider('snowVol')));
-    fadeTo(audioMap.tape, perceptualVolume(readSlider('tapeVol')));
-    fadeTo(audioMap.music, perceptualVolume(readSlider('musicVol')));
-
-    video.muted = false;
-    fadeTo(video, perceptualVolume(readSlider('videoVol')));
+    setAllVolumesLive();
   }
 
   function disableFireplace() {
     fireplaceEnabled = false;
+
+    // ❄️ remove fireplace glow state
+    fireToggle
+    .closest('.fireplacePanel')
+    ?.classList.remove('fire-on');
 
     Object.values(audioMap).forEach(a => fadeTo(a, 0, 0.04, 40));
     fadeTo(video, 0, 0.04, 40);
@@ -203,72 +195,103 @@ document.addEventListener('DOMContentLoaded', () => {
     sliders.setAttribute('aria-hidden', 'true');
     fireToggle.textContent = 'Enable Fireplace Sounds';
 
-    setTimeout(() => {
-      sliders.classList.add('hidden');
-    }, 220);
+    setTimeout(() => sliders.classList.add('hidden'), 220);
   }
 
-  fireToggle.addEventListener('click', () => {
-    fireplaceEnabled ? disableFireplace() : enableFireplace();
-  });
+  fireToggle.addEventListener('click', () =>
+    fireplaceEnabled ? disableFireplace() : enableFireplace()
+  );
 
   sliderIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', setAllVolumesLive);
+    document.getElementById(id)?.addEventListener('input', setAllVolumesLive);
   });
 
-  // ---------------------------
-  // Fullscreen behavior
-  // ---------------------------
+  /* ===========================
+     Fullscreen
+  =========================== */
+
   if (isIOS) {
-    video.addEventListener('touchstart', () => {
-      if (video.webkitEnterFullscreen) {
-        try { video.webkitEnterFullscreen(); } catch {}
-      }
-    }, { passive: true });
+    video.addEventListener(
+      'touchstart',
+      () => {
+        if (video.webkitEnterFullscreen) {
+          try { video.webkitEnterFullscreen(); } catch {}
+        }
+      },
+      { passive: true }
+    );
   }
 
-  if (fullscreenBtn) {
-    fullscreenBtn.addEventListener('click', () => {
-      if (isIOS) return;
-      if (video.requestFullscreen) video.requestFullscreen();
-      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
-      else if (video.msRequestFullscreen) video.msRequestFullscreen();
-    });
-  }
+  fullscreenBtn?.addEventListener('click', () => {
+    if (isIOS) return;
+    if (video.requestFullscreen) video.requestFullscreen();
+    else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+  });
 
   video.addEventListener('contextmenu', e => e.preventDefault());
 
-  // ---------------------------
-  // Simulated stream seek
-  // ---------------------------
-  const hlsSource =
-    'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8';
-  const duration = 5556;
-  const streamStart = new Date('2024-12-24T18:00:00-06:00').getTime();
+  /* ===========================
+     SINGLE CHANNEL BROADCAST
+  =========================== */
 
-  const now = Date.now();
-  let offset = Math.floor((now - streamStart) / 1000);
-  if (offset < 0) offset = 0;
-  const position = offset % duration;
+  const PROGRAMS = [
+    {
+      title: 'A Glitchmas Story',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
+      duration: 5556
+    }
+    // add more later
+  ];
 
-  function startAt(pos) {
+  const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
+  const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
+
+  function getLiveProgram() {
+    let elapsed = Math.floor((Date.now() - BROADCAST_START) / 1000);
+    if (elapsed < 0) elapsed = 0;
+
+    // ✅ KEY FIX: loop elapsed across the full channel runtime
+    elapsed = TOTAL_DURATION > 0 ? (elapsed % TOTAL_DURATION) : 0;
+
+    for (const p of PROGRAMS) {
+      if (elapsed < p.duration) return { program: p, offset: elapsed };
+      elapsed -= p.duration;
+    }
+
+    return { program: PROGRAMS[0], offset: 0 };
+  }
+
+  function loadProgram(program, offsetSeconds) {
     video.muted = true;
     video.volume = 0;
 
-    video.addEventListener('loadedmetadata', () => {
-      try { video.currentTime = pos; } catch {}
-      video.play().catch(() => {});
-    }, { once: true });
+    const attemptPlay = () => video.play().catch(() => {});
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = program.src;
+
+      video.addEventListener(
+        'loadedmetadata',
+        () => {
+          try { video.currentTime = offsetSeconds; } catch {}
+          attemptPlay();
+        },
+        { once: true }
+      );
+    } else if (window.Hls && Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true });
+      hls.loadSource(program.src);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        try { video.currentTime = offsetSeconds; } catch {}
+        attemptPlay();
+      });
+    }
+
+    // Autoplay safety net
+    setTimeout(attemptPlay, 600);
   }
 
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = hlsSource;
-    startAt(position);
-  } else if (window.Hls && Hls.isSupported()) {
-    const hls = new Hls({ enableWorker: true });
-    hls.loadSource(hlsSource);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => startAt(position));
-  }
+  const { program, offset } = getLiveProgram();
+  loadProgram(program, offset);
 });
