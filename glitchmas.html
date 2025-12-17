@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A Glitchmas Story</title>
-  <link rel="stylesheet" href="css/glitchmas.css" />
+  <link rel="stylesheet" href="glitchmas.css" />
 </head>
 <body>
   <header class="top">
@@ -20,97 +20,99 @@
 
   <main class="grid">
     <!-- Video Panel -->
-    <div class="panelWrap">
-      <div class="window-header" aria-hidden="true">
+    <section class="panel videoPanel">
+      <div class="window-header">
         <div class="window-btn"></div>
         <div class="window-btn"></div>
         <div class="window-btn"></div>
       </div>
 
-      <section class="panel videoPanel">
-        <h1 class="title">A Glitchmas Story</h1>
-        <p class="desc">
-          A corrupted holiday broadcast. Hit Fireplace Mode if you want cozy crackling sounds layered over the film.
-        </p>
+      <h1 class="title">A Glitchmas Story</h1>
+      <p class="desc">
+        A corrupted holiday broadcast. Hit Fireplace Mode if you want cozy crackling sounds layered over the film.
+      </p>
 
-        <div class="playerWrap">
-          <video id="glitchmasVideo" class="player" playsinline autoplay muted controls disablePictureInPicture
-            controlslist="nodownload noplaybackrate noremoteplayback">
-            <source
-              src="https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8"
-              type="application/x-mpegURL"
-            />
-            Your browser does not support the video tag.
-          </video>
+      <div class="playerWrap">
+        <video
+          id="glitchmasVideo"
+          class="player"
+          playsinline
+          autoplay
+          muted
+          disablePictureInPicture
+          controlslist="nodownload noplaybackrate noremoteplayback"
+        >
+          <source
+            src="https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8"
+            type="application/x-mpegURL"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="fireplacePanel">
+        <button id="fullscreenBtn" class="btn fullscreen-btn">Go Fullscreen</button>
+        <button id="fireToggle" class="btn">Enable Fireplace Sounds</button>
+
+        <div id="sliders" class="sliders hidden" aria-hidden="true">
+          <label class="slider" data-val="0%">
+            <span>Fire</span>
+            <input id="rumbleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
+          </label>
+
+          <label class="slider" data-val="0%">
+            <span>Crackle</span>
+            <input id="crackleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
+          </label>
+
+          <label class="slider" data-val="0%">
+            <span>Snowfall</span>
+            <input id="snowVol" type="range" min="0" max="1" step="0.01" value="0.25" />
+          </label>
+
+          <label class="slider" data-val="0%">
+            <span>Tape Noise</span>
+            <input id="tapeVol" type="range" min="0" max="1" step="0.01" value="0.18" />
+          </label>
+
+          <label class="slider" data-val="0%">
+            <span>Music</span>
+            <input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.22" />
+          </label>
+
+          <label class="slider" data-val="0%">
+            <span>Video Volume</span>
+            <input id="videoVol" type="range" min="0" max="1" step="0.01" value="0.35" />
+          </label>
         </div>
-
-        <div class="fireplacePanel">
-          <button id="fullscreenBtn" class="btn" type="button">Go Fullscreen</button>
-          <button id="fireToggle" class="btn" type="button">Enable Fireplace Sounds</button>
-
-          <div id="sliders" class="sliders hidden" aria-hidden="true">
-            <label class="slider" data-val="45%">
-
-              <span>Fire</span>
-              <input id="rumbleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Crackle</span>
-              <input id="crackleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Snowfall</span>
-              <input id="snowVol" type="range" min="0" max="1" step="0.01" value="0.25" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Tape Noise</span>
-              <input id="tapeVol" type="range" min="0" max="1" step="0.01" value="0.18" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Music</span>
-              <input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.22" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Video Volume</span>
-              <input id="videoVol" type="range" min="0" max="1" step="0.01" value="0.35" />
-            </label>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <!-- Chat Panel -->
-    <div class="panelWrap">
-      <div class="window-header" aria-hidden="true">
+    <aside class="panel chatPanel">
+      <div class="window-header">
         <div class="window-btn"></div>
         <div class="window-btn"></div>
         <div class="window-btn"></div>
       </div>
 
-      <aside class="panel chatPanel">
-        <div class="chatHeader">
-          <h2>Chat</h2><span class="status">live</span>
-        </div>
+      <div class="chatHeader">
+        <h2>Chat</h2><span class="status">live</span>
+      </div>
 
-        <div class="chatEmbed">
-          <iframe src="https://organizations.minnit.chat/437587601341501/c/culdesacirc?embed" style="border:none; width:90%; height:500px; max-height:90vh;" allowTransparency="true" loading="lazy" data-minnitchatembed="1"></iframe>
-        </div>
+      <div class="chatEmbed">
+        <iframe
+          src="https://minnit.chat/culdesacirc?embed&dark=false"
+          style="border:none;width:100%;height:420px;"
+          allowTransparency="true"
+          title="Minnit Chat"
+        ></iframe>
+      </div>
 
-        <div class="rules">
-          <p><strong>House rules:</strong> be normal, be kind, no spoilers.</p>
-        </div>
-      </aside>
-    </div>
+      <div class="rules">
+        <p><strong>House rules:</strong> be normal, be kind, no spoilers.</p>
+      </div>
+    </aside>
   </main>
 
   <footer class="foot">
@@ -125,6 +127,6 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="js/glitchmas.js"></script>
+  <script src="glitchmas.js"></script>
 </body>
 </html>
