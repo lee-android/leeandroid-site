@@ -459,3 +459,24 @@ button,
 button:active {
   transform: translateY(1px);
 }
+
+/* Make native controls subtle */
+video::-webkit-media-controls-panel {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0)
+  );
+}
+
+/* Slightly reduce control size */
+video::-webkit-media-controls {
+  opacity: 0.85;
+}
+
+/* Hide timeline on small screens to reduce clutter */
+@media (max-width: 768px) {
+  video::-webkit-media-controls-timeline {
+    display: none;
+  }
+}
