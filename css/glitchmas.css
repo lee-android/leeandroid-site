@@ -103,7 +103,7 @@ body {
 }
 
 /* ===============================
-   Mac Window Chrome
+   Panel Chrome
 ================================ */
 
 .panelWrap {
@@ -171,18 +171,17 @@ body {
 
 .player {
   width: 100%;
-  display: block;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  display: block;
   background: #000;
   opacity: 0;
-  transition: opacity 330ms ease-out;
+  transition: opacity 320ms ease-out;
 }
 
 .player.is-ready {
   opacity: 1;
 }
-
 
 /* Fullscreen fill */
 video:fullscreen,
@@ -197,7 +196,7 @@ video:-webkit-full-screen {
    Native Video Controls
 ================================ */
 
-/* Mobile: allow subtle native controls */
+/* Mobile */
 @media (max-width: 768px) {
   video::-webkit-media-controls-panel {
     background: linear-gradient(
@@ -216,22 +215,18 @@ video:-webkit-full-screen {
   }
 }
 
-/* Desktop: suppress native controls completely */
+/* Desktop */
 @media (min-width: 769px) {
   video {
-    pointer-events: none !important;
+    pointer-events: none;
   }
 
   video::-webkit-media-controls,
   video::-webkit-media-controls-panel,
   video::-webkit-media-controls-enclosure {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-
-  .playerWrap {
-    cursor: default;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
@@ -248,32 +243,24 @@ video:-webkit-full-screen {
 }
 
 .fireplacePanel.fire-on {
-  box-shadow:
-    0 0 0 0 rgba(255,180,90,0.0);
   animation: ember 6s ease-in-out infinite;
 }
 
 @keyframes ember {
-  0%, 100% { box-shadow: 0 0 0 rgba(255,180,90,0.0); }
+  0%, 100% { box-shadow: 0 0 0 rgba(255,180,90,0); }
   50% { box-shadow: 0 0 14px rgba(255,180,90,0.15); }
 }
 
-
 .btn {
-  appearance: none;
   border: 1px solid #a9a9a9;
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 14px;
   background: linear-gradient(#ffffff, #dedede);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 1px 0 rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    0 1px 0 rgba(0,0,0,0.06);
   cursor: pointer;
-}
-
-.btn:active {
-  transform: translateY(1px);
 }
 
 /* ===============================
@@ -283,9 +270,7 @@ video:-webkit-full-screen {
 .sliders {
   opacity: 1;
   transform: translateY(0);
-  transition:
-    opacity 180ms ease-out,
-    transform 180ms ease-out;
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
 }
 
 .sliders.is-hidden {
@@ -294,27 +279,21 @@ video:-webkit-full-screen {
   pointer-events: none;
 }
 
-
 .hidden {
   display: none !important;
 }
 
-/* Slider rows */
 .slider {
   display: grid;
   grid-template-columns: 110px 1fr 48px;
   gap: 12px;
-  align-items: center;
   padding: 6px;
   border-radius: 10px;
+  align-items: center;
 }
 
 .slider:nth-child(odd) {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.slider span {
-  font-size: 14px;
+  background: rgba(0,0,0,0.02);
 }
 
 .slider::after {
@@ -324,33 +303,14 @@ video:-webkit-full-screen {
   text-align: right;
 }
 
-/* Range styling */
-.slider input[type="range"] {
-  width: 100%;
-  appearance: none;
-  background: transparent;
-}
-
-.slider input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(#efefef, #dcdcdc);
-  border: 1px solid #c9c9c9;
-}
-
-.slider input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  margin-top: -6px;
-  border-radius: 999px;
-  border: 1px solid #2b5fbf;
-  background: linear-gradient(var(--mac-blue-1), var(--mac-blue-2));
-}
-
 /* ===============================
    Chat
 ================================ */
+
+.chatPanel {
+  display: flex;
+  flex-direction: column;
+}
 
 .chatHeader {
   display: flex;
@@ -359,24 +319,7 @@ video:-webkit-full-screen {
   margin-bottom: 10px;
 }
 
-.chatPanel {
-  display: flex;
-  flex-direction: column;
-  padding-right: 16px;
-}
-
-
-.status {
-  font-size: 13px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid #bdbdbd;
-  background: linear-gradient(#ffffff, #efefef);
-  color: #2f7d55;
-}
-
 .chatEmbed {
-  width: 100%;
   flex: 1;
 }
 
@@ -384,9 +327,7 @@ video:-webkit-full-screen {
   width: 100%;
   height: 500px;
   border: none;
-  display: block;
 }
-
 
 /* ===============================
    Footer / Schedule
@@ -399,7 +340,6 @@ video:-webkit-full-screen {
 }
 
 .schedule {
-  margin-top: 10px;
   padding: 14px 16px;
   border-radius: 12px;
   border: 1px solid #c7c7c7;
@@ -414,24 +354,20 @@ video:-webkit-full-screen {
 }
 
 .poster {
-  position: relative;
   width: 280px;
   aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #bdbdbd;
   background: #000;
-  transition:
-    transform 140ms ease-out,
-    box-shadow 140ms ease-out;
+  position: relative;
+  transition: transform 140ms ease, box-shadow 140ms ease;
 }
-
 
 .poster:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 }
-
 
 .poster img {
   position: absolute;
@@ -451,7 +387,7 @@ video:-webkit-full-screen {
 }
 
 /* ===============================
-   Mobile Layout
+   Mobile Layout (CLEAN FIX)
 ================================ */
 
 @media (max-width: 800px) {
@@ -463,65 +399,7 @@ video:-webkit-full-screen {
     flex-direction: column;
     align-items: flex-start;
   }
-}
 
-/* Hide custom fullscreen button on mobile */
-@media (max-width: 768px) {
-  #fullscreenBtn {
-    display: none !important;
-  }
-}
-
-/* ===============================
-   Mobile: Fireplace + Slider Fix
-================================ */
-
-@media (max-width: 768px) {
-  .fireplacePanel {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 0;
-  }
-
-  /* Add spacing ONLY when sliders are visible */
-  .fireplacePanel:has(#sliders:not(.hidden)) {
-    margin-bottom: 16px;
-  }
-
-  .fireplacePanel .btn {
-    width: 100%;
-  }
-
-  #sliders {
-    width: 100%;
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  /* Fully collapse sliders when hidden */
-  #sliders.hidden {
-    display: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: 0 !important;
-  }
-
-  .slider {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .slider::after {
-    text-align: left;
-    font-size: 12px;
-    color: #666;
-  }
-
-  /* Schedule posters stack */
   .schedule-posters {
     flex-direction: column;
     align-items: center;
@@ -532,38 +410,20 @@ video:-webkit-full-screen {
     width: 100%;
     max-width: 340px;
   }
-}
-@media (hover: hover) {
-  .btn {
-    transition:
-      transform 120ms ease-out,
-      box-shadow 120ms ease-out,
-      background 120ms ease-out;
+
+  .fireplacePanel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .btn:hover {
-    background: linear-gradient(#ffffff, #e6e6e6);
+  #fullscreenBtn {
+    display: none;
+  }
+}
+@media (min-width: 900px) {
+  .grid > .panelWrap:nth-child(2) {
+    transform: translate(-48px, 32px);
   }
 }
 
-.btn:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.6),
-    0 0 0 rgba(0,0,0,0);
-}
-.slider input[type="range"]::-webkit-slider-thumb {
-  transition:
-    transform 80ms ease-out,
-    box-shadow 80ms ease-out;
-}
-
-.slider input[type="range"]:active::-webkit-slider-thumb {
-  transform: scale(1.05);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-}
-@media (hover: none) {
-  .poster-still {
-    opacity: 1;
-  }
-}
