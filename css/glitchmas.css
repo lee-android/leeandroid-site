@@ -423,7 +423,7 @@ video:-webkit-full-screen {
 }
 @media (min-width: 900px) {
   .grid > .panelWrap:nth-child(2) {
-    transform: translate(-48px, 32px);
+    transform: translate(-28px, 62px);
   }
 }
 
