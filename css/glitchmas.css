@@ -407,41 +407,47 @@ video:-webkit-full-screen {
   }
 }
 
-/* --- Mobile Fireplace Layout Fix --- */
+/* ===============================
+   MOBILE: Fireplace Stack Fix
+================================ */
+
 @media (max-width: 768px) {
+
   .fireplacePanel {
-    width: 100%;
-    max-width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 12px !important;
   }
 
+  /* Buttons stack and fill width */
+  .fireplacePanel .btn {
+    width: 100% !important;
+  }
+
+  /* Sliders container must be BELOW buttons */
   #sliders {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    margin-top: 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
   }
 
+  /* Individual slider rows */
   .slider {
-    width: 100%;
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+    width: 100% !important;
   }
 
-  .slider input[type="range"] {
-    width: 100%;
+  .slider::after {
+    text-align: left !important;
+    font-size: 12px;
+    color: #666;
   }
 }
-@media (max-width: 768px) {
-  #sliders {
-    background: #f6f6f6;
-    border-radius: 12px;
-    padding: 14px;
-  }
-}
+
