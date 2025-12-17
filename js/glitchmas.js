@@ -173,6 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) el.addEventListener('input', setAllVolumesLive);
   });
 
+  // iOS tap-to-fullscreen (real fullscreen, Apple-approved)
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    video.addEventListener('touchstart', () => {
+      if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      }
+    }, { passive: true });
+  }
+
+
   // Desktop fullscreen only (iOS handled by tapping video)
   fullscreenBtn.addEventListener('click', () => {
     if (isIOS) return;
