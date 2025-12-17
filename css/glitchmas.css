@@ -362,11 +362,7 @@ video:-moz-full-screen{
 
 
 
-/* ---- Mobile ---- */
-@media (max-width: 800px){
-  .grid{ grid-template-columns: 1fr; }
-  .top{ flex-direction: column; align-items: flex-start; }
-}
+
 
 
 /* --- Better slider layout (System Prefs vibe) --- */
@@ -386,14 +382,20 @@ video:-moz-full-screen{
 }
 
 /* each row: label + slider + value readout */
-.slider{
+.slider {
   display: grid;
-  grid-template-columns: 110px 1fr 48px;
-  gap: 12px;
+  grid-template-columns: 90px 1fr 48px;
   align-items: center;
-  padding: 6px 6px;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 6px 0;
 }
+.slider::after {
+  content: attr(data-val);
+  font-size: 12px;
+  color: #555;
+  text-align: right;
+}
+
 
 /* subtle alternating row treatment (feels like a prefs list) */
 .slider:nth-child(odd){
@@ -418,4 +420,36 @@ video:-moz-full-screen{
   color: #5a5a5a;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.slider[data-val="0%"] {
+  opacity: 0.5;
+}
+
+
+
+/* ---- Mobile ---- */
+@media (max-width: 800px){
+  .grid{ grid-template-columns: 1fr; }
+  .top{ flex-direction: column; align-items: flex-start; }
+}
+
+.fireplacePanel {
+  overflow: visible;
+}
+
+
+/* Normalize buttons on iOS */
+button,
+.btn {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1;
+  white-space: nowrap;
+}
+button:active {
+  transform: translateY(1px);
 }

@@ -98,15 +98,40 @@ function updateSliderLabel(slider) {
     return el ? parseFloat(el.value) : 0;
   }
 
-  function setAllVolumesLive() {
-    if (!fireplaceEnabled) return;
-    audioMap.fire.volume = readSlider('rumbleVol');
-    audioMap.crackle.volume = readSlider('crackleVol');
-    audioMap.snowfall.volume = readSlider('snowVol');
-    audioMap.tape.volume = readSlider('tapeVol');
-    audioMap.music.volume = readSlider('musicVol');
-    video.volume = readSlider('videoVol');
+  function setVolumeWithKill(media, value) {
+  if (value <= 0) {
+    media.volume = 0;
+    if (!media.paused) {
+      try { media.pause(); } catch (e) {}
+    }
+  } else {
+    if (media.paused) {
+      try { media.play(); } catch (e) {}
+    }
+    media.volume = value;
   }
+}
+
+function setAllVolumesLive() {
+  if (!fireplaceEnabled) return;
+
+  setVolumeWithKill(audioMap.fire, readSlider('rumbleVol'));
+  setVolumeWithKill(audioMap.crackle, readSlider('crackleVol'));
+  setVolumeWithKill(audioMap.snowfall, readSlider('snowVol'));
+  setVolumeWithKill(audioMap.tape, readSlider('tapeVol'));
+  setVolumeWithKill(audioMap.music, readSlider('musicVol'));
+
+  // Video behaves better, but still guard it
+  const v = readSlider('videoVol');
+  if (v <= 0) {
+    video.volume = 0;
+    video.muted = true;
+  } else {
+    video.muted = false;
+    video.volume = v;
+  }
+}
+
 
   function enableFireplace() {
     fireplaceEnabled = true;
