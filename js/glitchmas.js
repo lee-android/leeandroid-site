@@ -6,16 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!video || !fireToggle || !sliders) return;
 
-  // Video fade-in once stream has data
-  video.addEventListener('loadeddata', () => {
-    setTimeout(() => {
-      video.classList.add('is-ready');
-    }, 120);
-  }, { once: true });
+  /* ===========================
+     Video fade-in
+  =========================== */
 
-
-  /* rest of your JS continues here */
-
+  video.addEventListener(
+    'loadeddata',
+    () => {
+      setTimeout(() => video.classList.add('is-ready'), 120);
+    },
+    { once: true }
+  );
 
   /* ===========================
      Platform detection
@@ -35,7 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
      Slider labels
   =========================== */
 
-  const sliderIds = ['rumbleVol', 'crackleVol', 'snowVol', 'tapeVol', 'musicVol', 'videoVol'];
+  const sliderIds = [
+    'rumbleVol',
+    'crackleVol',
+    'snowVol',
+    'tapeVol',
+    'musicVol',
+    'videoVol'
+  ];
 
   function updateSliderLabel(slider) {
     const percent = Math.round(parseFloat(slider.value) * 100);
@@ -50,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ===========================
-     Slider visibility (animated)
+     Slider visibility
   =========================== */
 
   sliders.classList.add('hidden', 'is-hidden');
@@ -87,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Object.values(audioMap).forEach(randomizeStart);
 
   /* ===========================
-     Volume + fade helpers
+     Volume helpers
   =========================== */
 
   let fireplaceEnabled = false;
@@ -157,10 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function enableFireplace() {
     fireplaceEnabled = true;
 
-    // 🔥 add fireplace glow state
-    fireToggle
-    .closest('.fireplacePanel')
-    ?.classList.add('fire-on');
+    fireToggle.closest('.fireplacePanel')?.classList.add('fire-on');
 
     sliders.classList.remove('hidden');
     requestAnimationFrame(() => sliders.classList.remove('is-hidden'));
@@ -174,10 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function disableFireplace() {
     fireplaceEnabled = false;
 
-    // ❄️ remove fireplace glow state
-    fireToggle
-    .closest('.fireplacePanel')
-    ?.classList.remove('fire-on');
+    fireToggle.closest('.fireplacePanel')?.classList.remove('fire-on');
 
     Object.values(audioMap).forEach(a => fadeTo(a, 0, 0.04, 40));
     fadeTo(video, 0, 0.04, 40);
@@ -202,9 +204,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fireplaceEnabled ? disableFireplace() : enableFireplace()
   );
 
-  sliderIds.forEach(id => {
-    document.getElementById(id)?.addEventListener('input', setAllVolumesLive);
-  });
+  sliderIds.forEach(id =>
+    document.getElementById(id)?.addEventListener('input', setAllVolumesLive)
+  );
 
   /* ===========================
      Fullscreen
@@ -245,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
       src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
       duration: 6213
     }
-    // add more later
   ];
 
   const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
@@ -254,9 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getLiveProgram() {
     let elapsed = Math.floor((Date.now() - BROADCAST_START) / 1000);
     if (elapsed < 0) elapsed = 0;
-
-    // ✅ KEY FIX: loop elapsed across the full channel runtime
-    elapsed = TOTAL_DURATION > 0 ? (elapsed % TOTAL_DURATION) : 0;
+    elapsed = TOTAL_DURATION ? elapsed % TOTAL_DURATION : 0;
 
     for (const p of PROGRAMS) {
       if (elapsed < p.duration) return { program: p, offset: elapsed };
@@ -274,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = program.src;
-
       video.addEventListener(
         'loadedmetadata',
         () => {
@@ -293,28 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Autoplay safety net
     setTimeout(attemptPlay, 600);
   }
 
   const { program, offset } = getLiveProgram();
   loadProgram(program, offset);
-  const tracks = video.textTracks;
-  if (tracks && tracks.length) {
-    const track = tracks[0];
-
-    track.mode = 'hidden'; // required to edit cues safely
-
-    track.addEventListener('cuechange', () => { }, { once: true });
-
-    // Shift all cues backward by the offset
-    for (let i = 0; i < track.cues.length; i++) {
-      const cue = track.cues[i];
-      cue.startTime = Math.max(0, cue.startTime - offset);
-      cue.endTime = Math.max(0, cue.endTime - offset);
-    }
-
-    track.mode = 'showing';
-  }
-
 });
