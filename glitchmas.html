@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/glitchmas.css" />
 </head>
 <body>
+
   <header class="top">
     <div class="breadcrumb">
       <a href="/">leeandroid.com</a> <span class="sep">></span>
@@ -19,7 +20,8 @@
   </header>
 
   <main class="grid">
-    <!-- Video Panel -->
+
+    <!-- VIDEO PANEL -->
     <div class="panelWrap">
       <div class="window-header" aria-hidden="true">
         <div class="window-btn"></div>
@@ -34,61 +36,35 @@
         </p>
 
         <div class="playerWrap">
-          <video id="glitchmasVideo" class="player" playsinline muted autoplay preload="auto" controls disablePictureInPicture
-            controlslist="nodownload noplaybackrate noremoteplayback">
-            <source src="https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8"
-              type="application/x-mpegURL" />
-              <!-- <track kind="subtitles" label="English" srclang="en" src="/vtts/glitchmas-resync.vtt" default /> -->
-          </video>
-
+          <video
+            id="glitchmasVideo"
+            class="player"
+            playsinline
+            autoplay
+            muted
+            controls
+            disablePictureInPicture
+            controlslist="nodownload noplaybackrate noremoteplayback"
+          ></video>
         </div>
 
         <div class="fireplacePanel">
-          <button id="fullscreenBtn" class="btn" type="button">Go Fullscreen</button>
-          <button id="fireToggle" class="btn" type="button">Enable Fireplace Sounds</button>
+          <button id="fullscreenBtn" class="btn">Go Fullscreen</button>
+          <button id="fireToggle" class="btn">Enable Fireplace Sounds</button>
 
-          <div id="sliders" class="sliders hidden" aria-hidden="true">
-            <label class="slider" data-val="45%">
-
-              <span>Fire</span>
-              <input id="rumbleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Crackle</span>
-              <input id="crackleVol" type="range" min="0" max="1" step="0.01" value="0.45" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Snowfall</span>
-              <input id="snowVol" type="range" min="0" max="1" step="0.01" value="0.25" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Tape Noise</span>
-              <input id="tapeVol" type="range" min="0" max="1" step="0.01" value="0.18" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Music</span>
-              <input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.22" />
-            </label>
-
-            <label class="slider" data-val="45%">
-
-              <span>Video Volume</span>
-              <input id="videoVol" type="range" min="0" max="1" step="0.01" value="0.35" />
-            </label>
+          <div id="sliders" class="sliders hidden is-hidden" aria-hidden="true">
+            <label class="slider"><span>Fire</span><input id="rumbleVol" type="range" min="0" max="1" step="0.01" value="0.45"></label>
+            <label class="slider"><span>Crackle</span><input id="crackleVol" type="range" min="0" max="1" step="0.01" value="0.45"></label>
+            <label class="slider"><span>Snowfall</span><input id="snowVol" type="range" min="0" max="1" step="0.01" value="0.25"></label>
+            <label class="slider"><span>Tape Noise</span><input id="tapeVol" type="range" min="0" max="1" step="0.01" value="0.18"></label>
+            <label class="slider"><span>Music</span><input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.22"></label>
+            <label class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01" value="0.35"></label>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- Chat Panel -->
+    <!-- CHAT PANEL -->
     <div class="panelWrap">
       <div class="window-header" aria-hidden="true">
         <div class="window-btn"></div>
@@ -98,73 +74,38 @@
 
       <aside class="panel chatPanel">
         <div class="chatHeader">
-          <h2>Chat</h2><span class="status">live</span>
+          <h2>Chat</h2>
+          <span class="status">live</span>
         </div>
 
         <div class="chatEmbed">
-          <iframe src="https://organizations.minnit.chat/437587601341501/c/culdesacirc?embed" style="border:none; height:500px;" allowTransparency="true" loading="lazy" data-minnitchatembed="1"></iframe>
-        </div>
-
-        <div class="rules">
-          <p><strong>House rules:</strong> be normal, be kind, no spoilers.</p>
+          <iframe
+            src="https://organizations.minnit.chat/437587601341501/c/culdesacirc?embed"
+            loading="lazy"
+            allowTransparency="true">
+          </iframe>
         </div>
       </aside>
     </div>
+
   </main>
 
-  <footer class="foot">
-    <div class="schedule">
-  <h3>Schedule / Updates</h3>
-  <p>Replay drops every hour on the hour. Site may glitch intentionally.</p>
+  <!-- SCHEDULE (NOW REORDERABLE) -->
+  <div class="scheduleWrap">
+    <footer class="foot">
+      <div class="schedule">
+        <h3>Schedule / Updates</h3>
+        <p>Replay drops every hour on the hour.</p>
 
-  <div class="schedule-posters">
-    <a class="poster" href="#">
-      <img
-        class="poster-gif"
-        src="https://placehold.co/252x122.gif?text=UP+NEXT+%28GIF%29"
-        alt="Up Next"
-      />
-      <img
-        class="poster-still"
-        src="https://placehold.co/252x122/png?text=UP+NEXT"
-        alt=""
-      />
-    </a>
-
-    <a class="poster" href="#">
-      <img
-        class="poster-gif"
-        src="https://placehold.co/252x122.gif?text=FIREPLACE+MODE+%28GIF%29"
-        alt="Fireplace Mode"
-      />
-      <img
-        class="poster-still"
-        src="https://placehold.co/252x122/png?text=FIREPLACE+MODE"
-        alt=""
-      />
-    </a>
-
-    <a class="poster" href="#">
-      <img
-        class="poster-gif"
-        src="https://placehold.co/252x122.gif?text=LATE+NIGHT+%28GIF%29"
-        alt="Late Night"
-      />
-      <img
-        class="poster-still"
-        src="https://placehold.co/252x122/png?text=LATE+NIGHT"
-        alt=""
-      />
-    </a>
+        <div class="schedule-posters">
+          <div class="poster"><img src="https://placehold.co/560x315.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster"><img src="https://placehold.co/560x315.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster"><img src="https://placehold.co/560x315.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+        </div>
+      </div>
+    </footer>
   </div>
-</div>
 
-    <p class="copyright">&copy; <span id="year"></span> leeandroid</p>
-  </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="js/glitchmas.js"></script>
 </body>

@@ -431,7 +431,63 @@ video:-webkit-full-screen {
 }
 @media (min-width: 900px) {
   .grid > .panelWrap:nth-child(2) {
-    transform: translate(-28px, 62px);
+    transform: translate(-12px, 40px);
+  }
+}
+/* ===============================
+   Layout Grid
+================================ */
+
+.grid {
+  max-width: 1180px;
+  margin: 18px auto 0;
+  padding: 0 18px 18px;
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* Desktop asymmetry */
+@media (min-width: 900px) {
+  .grid > .panelWrap:nth-child(2) {
+    margin-top: 36px;
+  }
+}
+
+/* ===============================
+   Mobile ordering FIX
+================================ */
+
+@media (max-width: 800px) {
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  main.grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Video */
+  main.grid > .panelWrap:first-child {
+    order: 1;
+  }
+
+  /* Schedule */
+  .scheduleWrap {
+    order: 2;
+  }
+
+  /* Chat */
+  main.grid > .panelWrap:nth-child(2) {
+    order: 3;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
   }
 }
 
