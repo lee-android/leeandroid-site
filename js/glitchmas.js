@@ -239,6 +239,11 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'A Glitchmas Story',
       src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
       duration: 5556
+    },
+    {
+      title: 'Grinch Stole Grinchmas',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
+      duration: 6213
     }
     // add more later
   ];
