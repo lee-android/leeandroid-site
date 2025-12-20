@@ -124,6 +124,17 @@ body {
   padding: 0 12px;
   background: linear-gradient(var(--chrome-top), var(--chrome-bot));
   border-bottom: 1px solid #bdbdbd;
+  position: relative;
+}
+
+.window-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a4a4a;
+  pointer-events: none;
 }
 
 .window-btn {
