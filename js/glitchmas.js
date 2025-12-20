@@ -315,4 +315,97 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   video.addEventListener('ended', loadNextProgram);
+
+  /* ===========================
+     Schedule Carousel (Mobile)
+  =========================== */
+
+  const carousel = document.getElementById('scheduleCarousel');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const posters = carousel ? carousel.querySelectorAll('.poster') : [];
+  const posterCount = posters.length;
+
+  if (carousel && dots.length && posterCount > 0) {
+    let currentSlide = 0;
+    let autoRotateInterval = null;
+    let userInteracting = false;
+    const AUTO_ROTATE_DELAY = 5000; // 5 seconds between slides
+    const INTERACTION_PAUSE = 8000; // 8 seconds pause after user interaction
+
+    // Reset scroll position to first slide on load
+    carousel.scrollLeft = 0;
+
+    function updateDots(index) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    function goToSlide(index) {
+      const width = carousel.offsetWidth;
+      carousel.scrollTo({ left: index * width, behavior: 'smooth' });
+      currentSlide = index;
+      updateDots(index);
+    }
+
+    function nextSlide() {
+      const next = (currentSlide + 1) % posterCount;
+      goToSlide(next);
+    }
+
+    function startAutoRotate() {
+      stopAutoRotate();
+      autoRotateInterval = setInterval(() => {
+        if (!userInteracting) {
+          nextSlide();
+        }
+      }, AUTO_ROTATE_DELAY);
+    }
+
+    function stopAutoRotate() {
+      if (autoRotateInterval) {
+        clearInterval(autoRotateInterval);
+        autoRotateInterval = null;
+      }
+    }
+
+    function handleUserInteraction() {
+      userInteracting = true;
+      stopAutoRotate();
+
+      setTimeout(() => {
+        userInteracting = false;
+        startAutoRotate();
+      }, INTERACTION_PAUSE);
+    }
+
+    // Update current slide and dots on scroll
+    carousel.addEventListener('scroll', () => {
+      const scrollLeft = carousel.scrollLeft;
+      const width = carousel.offsetWidth;
+      const index = Math.round(scrollLeft / width);
+
+      if (index !== currentSlide && index >= 0 && index < posterCount) {
+        currentSlide = index;
+        updateDots(index);
+      }
+    });
+
+    // Pause auto-rotate on touch/mouse interaction
+    carousel.addEventListener('touchstart', handleUserInteraction, { passive: true });
+    carousel.addEventListener('mousedown', handleUserInteraction);
+
+    // Click dots to navigate
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        handleUserInteraction();
+        const index = parseInt(dot.dataset.index, 10);
+        goToSlide(index);
+      });
+    });
+
+    // Initialize
+    updateDots(0);
+    startAutoRotate();
+  }
 });
