@@ -244,8 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       title: 'Grinch Stole Grinchmas',
-      src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
-      duration: 6213
+      src: 'https://vz-b741991d-4ed.b-cdn.net/9b7d2aec-4eb0-47a2-9922-2abd26097a1c/playlist.m3u8',
+      duration: 4886
     }
   ];
 
@@ -257,12 +257,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elapsed < 0) elapsed = 0;
     elapsed = TOTAL_DURATION ? elapsed % TOTAL_DURATION : 0;
 
+    let index = 0;
     for (const p of PROGRAMS) {
-      if (elapsed < p.duration) return { program: p, offset: elapsed };
+      if (elapsed < p.duration) return { program: p, offset: elapsed, index };
       elapsed -= p.duration;
+      index++;
     }
 
-    return { program: PROGRAMS[0], offset: 0 };
+    return { program: PROGRAMS[0], offset: 0, index: 0 };
   }
 
   function loadProgram(program, offsetSeconds) {
@@ -282,7 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { once: true }
       );
     } else if (window.Hls && Hls.isSupported()) {
+      if (window.hlsInstance) {
+        window.hlsInstance.destroy();
+      }
       const hls = new Hls({ enableWorker: true });
+      window.hlsInstance = hls;
       hls.loadSource(program.src);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -294,6 +300,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(attemptPlay, 600);
   }
 
-  const { program, offset } = getLiveProgram();
+  const { program, offset, index } = getLiveProgram();
+  let currentProgramIndex = index;
   loadProgram(program, offset);
+
+  /* ===========================
+     Program advancement
+  =========================== */
+
+  function loadNextProgram() {
+    currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
+    const next = PROGRAMS[currentProgramIndex];
+    loadProgram(next, 0);
+  }
+
+  video.addEventListener('ended', loadNextProgram);
 });
