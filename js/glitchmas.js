@@ -102,18 +102,100 @@ document.addEventListener('DOMContentLoaded', () => {
      Fireplace audio layers
   =========================== */
 
+  // Define music playlist from wun_two folder
+  const MUSIC_PLAYLIST = [
+    // Snow, Vol. 8 (9 tracks)
+    '/audio/wun_two/Snow, Vol. 8/01 - wun two - ouverture [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/02 - wun two - the house [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/03 - wun two - peanut brigade feat. Eets [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/04 - wun two - pine [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/05 - wun two - greensleeves [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/06 - wun two - snow telegram [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/07 - wun two - ouverture 2 [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/08 - wun two - glacier express [Snow Vol. 8].mp3',
+    '/audio/wun_two/Snow, Vol. 8/09 - wun two - blue champagne [Snow Vol. 8].mp3',
+    
+    // Snow, Vol. 9 (12 tracks)
+    '/audio/wun_two/Snow, Vol. 9/01 - wun two - frore intro [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/02 - wun two - hibernaculums [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/03 - wun two - piano to snow to [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/04 - wun two - whitetime [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/05 - wun two - aboo the snow giant [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/06 - wun two - brumal [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/07 - wun two - winter overture [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/08 - wun two - riz snow [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/09 - wun two - december shoes [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/10 - wun two - winzlig [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/11 - wun two - gelid [Snow, Vol. 9].mp3',
+    '/audio/wun_two/Snow, Vol. 9/12 - wun two - flakelet outro [Snow, Vol. 9].mp3',
+    
+    // Snow, Vol. 10 (16 tracks)
+    '/audio/wun_two/Snow, Vol. 10/01 - wun two - schnee [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/02 - wun two - holli [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/03 - wun two - here we are [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/04 - wun two - uoy [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/05 - wun two - candli [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/06 - wun two - snow drive [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/07 - wun two - herbst [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/08 - wun two - coldzero [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/09 - wun two - laterne [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/10 - wun two - minttea [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/11 - wun two - bergfrost [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/12 - wun two - tog [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/13 - wun two - schneesturm [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/14 - wun two - katz [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/15 - wun two - heimo [Snow, Vol. 10].mp3',
+    '/audio/wun_two/Snow, Vol. 10/16 - wun two - kristallin [Snow, Vol. 10].mp3'
+  ];
+
+  // Shuffle array in place
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  // Create shuffled playlist
+  const shuffledPlaylist = shuffleArray([...MUSIC_PLAYLIST]);
+  let currentMusicIndex = 0;
+
   const audioMap = {
     fire: new Audio('/audio/fire.mp3'),
     crackle: new Audio('/audio/crackle.mp3'),
     snowfall: new Audio('/audio/snowfall.mp3'),
     tape: new Audio('/audio/tape-noise.mp3'),
-    music: new Audio('/audio/xmas-music.mp3')
+    music: new Audio(shuffledPlaylist[0])
   };
 
+  // Set looping for ambient tracks (but NOT music)
+  audioMap.fire.loop = true;
+  audioMap.crackle.loop = true;
+  audioMap.snowfall.loop = true;
+  audioMap.tape.loop = true;
+  audioMap.music.loop = false; // Music will advance through playlist
+
   Object.values(audioMap).forEach(a => {
-    a.loop = true;
     a.preload = 'auto';
     a.volume = 0;
+  });
+
+  // Handle music track ending - advance to next in playlist
+  audioMap.music.addEventListener('ended', () => {
+    currentMusicIndex = (currentMusicIndex + 1) % shuffledPlaylist.length;
+    const nextTrack = shuffledPlaylist[currentMusicIndex];
+    
+    audioMap.music.src = nextTrack;
+    audioMap.music.load();
+    
+    // Randomize start point of new track
+    audioMap.music.addEventListener('loadedmetadata', () => {
+      randomizeStart(audioMap.music);
+      if (fireplaceEnabled && read('musicVol') > 0) {
+        audioMap.music.play().catch(() => {});
+      }
+    }, { once: true });
   });
 
   function randomizeStart(audio, tail = 5) {
