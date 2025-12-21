@@ -26,23 +26,55 @@ document.addEventListener('DOMContentLoaded', () => {
     /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  /* ===========================
+     Safari/iOS Autoplay Fix
+  =========================== */
+
+  function attemptAutoplay() {
+    video.muted = true;
+    video.playsInline = true;
+    
+    const playPromise = video.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay blocked - add click handler to start
+        const startPlayback = () => {
+          video.play().catch(() => {});
+          document.removeEventListener('click', startPlayback);
+          document.removeEventListener('touchstart', startPlayback);
+        };
+        document.addEventListener('click', startPlayback, { once: true });
+        document.addEventListener('touchstart', startPlayback, { once: true });
+      });
+    }
+  }
+
   /* ===========================
      Perceptual volume curve
   =========================== */
 
-  const perceptualVolume = v => (v <= 0 ? 0 : Math.pow(v, 2));
+  const perceptualVolume = v => {
+    const val = parseFloat(v);
+    if (val <= 0) return 0;
+    if (val >= 1) return 1;
+    // Attempt to work around iOS quirks by using finer curve
+    return Math.pow(val, 2.2);
+  };
 
   /* ===========================
      Slider labels
   =========================== */
 
   const sliderIds = [
+    'videoVol',
     'rumbleVol',
     'crackleVol',
     'snowVol',
     'tapeVol',
-    'musicVol',
-    'videoVol'
+    'musicVol'
   ];
 
   function updateSliderLabel(slider) {
@@ -130,15 +162,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const read = id => parseFloat(document.getElementById(id)?.value || 0);
 
+  function setSlider(id, value) {
+    const slider = document.getElementById(id);
+    if (slider) {
+      slider.value = value;
+      updateSliderLabel(slider);
+    }
+  }
+
   function set(media, value) {
     const pv = perceptualVolume(Math.max(0, Math.min(1, value)));
     if (pv <= 0) {
       stopFade(media);
       media.volume = 0;
-      try { media.pause(); } catch {}
+      if (media !== video) {
+        try { media.pause(); } catch {}
+      }
       return;
     }
-    if (media.paused) {
+    if (media.paused && media !== video) {
       try { media.play(); } catch {}
     }
     media.volume = pv;
@@ -153,10 +195,68 @@ document.addEventListener('DOMContentLoaded', () => {
     set(audioMap.tape, read('tapeVol'));
     set(audioMap.music, read('musicVol'));
 
-    const pv = perceptualVolume(read('videoVol'));
+    const videoVal = read('videoVol');
+    const pv = perceptualVolume(videoVal);
     video.muted = pv <= 0;
     video.volume = pv;
   }
+
+  /* ===========================
+     Presets
+  =========================== */
+
+  const PRESETS = {
+    videoOnly: {
+      videoVol: 0.5,
+      rumbleVol: 0,
+      crackleVol: 0,
+      snowVol: 0,
+      tapeVol: 0,
+      musicVol: 0
+    },
+    cozy: {
+      videoVol: 0.25,
+      rumbleVol: 0.5,
+      crackleVol: 0.45,
+      snowVol: 0.2,
+      tapeVol: 0.1,
+      musicVol: 0.15
+    },
+    lofi: {
+      videoVol: 0,
+      rumbleVol: 0.3,
+      crackleVol: 0.2,
+      snowVol: 0.35,
+      tapeVol: 0.25,
+      musicVol: 0.4
+    },
+    fireplace: {
+      videoVol: 0,
+      rumbleVol: 0.6,
+      crackleVol: 0.55,
+      snowVol: 0,
+      tapeVol: 0.05,
+      musicVol: 0
+    }
+  };
+
+  function applyPreset(presetName) {
+    const preset = PRESETS[presetName];
+    if (!preset) return;
+
+    Object.entries(preset).forEach(([id, value]) => {
+      setSlider(id, value);
+    });
+
+    setAllVolumesLive();
+  }
+
+  // Attach preset button handlers
+  document.querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyPreset(btn.dataset.preset);
+    });
+  });
 
   /* ===========================
      Fireplace toggles
@@ -172,6 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
     sliders.setAttribute('aria-hidden', 'false');
     fireToggle.textContent = 'Disable Fireplace Sounds';
 
+    // Apply default preset (video only)
+    applyPreset('videoOnly');
+
+    // Start audio elements (they'll be at 0 volume until slider moved)
     Object.values(audioMap).forEach(a => a.play().catch(() => {}));
     setAllVolumesLive();
   }
@@ -271,15 +375,13 @@ document.addEventListener('DOMContentLoaded', () => {
     video.muted = true;
     video.volume = 0;
 
-    const attemptPlay = () => video.play().catch(() => {});
-
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = program.src;
       video.addEventListener(
         'loadedmetadata',
         () => {
           try { video.currentTime = offsetSeconds; } catch {}
-          attemptPlay();
+          attemptAutoplay();
         },
         { once: true }
       );
@@ -293,11 +395,11 @@ document.addEventListener('DOMContentLoaded', () => {
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         try { video.currentTime = offsetSeconds; } catch {}
-        attemptPlay();
+        attemptAutoplay();
       });
     }
 
-    setTimeout(attemptPlay, 600);
+    setTimeout(attemptAutoplay, 600);
   }
 
   const { program, offset, index } = getLiveProgram();
@@ -332,7 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const AUTO_ROTATE_DELAY = 5000;
     const INTERACTION_PAUSE = 8000;
 
-    // Reset scroll position to first slide on load
     carousel.scrollLeft = 0;
 
     function updateDots(index) {
@@ -406,54 +507,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ===========================
-   Ghost Cursor Animation
-=========================== */
+     Ghost Cursor Animation
+  =========================== */
 
-const ghostCursor = document.querySelector('.ghost-cursor');
+  const ghostCursor = document.querySelector('.ghost-cursor');
 
-if (ghostCursor) {
-  // Set initial random position
-  const initX = Math.random() * (window.innerWidth - 50);
-  const initY = Math.random() * (window.innerHeight - 50);
-  
-  ghostCursor.style.left = initX + 'px';
-  ghostCursor.style.top = initY + 'px';
-
-  function moveGhostCursor() {
-    const padding = 30;
-    const cursorSize = 20;
-    const maxX = window.innerWidth - padding - cursorSize;
-    const maxY = window.innerHeight - padding - cursorSize;
+  if (ghostCursor) {
+    const initX = Math.random() * (window.innerWidth - 50);
+    const initY = Math.random() * (window.innerHeight - 50);
     
-    // Generate new random position within viewport
-    const newX = padding + Math.random() * (maxX - padding);
-    const newY = padding + Math.random() * (maxY - padding);
-    
-    ghostCursor.style.left = newX + 'px';
-    ghostCursor.style.top = newY + 'px';
-  }
+    ghostCursor.style.left = initX + 'px';
+    ghostCursor.style.top = initY + 'px';
 
-  // Initial move after a short delay
-  setTimeout(moveGhostCursor, 1000);
-  
-  // Move every 3-6 seconds (randomized)
-  function scheduleNextMove() {
-    const delay = 3000 + Math.random() * 3000;
-    setTimeout(() => {
-      moveGhostCursor();
-      scheduleNextMove();
-    }, delay);
-  }
-  
-  scheduleNextMove();
-
-  // Update bounds on resize
-  window.addEventListener('resize', () => {
-    // If cursor is outside new viewport, move it back in
-    const rect = ghostCursor.getBoundingClientRect();
-    if (rect.left > window.innerWidth || rect.top > window.innerHeight) {
-      moveGhostCursor();
+    function moveGhostCursor() {
+      const padding = 30;
+      const cursorSize = 20;
+      const maxX = window.innerWidth - padding - cursorSize;
+      const maxY = window.innerHeight - padding - cursorSize;
+      
+      const newX = padding + Math.random() * (maxX - padding);
+      const newY = padding + Math.random() * (maxY - padding);
+      
+      ghostCursor.style.left = newX + 'px';
+      ghostCursor.style.top = newY + 'px';
     }
-  });
-}
+
+    setTimeout(moveGhostCursor, 1000);
+    
+    function scheduleNextMove() {
+      const delay = 3000 + Math.random() * 3000;
+      setTimeout(() => {
+        moveGhostCursor();
+        scheduleNextMove();
+      }, delay);
+    }
+    
+    scheduleNextMove();
+
+    window.addEventListener('resize', () => {
+      const rect = ghostCursor.getBoundingClientRect();
+      if (rect.left > window.innerWidth || rect.top > window.innerHeight) {
+        moveGhostCursor();
+      }
+    });
+  }
 });

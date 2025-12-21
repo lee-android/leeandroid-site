@@ -457,6 +457,65 @@ video:-webkit-full-screen {
 }
 
 /* ===============================
+   Presets
+================================ */
+
+.presets {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  background: 
+    linear-gradient(
+      to bottom,
+      #fefefe 0%,
+      #e8e8e8 45%,
+      #d8d8d8 50%,
+      #e4e4e4 55%,
+      #f4f4f4 100%
+    );
+  border: 1px solid #888;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 120ms ease;
+}
+
+.preset-btn:hover {
+  background: 
+    linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #eeeeee 45%,
+      #e0e0e0 50%,
+      #eaeaea 55%,
+      #f8f8f8 100%
+    );
+}
+
+.preset-btn:active {
+  background: 
+    linear-gradient(
+      to bottom,
+      #d0e4f8 0%,
+      #a0c8f0 45%,
+      #7ab4e8 50%,
+      #90c0ec 55%,
+      #b8d8f6 100%
+    );
+  border-color: #5a90c0;
+}
+
+/* ===============================
    Sliders (Aqua Style)
 ================================ */
 

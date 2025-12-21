@@ -62,14 +62,26 @@
           <button id="fireToggle" class="btn">Enable Fireplace Sounds</button>
 
           <div id="sliders" class="sliders hidden is-hidden" aria-hidden="true">
-            <label class="slider"><span>Fire</span><input id="rumbleVol" type="range" min="0" max="1" step="0.01" value="0.45"></label>
-            <label class="slider"><span>Crackle</span><input id="crackleVol" type="range" min="0" max="1" step="0.01" value="0.45"></label>
-            <label class="slider"><span>Snowfall</span><input id="snowVol" type="range" min="0" max="1" step="0.01" value="0.25"></label>
-            <label class="slider"><span>Tape Noise</span><input id="tapeVol" type="range" min="0" max="1" step="0.01" value="0.18"></label>
-            <label class="slider"><span>Music</span><input id="musicVol" type="range" min="0" max="1" step="0.01" value="0.22"></label>
-            <label class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01" value="0.35"></label>
+            <div class="presets">
+              <button class="preset-btn" data-preset="videoOnly">Video Only</button>
+              <button class="preset-btn" data-preset="cozy">Cozy</button>
+              <button class="preset-btn" data-preset="lofi">Lo-Fi</button>
+              <button class="preset-btn" data-preset="fireplace">Fireplace</button>
+            </div>
+            <label class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01"
+                value="0.5"></label>
+            <label class="slider"><span>Fire</span><input id="rumbleVol" type="range" min="0" max="1" step="0.01"
+                value="0"></label>
+            <label class="slider"><span>Crackle</span><input id="crackleVol" type="range" min="0" max="1" step="0.01"
+                value="0"></label>
+            <label class="slider"><span>Snowfall</span><input id="snowVol" type="range" min="0" max="1" step="0.01"
+                value="0"></label>
+            <label class="slider"><span>Tape Noise</span><input id="tapeVol" type="range" min="0" max="1" step="0.01"
+                value="0"></label>
+            <label class="slider"><span>Music</span><input id="musicVol" type="range" min="0" max="1" step="0.01"
+                value="0"></label>
           </div>
-        </div>
+          </div>
       </section>
     </div>
 
