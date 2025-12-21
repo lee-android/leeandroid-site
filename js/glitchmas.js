@@ -60,8 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const val = parseFloat(v);
     if (val <= 0) return 0;
     if (val >= 1) return 1;
-    // Attempt to work around iOS quirks by using finer curve
-    return Math.pow(val, 2.2);
+    // More aggressive curve for mobile to prevent "all or nothing" volume
+    // iOS needs a stronger curve due to hardware audio characteristics
+    const exponent = (isIOS || isSafari) ? 2.8 : 2.2;
+    return Math.pow(val, exponent);
   };
 
   /* ===========================
@@ -289,7 +291,7 @@ if (presetSelect) {
     sliders.classList.remove('hidden');
     requestAnimationFrame(() => sliders.classList.remove('is-hidden'));
     sliders.setAttribute('aria-hidden', 'false');
-    fireToggle.textContent = 'Disable Fireplace Sounds';
+    fireToggle.textContent = 'Disable Cozy Sounds';
 
     // Apply default preset (video only)
     applyPreset('videoOnly');
@@ -318,7 +320,7 @@ if (presetSelect) {
 
     sliders.classList.add('is-hidden');
     sliders.setAttribute('aria-hidden', 'true');
-    fireToggle.textContent = 'Enable Fireplace Sounds';
+    fireToggle.textContent = 'Enable Cozy Sounds';
 
     setTimeout(() => sliders.classList.add('hidden'), 220);
   }
@@ -466,7 +468,12 @@ function loadProgram(program, offsetSeconds) {
 
   // Update page title to reflect current program
   document.querySelector('.videoPanel .title').textContent = program.title;
-  document.getElementById('nowPlayingTitle').textContent = program.title;
+  
+  // Update window header "Now Playing" with program title
+  const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+  if (nowPlayingTitle) {
+    nowPlayingTitle.textContent = program.title;
+  }
 
   if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = program.src;
@@ -490,8 +497,6 @@ function loadProgram(program, offsetSeconds) {
       try { video.currentTime = offsetSeconds; } catch {}
       attemptAutoplay();
     });
-
-  
   }
 
   setTimeout(attemptAutoplay, 600);
