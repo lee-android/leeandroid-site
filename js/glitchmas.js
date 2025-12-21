@@ -202,43 +202,62 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ===========================
-     Presets
-  =========================== */
+   Presets
+=========================== */
 
-  const PRESETS = {
-    videoOnly: {
-      videoVol: 0.5,
-      rumbleVol: 0,
-      crackleVol: 0,
-      snowVol: 0,
-      tapeVol: 0,
-      musicVol: 0
-    },
-    cozy: {
-      videoVol: 0.25,
-      rumbleVol: 0.5,
-      crackleVol: 0.45,
-      snowVol: 0.2,
-      tapeVol: 0.1,
-      musicVol: 0.15
-    },
-    lofi: {
-      videoVol: 0,
-      rumbleVol: 0.3,
-      crackleVol: 0.2,
-      snowVol: 0.35,
-      tapeVol: 0.25,
-      musicVol: 0.4
-    },
-    fireplace: {
-      videoVol: 0,
-      rumbleVol: 0.6,
-      crackleVol: 0.55,
-      snowVol: 0,
-      tapeVol: 0.05,
-      musicVol: 0
-    }
-  };
+const PRESETS = {
+  videoOnly: {
+    videoVol: 0.5,
+    rumbleVol: 0,
+    crackleVol: 0,
+    snowVol: 0,
+    tapeVol: 0,
+    musicVol: 0
+  },
+  cozy: {
+    videoVol: 0.25,
+    rumbleVol: 0.5,
+    crackleVol: 0.45,
+    snowVol: 0.2,
+    tapeVol: 0.1,
+    musicVol: 0.15
+  },
+  lofi: {
+    videoVol: 0,
+    rumbleVol: 0.3,
+    crackleVol: 0.2,
+    snowVol: 0.35,
+    tapeVol: 0.25,
+    musicVol: 0.4
+  },
+  fireplace: {
+    videoVol: 0,
+    rumbleVol: 0.6,
+    crackleVol: 0.55,
+    snowVol: 0,
+    tapeVol: 0.05,
+    musicVol: 0
+  }
+};
+
+function applyPreset(presetName) {
+  const preset = PRESETS[presetName];
+  if (!preset) return;
+
+  Object.entries(preset).forEach(([id, value]) => {
+    setSlider(id, value);
+  });
+
+  setAllVolumesLive();
+}
+
+// Dropdown handler
+const presetSelect = document.getElementById('presetSelect');
+if (presetSelect) {
+  presetSelect.addEventListener('change', (e) => {
+    applyPreset(e.target.value);
+  });
+}
 
   function applyPreset(presetName) {
     const preset = PRESETS[presetName];

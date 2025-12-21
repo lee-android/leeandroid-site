@@ -62,11 +62,14 @@
           <button id="fireToggle" class="btn">Enable Fireplace Sounds</button>
 
           <div id="sliders" class="sliders hidden is-hidden" aria-hidden="true">
-            <div class="presets">
-              <button class="preset-btn" data-preset="videoOnly">Video Only</button>
-              <button class="preset-btn" data-preset="cozy">Cozy</button>
-              <button class="preset-btn" data-preset="lofi">Lo-Fi</button>
-              <button class="preset-btn" data-preset="fireplace">Fireplace</button>
+            <div class="preset-select-wrap">
+              <label for="presetSelect">Preset:</label>
+              <select id="presetSelect" class="preset-select">
+                <option value="videoOnly">Video Only</option>
+                <option value="cozy">Cozy</option>
+                <option value="lofi">Lo-Fi</option>
+                <option value="fireplace">Fireplace</option>
+              </select>
             </div>
             <label class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01"
                 value="0.5"></label>
