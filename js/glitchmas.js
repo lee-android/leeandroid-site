@@ -337,9 +337,12 @@ function applyPreset(presetName) {
 
 // Dropdown handler
 const presetSelect = document.getElementById('presetSelect');
+let currentPreset = 'videoOnly'; // Track current preset
+
 if (presetSelect) {
   presetSelect.addEventListener('change', (e) => {
-    applyPreset(e.target.value);
+    currentPreset = e.target.value;
+    applyPreset(currentPreset);
   });
 }
 
@@ -375,8 +378,13 @@ if (presetSelect) {
     sliders.setAttribute('aria-hidden', 'false');
     fireToggle.textContent = 'Disable Cozy Sounds';
 
-    // Apply default preset (video only)
-    applyPreset('videoOnly');
+    // Sync dropdown to current preset
+    if (presetSelect) {
+      presetSelect.value = currentPreset;
+    }
+
+    // Apply current preset (preserves user's last selection)
+    applyPreset(currentPreset);
 
     // Start audio elements (they'll be at 0 volume until slider moved)
     Object.values(audioMap).forEach(a => a.play().catch(() => {}));
