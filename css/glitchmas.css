@@ -780,7 +780,7 @@ video:-webkit-full-screen {
 /* Hide on mobile */
 @media (max-width: 899px) {
   .ghost-cursor {
-    display: none;
+    width: 15px;
   }
 }
 
