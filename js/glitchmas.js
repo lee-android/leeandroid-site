@@ -406,40 +406,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ===========================
-     Ghost Cursor Animation
-  =========================== */
+   Ghost Cursor Animation
+=========================== */
 
-  const ghostCursor = document.querySelector('.ghost-cursor');
+const ghostCursor = document.querySelector('.ghost-cursor');
 
-  if (ghostCursor && window.innerWidth > 899) {
-    let cursorX = Math.random() * (window.innerWidth - 100);
-    let cursorY = Math.random() * (window.innerHeight - 100);
+if (ghostCursor) {
+  // Set initial random position
+  const initX = Math.random() * (window.innerWidth - 50);
+  const initY = Math.random() * (window.innerHeight - 50);
+  
+  ghostCursor.style.left = initX + 'px';
+  ghostCursor.style.top = initY + 'px';
+
+  function moveGhostCursor() {
+    const padding = 30;
+    const cursorSize = 20;
+    const maxX = window.innerWidth - padding - cursorSize;
+    const maxY = window.innerHeight - padding - cursorSize;
     
-    ghostCursor.style.left = cursorX + 'px';
-    ghostCursor.style.top = cursorY + 'px';
-
-    function moveGhostCursor() {
-      const padding = 60;
-      const maxX = window.innerWidth - padding;
-      const maxY = document.documentElement.scrollHeight - padding;
-      
-      const newX = padding + Math.random() * (maxX - padding);
-      const newY = padding + Math.random() * (Math.min(maxY, window.innerHeight * 1.5) - padding);
-      
-      ghostCursor.style.left = newX + 'px';
-      ghostCursor.style.top = newY + 'px';
-    }
-
-    setTimeout(moveGhostCursor, 1000);
+    // Generate new random position within viewport
+    const newX = padding + Math.random() * (maxX - padding);
+    const newY = padding + Math.random() * (maxY - padding);
     
-    function scheduleNextMove() {
-      const delay = 3000 + Math.random() * 3000;
-      setTimeout(() => {
-        moveGhostCursor();
-        scheduleNextMove();
-      }, delay);
-    }
-    
-    scheduleNextMove();
+    ghostCursor.style.left = newX + 'px';
+    ghostCursor.style.top = newY + 'px';
   }
+
+  // Initial move after a short delay
+  setTimeout(moveGhostCursor, 1000);
+  
+  // Move every 3-6 seconds (randomized)
+  function scheduleNextMove() {
+    const delay = 3000 + Math.random() * 3000;
+    setTimeout(() => {
+      moveGhostCursor();
+      scheduleNextMove();
+    }, delay);
+  }
+  
+  scheduleNextMove();
+
+  // Update bounds on resize
+  window.addEventListener('resize', () => {
+    // If cursor is outside new viewport, move it back in
+    const rect = ghostCursor.getBoundingClientRect();
+    if (rect.left > window.innerWidth || rect.top > window.innerHeight) {
+      moveGhostCursor();
+    }
+  });
+}
 });

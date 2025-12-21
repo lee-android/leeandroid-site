@@ -777,7 +777,7 @@ video:-webkit-full-screen {
   will-change: left, top;
 }
 
-/* Hide on mobile */
+
 @media (max-width: 899px) {
   .ghost-cursor {
     position: fixed;
