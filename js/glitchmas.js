@@ -329,8 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
     let autoRotateInterval = null;
     let userInteracting = false;
-    const AUTO_ROTATE_DELAY = 5000; // 5 seconds between slides
-    const INTERACTION_PAUSE = 8000; // 8 seconds pause after user interaction
+    const AUTO_ROTATE_DELAY = 5000;
+    const INTERACTION_PAUSE = 8000;
 
     // Reset scroll position to first slide on load
     carousel.scrollLeft = 0;
@@ -379,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }, INTERACTION_PAUSE);
     }
 
-    // Update current slide and dots on scroll
     carousel.addEventListener('scroll', () => {
       const scrollLeft = carousel.scrollLeft;
       const width = carousel.offsetWidth;
@@ -391,11 +390,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Pause auto-rotate on touch/mouse interaction
     carousel.addEventListener('touchstart', handleUserInteraction, { passive: true });
     carousel.addEventListener('mousedown', handleUserInteraction);
 
-    // Click dots to navigate
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         handleUserInteraction();
@@ -404,8 +401,45 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Initialize
     updateDots(0);
     startAutoRotate();
+  }
+
+  /* ===========================
+     Ghost Cursor Animation
+  =========================== */
+
+  const ghostCursor = document.querySelector('.ghost-cursor');
+
+  if (ghostCursor && window.innerWidth > 899) {
+    let cursorX = Math.random() * (window.innerWidth - 100);
+    let cursorY = Math.random() * (window.innerHeight - 100);
+    
+    ghostCursor.style.left = cursorX + 'px';
+    ghostCursor.style.top = cursorY + 'px';
+
+    function moveGhostCursor() {
+      const padding = 60;
+      const maxX = window.innerWidth - padding;
+      const maxY = document.documentElement.scrollHeight - padding;
+      
+      const newX = padding + Math.random() * (maxX - padding);
+      const newY = padding + Math.random() * (Math.min(maxY, window.innerHeight * 1.5) - padding);
+      
+      ghostCursor.style.left = newX + 'px';
+      ghostCursor.style.top = newY + 'px';
+    }
+
+    setTimeout(moveGhostCursor, 1000);
+    
+    function scheduleNextMove() {
+      const delay = 3000 + Math.random() * 3000;
+      setTimeout(() => {
+        moveGhostCursor();
+        scheduleNextMove();
+      }, delay);
+    }
+    
+    scheduleNextMove();
   }
 });

@@ -760,6 +760,31 @@ video:-webkit-full-screen {
 }
 
 /* ===============================
+   Ghost Cursor
+================================ */
+
+.ghost-cursor {
+  position: fixed;
+  width: 18px;
+  height: auto;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: 
+    left 3s cubic-bezier(0.25, 0.1, 0.25, 1),
+    top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: left, top;
+}
+
+/* Hide on mobile */
+@media (max-width: 899px) {
+  .ghost-cursor {
+    display: none;
+  }
+}
+
+/* ===============================
    Desktop Layout
 ================================ */
 
