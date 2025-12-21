@@ -814,6 +814,47 @@ video:-webkit-full-screen {
   opacity: 1;
 }
 
+/* ===============================
+   Poster Labels
+================================ */
+
+.poster-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.poster-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+  box-shadow: 0 0 4px rgba(74, 222, 128, 0.6);
+}
+
+/* "Up Next" gets a brighter indicator */
+.poster[data-index="0"] .poster-label::before {
+  background: #facc15;
+  box-shadow: 0 0 4px rgba(250, 204, 21, 0.6);
+}
+
 /* Carousel dots (mobile only) */
 .carousel-dots {
   display: none;

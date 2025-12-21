@@ -356,74 +356,166 @@ if (presetSelect) {
   video.addEventListener('contextmenu', e => e.preventDefault());
 
   /* ===========================
-     SINGLE CHANNEL BROADCAST
-  =========================== */
+   SINGLE CHANNEL BROADCAST
+=========================== */
 
-  const PROGRAMS = [
-    {
-      title: 'A Glitchmas Story',
-      src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
-      duration: 5556
-    },
-    {
-      title: 'Grinch Stole Grinchmas',
-      src: 'https://vz-b741991d-4ed.b-cdn.net/9b7d2aec-4eb0-47a2-9922-2abd26097a1c/playlist.m3u8',
-      duration: 4886
-    }
-  ];
+const PROGRAMS = [
+  {
+    title: 'A Glitchmas Story',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
+    duration: 5556,
+    poster: 'imgs/posters/glitchmas-story.gif',
+    posterStill: 'imgs/posters/glitchmas-story-still.jpg'
+  },
+  {
+    title: 'Grinch Stole Grinchmas',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/9b7d2aec-4eb0-47a2-9922-2abd26097a1c/playlist.m3u8',
+    duration: 4886,
+    poster: 'imgs/posters/grinch.gif',
+    posterStill: 'imgs/posters/grinch-still.jpg'
+  },
+  {
+    // Placeholder - Program 3
+    title: 'Program 3',
+    src: '',
+    duration: 3600,
+    poster: 'https://placehold.co/320x240/1a1a1a/666?text=Coming+Soon',
+    posterStill: 'https://placehold.co/320x240/1a1a1a/444?text=Program+3'
+  },
+  {
+    // Placeholder - Program 4
+    title: 'Program 4',
+    src: '',
+    duration: 3600,
+    poster: 'https://placehold.co/320x240/1a1a1a/666?text=Coming+Soon',
+    posterStill: 'https://placehold.co/320x240/1a1a1a/444?text=Program+4'
+  }
+];
 
-  const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
-  const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
+const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
+const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
 
-  function getLiveProgram() {
-    let elapsed = Math.floor((Date.now() - BROADCAST_START) / 1000);
-    if (elapsed < 0) elapsed = 0;
-    elapsed = TOTAL_DURATION ? elapsed % TOTAL_DURATION : 0;
+let currentProgramIndex = 0;
 
-    let index = 0;
-    for (const p of PROGRAMS) {
-      if (elapsed < p.duration) return { program: p, offset: elapsed, index };
-      elapsed -= p.duration;
-      index++;
-    }
+function getLiveProgram() {
+  let elapsed = Math.floor((Date.now() - BROADCAST_START) / 1000);
+  if (elapsed < 0) elapsed = 0;
+  elapsed = TOTAL_DURATION ? elapsed % TOTAL_DURATION : 0;
 
-    return { program: PROGRAMS[0], offset: 0, index: 0 };
+  let index = 0;
+  for (const p of PROGRAMS) {
+    if (elapsed < p.duration) return { program: p, offset: elapsed, index };
+    elapsed -= p.duration;
+    index++;
   }
 
-  function loadProgram(program, offsetSeconds) {
-    video.muted = true;
-    video.volume = 0;
+  return { program: PROGRAMS[0], offset: 0, index: 0 };
+}
 
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = program.src;
-      video.addEventListener(
-        'loadedmetadata',
-        () => {
-          try { video.currentTime = offsetSeconds; } catch {}
-          attemptAutoplay();
-        },
-        { once: true }
-      );
-    } else if (window.Hls && Hls.isSupported()) {
-      if (window.hlsInstance) {
-        window.hlsInstance.destroy();
-      }
-      const hls = new Hls({ enableWorker: true });
-      window.hlsInstance = hls;
-      hls.loadSource(program.src);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+/* ===========================
+   Schedule Panel Sync
+=========================== */
+
+const SCHEDULE_LABELS = ['Up Next', 'After That', 'Then'];
+
+function getUpcomingPrograms(currentIndex) {
+  const upcoming = [];
+  for (let i = 1; i <= 3; i++) {
+    const idx = (currentIndex + i) % PROGRAMS.length;
+    upcoming.push(PROGRAMS[idx]);
+  }
+  return upcoming;
+}
+
+function updateSchedulePanel(currentIndex) {
+  const posters = document.querySelectorAll('#scheduleCarousel .poster');
+  const upcoming = getUpcomingPrograms(currentIndex);
+
+  posters.forEach((poster, i) => {
+    const program = upcoming[i];
+    if (!program) return;
+
+    // Update images
+    const mainImg = poster.querySelector('img:not(.poster-still)');
+    const stillImg = poster.querySelector('.poster-still');
+    
+    if (mainImg) mainImg.src = program.poster;
+    if (stillImg) stillImg.src = program.posterStill;
+
+    // Update or create label
+    let label = poster.querySelector('.poster-label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'poster-label';
+      poster.appendChild(label);
+    }
+    label.textContent = SCHEDULE_LABELS[i];
+
+    // Update data attribute for accessibility
+    poster.setAttribute('data-title', program.title);
+  });
+}
+
+/* ===========================
+   Program Loading
+=========================== */
+
+function loadProgram(program, offsetSeconds) {
+  video.muted = true;
+  video.volume = 0;
+
+  // Update page title to reflect current program
+  document.querySelector('.videoPanel .title').textContent = program.title;
+  document.getElementById('nowPlayingTitle').textContent = program.title;
+
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = program.src;
+    video.addEventListener(
+      'loadedmetadata',
+      () => {
         try { video.currentTime = offsetSeconds; } catch {}
         attemptAutoplay();
-      });
+      },
+      { once: true }
+    );
+  } else if (window.Hls && Hls.isSupported()) {
+    if (window.hlsInstance) {
+      window.hlsInstance.destroy();
     }
+    const hls = new Hls({ enableWorker: true });
+    window.hlsInstance = hls;
+    hls.loadSource(program.src);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      try { video.currentTime = offsetSeconds; } catch {}
+      attemptAutoplay();
+    });
 
-    setTimeout(attemptAutoplay, 600);
+  
   }
 
-  const { program, offset, index } = getLiveProgram();
-  let currentProgramIndex = index;
-  loadProgram(program, offset);
+  setTimeout(attemptAutoplay, 600);
+  
+  // Sync schedule panel
+  updateSchedulePanel(currentProgramIndex);
+}
+
+// Initial load
+const { program, offset, index } = getLiveProgram();
+currentProgramIndex = index;
+loadProgram(program, offset);
+
+/* ===========================
+   Program Advancement
+=========================== */
+
+function loadNextProgram() {
+  currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
+  const next = PROGRAMS[currentProgramIndex];
+  loadProgram(next, 0);
+}
+
+video.addEventListener('ended', loadNextProgram);
 
   /* ===========================
      Program advancement
