@@ -780,7 +780,17 @@ video:-webkit-full-screen {
 /* Hide on mobile */
 @media (max-width: 899px) {
   .ghost-cursor {
-    width: 15px;
+    position: fixed;
+  width: 15px;
+  height: auto;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: 
+    left 3s cubic-bezier(0.25, 0.1, 0.25, 1),
+    top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: left, top;
   }
 }
 
