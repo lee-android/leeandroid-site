@@ -130,41 +130,84 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
+  gap: 20px;
 }
 
-.breadcrumb {
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.breadcrumb a {
-  color: var(--text);
-  text-decoration: none;
-}
-
-.breadcrumb a:hover {
-  text-decoration: underline;
-}
-
-.sep {
-  margin: 0 8px;
-  opacity: 0.5;
-}
-
-.tags {
+/* Signal Bars */
+.signal-bars {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 3px;
+  position: relative;
 }
 
-.tag {
-  font-size: 13px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  border: 1px solid #bfbfbf;
-  background: linear-gradient(#ffffff, #efefef);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+.bar {
+  width: 8px;
+  background: linear-gradient(
+    to top,
+    #4a9ce0 0%,
+    #6ab4f0 100%
+  );
+  border-radius: 2px 2px 0 0;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.12s ease-out;
+}
+
+.bar:nth-child(1) {
+  height: 8px;
+}
+
+.bar:nth-child(2) {
+  height: 12px;
+}
+
+.bar:nth-child(3) {
+  height: 16px;
+}
+
+.bar:nth-child(4) {
+  height: 20px;
+}
+
+.bar:nth-child(5) {
+  height: 24px;
+}
+
+.signal-label {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Broadcast Info */
+.broadcast-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.broadcast-time {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.broadcast-station {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.01em;
 }
 
 /* ===============================
@@ -190,8 +233,8 @@ html {
   overflow: hidden;
   background: var(--panel);
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 6px 16px rgba(0, 0, 0, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid #888;
 }
@@ -1075,8 +1118,15 @@ video:-webkit-full-screen {
   }
 
   .top {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .broadcast-info {
+    align-items: flex-end;
+    text-align: right;
   }
 
   .fireplacePanel {

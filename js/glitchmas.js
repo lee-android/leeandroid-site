@@ -148,10 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
     '/audio/wun_two/Snow, Vol. 10/16 - wun two - kristallin [Snow, Vol. 10].mp3'
   ];
 
-  // Shuffle array in place
+  // Shuffle array in place with better randomization
   function shuffleArray(array) {
+    // Use crypto.getRandomValues for better randomization if available
+    const getRandomValue = () => {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return arr[0] / (0xffffffff + 1);
+      }
+      return Math.random();
+    };
+
     for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(getRandomValue() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
@@ -189,15 +199,15 @@ document.addEventListener('DOMContentLoaded', () => {
     audioMap.music.src = nextTrack;
     audioMap.music.load();
     
-    // Randomize start point of new track
+    // Play from beginning when track loads
     audioMap.music.addEventListener('loadedmetadata', () => {
-      randomizeStart(audioMap.music);
       if (fireplaceEnabled && read('musicVol') > 0) {
         audioMap.music.play().catch(() => {});
       }
     }, { once: true });
   });
 
+  // Apply randomizeStart only to ambient tracks (fire, crackle, etc)
   function randomizeStart(audio, tail = 5) {
     const set = () => {
       if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
@@ -208,7 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.addEventListener('canplay', set, { once: true });
   }
 
-  Object.values(audioMap).forEach(randomizeStart);
+  // Only randomize ambient tracks, not music
+  randomizeStart(audioMap.fire);
+  randomizeStart(audioMap.crackle);
+  randomizeStart(audioMap.snowfall);
+  randomizeStart(audioMap.tape);
 
   /* ===========================
      Volume helpers
@@ -756,5 +770,81 @@ video.addEventListener('ended', loadNextProgram);
         moveGhostCursor();
       }
     });
+  }
+
+  /* ===========================
+     Broadcast Clock
+  =========================== */
+
+  const clockElement = document.getElementById('broadcastClock');
+  
+  if (clockElement) {
+    function updateClock() {
+      const now = new Date();
+      
+      // Format time as 12-hour with AM/PM
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      
+      // Get timezone abbreviation
+      const timezoneName = new Intl.DateTimeFormat('en-US', {
+        timeZoneName: 'short'
+      }).format(now).split(' ').pop();
+      
+      clockElement.textContent = `${hours}:${minutes} ${ampm} ${timezoneName}`;
+    }
+    
+    // Update immediately and then every second
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  /* ===========================
+     Signal Bar Fluctuation
+  =========================== */
+
+  const signalBars = document.querySelectorAll('.signal-bars .bar');
+  
+  if (signalBars.length > 0) {
+    function fluctuateSignal() {
+      // Randomly choose 2, 3, or 4 bars (with occasional 5)
+      const rand = Math.random();
+      let activeBars;
+      
+      if (rand < 0.05) {
+        activeBars = 5; // 5% chance for full signal
+      } else if (rand < 0.35) {
+        activeBars = 2; // 30% chance for 2 bars
+      } else if (rand < 0.70) {
+        activeBars = 3; // 35% chance for 3 bars
+      } else {
+        activeBars = 4; // 30% chance for 4 bars
+      }
+      
+      signalBars.forEach((bar, index) => {
+        if (index < activeBars) {
+          bar.style.opacity = '1';
+        } else {
+          bar.style.opacity = '0.2';
+        }
+      });
+    }
+    
+    // Initial fluctuation
+    fluctuateSignal();
+    
+    // Fluctuate erratically - unstable corrupted signal feel
+    function scheduleNextFluctuation() {
+      // Much shorter, more erratic intervals (0.8s to 3.5s)
+      const delay = 800 + Math.random() * 2700;
+      setTimeout(() => {
+        fluctuateSignal();
+        scheduleNextFluctuation();
+      }, delay);
+    }
+    
+    scheduleNextFluctuation();
   }
 });
