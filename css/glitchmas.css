@@ -1,34 +1,28 @@
 /* ===============================
    Base + Variables
 ================================ */
-
 :root {
   --bg: #e9edf3;
   --panel: #fbfbfb;
   --border: #b9b9b9;
   --text: #1c1c1c;
   --muted: #5a5a5a;
-
   --mac-blue-1: #9fc0ff;
   --mac-blue-2: #4b78d8;
-
   /* Aqua chrome */
   --chrome-top: #f6f6f6;
   --chrome-mid: #e8e8e8;
   --chrome-bot: #d4d4d4;
   --chrome-shine: rgba(255, 255, 255, 0.8);
 }
-
 * {
   box-sizing: border-box;
 }
-
 html,
 body {
   margin: 0;
   height: 100%;
 }
-
 body {
   background: radial-gradient(1200px 700px at 20% 0%, #f6f7fb, var(--bg));
   color: var(--text);
@@ -52,7 +46,6 @@ body {
   height: 15px;
   background: transparent;
 }
-
 ::-webkit-scrollbar-track {
   background: linear-gradient(
     to right,
@@ -64,7 +57,6 @@ body {
   border-left: 1px solid #c0c0c0;
   border-right: 1px solid #c0c0c0;
 }
-
 ::-webkit-scrollbar-thumb {
   background: 
     linear-gradient(
@@ -83,7 +75,6 @@ body {
     0 1px 3px rgba(0, 0, 0, 0.15);
   min-height: 40px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: 
     linear-gradient(
@@ -95,7 +86,6 @@ body {
       #eeeeee 100%
     );
 }
-
 ::-webkit-scrollbar-thumb:active {
   background: 
     linear-gradient(
@@ -108,21 +98,17 @@ body {
     );
   border-color: #4a7ab8;
 }
-
 ::-webkit-scrollbar-corner {
   background: #e8e8e8;
 }
-
 /* Firefox */
 html {
   scrollbar-width: auto;
   scrollbar-color: #c8c8c8 #ececec;
 }
-
 /* ===============================
    Header
 ================================ */
-
 .top {
   max-width: 1180px;
   margin: 26px auto 0;
@@ -131,8 +117,9 @@ html {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+  position: relative;
+  z-index: 10;
 }
-
 /* Signal Bars */
 .signal-bars {
   display: flex;
@@ -140,7 +127,6 @@ html {
   gap: 3px;
   position: relative;
 }
-
 .bar {
   width: 8px;
   background: linear-gradient(
@@ -154,27 +140,21 @@ html {
     0 1px 2px rgba(0, 0, 0, 0.2);
   transition: opacity 0.12s ease-out;
 }
-
 .bar:nth-child(1) {
   height: 8px;
 }
-
 .bar:nth-child(2) {
   height: 12px;
 }
-
 .bar:nth-child(3) {
   height: 16px;
 }
-
 .bar:nth-child(4) {
   height: 20px;
 }
-
 .bar:nth-child(5) {
   height: 24px;
 }
-
 .signal-label {
   position: absolute;
   left: calc(100% + 10px);
@@ -187,7 +167,6 @@ html {
   white-space: nowrap;
   text-transform: uppercase;
 }
-
 /* Broadcast Info */
 .broadcast-info {
   display: flex;
@@ -195,7 +174,6 @@ html {
   align-items: flex-end;
   gap: 2px;
 }
-
 .broadcast-time {
   font-size: 15px;
   font-weight: 600;
@@ -203,17 +181,14 @@ html {
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
 }
-
 .broadcast-station {
   font-size: 12px;
   color: var(--muted);
   letter-spacing: 0.01em;
 }
-
 /* ===============================
    Layout Grid
 ================================ */
-
 .grid {
   max-width: 1180px;
   margin: 18px auto 0;
@@ -222,12 +197,12 @@ html {
   grid-template-columns: 1.8fr 1fr;
   gap: 18px;
   align-items: start;
+  position: relative;
+  z-index: 10;
 }
-
 /* ===============================
    Panel Chrome (Aqua Style)
 ================================ */
-
 .panelWrap {
   border-radius: 10px;
   overflow: hidden;
@@ -238,7 +213,6 @@ html {
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid #888;
 }
-
 .window-header {
   height: 22px;
   display: flex;
@@ -266,7 +240,6 @@ html {
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
-
 .window-title {
   position: absolute;
   left: 50%;
@@ -278,7 +251,6 @@ html {
   pointer-events: none;
   letter-spacing: -0.02em;
 }
-
 /* Aqua traffic light buttons */
 .window-btn {
   width: 13px;
@@ -290,28 +262,24 @@ html {
     inset 0 2px 2px rgba(255, 255, 255, 0.5),
     0 1px 2px rgba(0, 0, 0, 0.2);
 }
-
 /* Close button - red */
 .window-btn:nth-child(1) {
   background: 
     radial-gradient(circle at 30% 30%, #ff9088 0%, #ff5f57 40%, #e0443d 100%);
   border: 1px solid #c43c35;
 }
-
 /* Minimize button - yellow */
 .window-btn:nth-child(2) {
   background: 
     radial-gradient(circle at 30% 30%, #ffe066 0%, #ffbd2e 40%, #e0a020 100%);
   border: 1px solid #c49a1a;
 }
-
 /* Zoom button - green */
 .window-btn:nth-child(3) {
   background: 
     radial-gradient(circle at 30% 30%, #6aea6a 0%, #28c840 40%, #1ba030 100%);
   border: 1px solid #1a9028;
 }
-
 /* Glossy highlight on buttons */
 .window-btn::before {
   content: '';
@@ -327,29 +295,24 @@ html {
   );
   border-radius: 50%;
 }
-
 .panel {
   padding: 18px;
   background: var(--panel);
 }
-
 /* ===============================
    Video
 ================================ */
-
 .title {
   margin: 0 0 6px;
   font-size: 34px;
   letter-spacing: -0.02em;
 }
-
 .desc {
   margin: 0 0 14px;
   font-size: 15px;
   color: #333;
   line-height: 1.5;
 }
-
 .playerWrap {
   width: 100%;
   border-radius: 8px;
@@ -360,7 +323,6 @@ html {
     inset 0 1px 3px rgba(0, 0, 0, 0.3),
     0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .player {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -370,18 +332,15 @@ html {
   opacity: 0;
   transition: opacity 320ms ease-out;
 }
-
 .player.is-ready {
   opacity: 1;
 }
-
 video::cue {
   font-family: "Chicago", system-ui, sans-serif;
   font-size: 14px;
   color: #fff;
   background: rgba(0,0,0,0.65);
 }
-
 /* Fullscreen fill */
 video:fullscreen,
 video:-webkit-full-screen {
@@ -390,11 +349,9 @@ video:-webkit-full-screen {
   object-fit: cover;
   background: #000;
 }
-
 /* ===============================
    Native Video Controls
 ================================ */
-
 /* Mobile */
 @media (max-width: 768px) {
   video::-webkit-media-controls-panel {
@@ -404,22 +361,18 @@ video:-webkit-full-screen {
       rgba(0, 0, 0, 0)
     );
   }
-
   video::-webkit-media-controls {
     opacity: 0.85;
   }
-
   video::-webkit-media-controls-timeline {
     display: none;
   }
 }
-
 /* Desktop */
 @media (min-width: 769px) {
   video {
     pointer-events: none;
   }
-
   video::-webkit-media-controls,
   video::-webkit-media-controls-panel,
   video::-webkit-media-controls-enclosure {
@@ -428,33 +381,27 @@ video:-webkit-full-screen {
     visibility: hidden;
   }
 }
-
 /* ===============================
    Fireplace Controls
 ================================ */
-
 .fireplacePanel {
   margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 .button-row {
   display: grid;
   grid-template-columns: 150px 180px;
   gap: 10px;
 }
-
 .fireplacePanel.fire-on {
   animation: ember 6s ease-in-out infinite;
 }
-
 @keyframes ember {
   0%, 100% { box-shadow: 0 0 0 rgba(255,180,90,0); }
   50% { box-shadow: 0 0 14px rgba(255,180,90,0.15); }
 }
-
 /* Aqua-style button */
 .btn {
   border-radius: 5px;
@@ -478,7 +425,6 @@ video:-webkit-full-screen {
     0 1px 2px rgba(0, 0, 0, 0.15);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
-
 .btn:hover {
   background: 
     linear-gradient(
@@ -490,7 +436,6 @@ video:-webkit-full-screen {
       #f8f8f8 100%
     );
 }
-
 .btn:active {
   background: 
     linear-gradient(
@@ -503,25 +448,21 @@ video:-webkit-full-screen {
     );
   border-color: #5a90c0;
 }
-
 /* ===============================
    Preset Dropdown (Aqua Style)
 ================================ */
-
 .preset-select-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
 }
-
 .preset-select-wrap label {
   font-size: 12px;
   font-weight: 500;
   color: #333;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
-
 .preset-select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -551,7 +492,6 @@ video:-webkit-full-screen {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   min-width: 140px;
 }
-
 .preset-select:hover {
   background: 
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") 
@@ -565,7 +505,6 @@ video:-webkit-full-screen {
       #f8f8f8 100%
     );
 }
-
 .preset-select:focus {
   outline: none;
   border-color: #5a90c0;
@@ -573,7 +512,6 @@ video:-webkit-full-screen {
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 0 0 2px rgba(74, 144, 216, 0.3);
 }
-
 .preset-select:active {
   background: 
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23fff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") 
@@ -590,11 +528,9 @@ video:-webkit-full-screen {
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
-
 /* ===============================
    Sliders (Aqua Style)
 ================================ */
-
 .sliders {
   opacity: 1;
   transform: translateY(0);
@@ -613,17 +549,14 @@ video:-webkit-full-screen {
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 1px 3px rgba(0, 0, 0, 0.08);
 }
-
 .sliders.is-hidden {
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
 }
-
 .hidden {
   display: none !important;
 }
-
 .slider {
   display: grid;
   grid-template-columns: 90px 1fr 40px;
@@ -632,18 +565,15 @@ video:-webkit-full-screen {
   border-radius: 6px;
   align-items: center;
 }
-
 .slider:nth-child(odd) {
   background: rgba(255, 255, 255, 0.5);
 }
-
 .slider span {
   font-size: 12px;
   font-weight: 500;
   color: #333;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
-
 .slider::after {
   content: attr(data-val);
   font-size: 11px;
@@ -651,7 +581,6 @@ video:-webkit-full-screen {
   text-align: right;
   font-weight: 500;
 }
-
 /* Aqua Range Slider */
 .slider input[type="range"] {
   -webkit-appearance: none;
@@ -661,7 +590,6 @@ video:-webkit-full-screen {
   background: transparent;
   cursor: pointer;
 }
-
 /* Track */
 .slider input[type="range"]::-webkit-slider-runnable-track {
   height: 6px;
@@ -677,7 +605,6 @@ video:-webkit-full-screen {
   box-shadow:
     inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-
 .slider input[type="range"]::-moz-range-track {
   height: 6px;
   border-radius: 3px;
@@ -692,7 +619,6 @@ video:-webkit-full-screen {
   box-shadow:
     inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-
 /* Thumb - Aqua blue gel style */
 .slider input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -716,7 +642,6 @@ video:-webkit-full-screen {
     inset 0 -2px 4px rgba(0, 0, 0, 0.15),
     0 2px 4px rgba(0, 0, 0, 0.3);
 }
-
 .slider input[type="range"]::-moz-range-thumb {
   width: 18px;
   height: 18px;
@@ -736,7 +661,6 @@ video:-webkit-full-screen {
     inset 0 -2px 4px rgba(0, 0, 0, 0.15),
     0 2px 4px rgba(0, 0, 0, 0.3);
 }
-
 /* Thumb hover */
 .slider input[type="range"]::-webkit-slider-thumb:hover {
   background: 
@@ -748,7 +672,6 @@ video:-webkit-full-screen {
       #3078c0 100%
     );
 }
-
 .slider input[type="range"]::-moz-range-thumb:hover {
   background: 
     radial-gradient(circle at 35% 35%, 
@@ -759,7 +682,6 @@ video:-webkit-full-screen {
       #3078c0 100%
     );
 }
-
 /* Thumb active/pressed */
 .slider input[type="range"]::-webkit-slider-thumb:active {
   background: 
@@ -775,7 +697,6 @@ video:-webkit-full-screen {
     inset 0 -2px 4px rgba(0, 0, 0, 0.2),
     0 1px 2px rgba(0, 0, 0, 0.4);
 }
-
 .slider input[type="range"]::-moz-range-thumb:active {
   background: 
     radial-gradient(circle at 35% 35%, 
@@ -790,12 +711,10 @@ video:-webkit-full-screen {
     inset 0 -2px 4px rgba(0, 0, 0, 0.2),
     0 1px 2px rgba(0, 0, 0, 0.4);
 }
-
 /* Focus outline */
 .slider input[type="range"]:focus {
   outline: none;
 }
-
 .slider input[type="range"]:focus::-webkit-slider-thumb {
   box-shadow:
     inset 0 2px 4px rgba(255, 255, 255, 0.5),
@@ -803,27 +722,22 @@ video:-webkit-full-screen {
     0 2px 4px rgba(0, 0, 0, 0.3),
     0 0 0 3px rgba(74, 156, 224, 0.3);
 }
-
 /* ===============================
    Schedule
 ================================ */
-
 .schedulePanel h3 {
   margin: 0 0 6px;
 }
-
 .schedulePanel p {
   margin: 0 0 14px;
   color: var(--muted);
 }
-
 .schedule-posters {
   display: flex;
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
 }
-
 .poster {
   width: 180px;
   aspect-ratio: 16 / 9;
@@ -837,14 +751,12 @@ video:-webkit-full-screen {
     inset 0 1px 2px rgba(0, 0, 0, 0.2),
     0 2px 6px rgba(0, 0, 0, 0.15);
 }
-
 .poster:hover {
   transform: translateY(-2px);
   box-shadow:
     inset 0 1px 2px rgba(0, 0, 0, 0.2),
     0 6px 16px rgba(0, 0, 0, 0.2);
 }
-
 .poster img {
   position: absolute;
   inset: 0;
@@ -852,20 +764,16 @@ video:-webkit-full-screen {
   height: 100%;
   object-fit: cover;
 }
-
 .poster-still {
   opacity: 0;
   transition: opacity 180ms ease;
 }
-
 .poster:hover .poster-still {
   opacity: 1;
 }
-
 /* ===============================
    Poster Labels
 ================================ */
-
 .poster-label {
   position: absolute;
   bottom: 8px;
@@ -884,7 +792,6 @@ video:-webkit-full-screen {
   pointer-events: none;
   z-index: 2;
 }
-
 .poster-label::before {
   content: '';
   display: inline-block;
@@ -896,29 +803,24 @@ video:-webkit-full-screen {
   vertical-align: middle;
   box-shadow: 0 0 4px rgba(74, 222, 128, 0.6);
 }
-
 /* "Up Next" gets a brighter indicator */
 .poster[data-index="0"] .poster-label::before {
   background: #facc15;
   box-shadow: 0 0 4px rgba(250, 204, 21, 0.6);
 }
-
 /* Carousel dots (mobile only) */
 .carousel-dots {
   display: none;
 }
-
 /* ===============================
    Chat
 ================================ */
-
 .chatPanel {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
 }
-
 .chatHeader {
   display: flex;
   justify-content: space-between;
@@ -926,13 +828,11 @@ video:-webkit-full-screen {
   margin-bottom: 10px;
   flex-shrink: 0;
 }
-
 .chatEmbed {
   flex: 1;
   overflow: hidden;
   position: relative;
 }
-
 .chatEmbed iframe {
   width: 100%;
   height: 500px;
@@ -941,11 +841,9 @@ video:-webkit-full-screen {
   display: block;
   box-sizing: border-box;
 }
-
 /* ===============================
    Ghost Cursor
 ================================ */
-
 .ghost-cursor {
   position: fixed;
   width: 18px;
@@ -959,8 +857,6 @@ video:-webkit-full-screen {
     top 3s cubic-bezier(0.25, 0.1, 0.25, 1);
   will-change: left, top;
 }
-
-
 @media (max-width: 899px) {
   .ghost-cursor {
     position: fixed;
@@ -976,23 +872,19 @@ video:-webkit-full-screen {
   will-change: left, top;
   }
 }
-
 /* ===============================
    Desktop Layout
 ================================ */
-
 @media (min-width: 900px) {
   .videoWrap {
     grid-column: 1;
     grid-row: 1 / 3;
   }
-
   .chatWrap {
     grid-column: 2;
     grid-row: 1;
     margin-top: 36px;
   }
-
   .scheduleWrap {
     grid-column: 1 / -1;
     grid-row: 3;
@@ -1000,29 +892,23 @@ video:-webkit-full-screen {
     justify-self: center;
     margin-left: -8%;
   }
-
   .poster {
     width: 180px;
   }
-
   .carousel-dots {
     display: none !important;
   }
 }
-
 /* ===============================
    Mobile Layout
 ================================ */
-
 @media (max-width: 899px) {
   .grid {
     grid-template-columns: 1fr;
   }
-
   .videoWrap {
     order: 1;
   }
-
   .scheduleWrap {
     order: 2;
     width: 75%;
@@ -1030,20 +916,16 @@ video:-webkit-full-screen {
     justify-self: start;
     margin-left: 8%;
   }
-
   .schedulePanel {
     padding: 14px;
   }
-
   .schedulePanel h3 {
     font-size: 15px;
   }
-
   .schedulePanel p {
     font-size: 13px;
     margin-bottom: 12px;
   }
-
   /* Carousel container */
   .schedule-posters {
     display: flex;
@@ -1058,11 +940,9 @@ video:-webkit-full-screen {
     -ms-overflow-style: none;
     justify-content: flex-start;
   }
-
   .schedule-posters::-webkit-scrollbar {
     display: none;
   }
-
   .poster {
     flex: 0 0 100%;
     min-width: 100%;
@@ -1073,7 +953,6 @@ video:-webkit-full-screen {
     aspect-ratio: 4 / 3;
     margin: 0;
   }
-
   /* Carousel dots */
   .carousel-dots {
     display: flex;
@@ -1081,7 +960,6 @@ video:-webkit-full-screen {
     gap: 8px;
     margin-top: 12px;
   }
-
   .carousel-dot {
     width: 8px;
     height: 8px;
@@ -1098,7 +976,6 @@ video:-webkit-full-screen {
     padding: 0;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
-
   .carousel-dot.active {
     background: 
       linear-gradient(
@@ -1111,17 +988,15 @@ video:-webkit-full-screen {
       inset 0 1px 0 rgba(255, 255, 255, 0.4),
       0 0 4px rgba(74, 144, 216, 0.5);
   }
-
   .chatWrap {
     order: 3;
     width: 92%;
   }
-
   .top {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 10px;
   }
 
   .broadcast-info {
@@ -1129,22 +1004,34 @@ video:-webkit-full-screen {
     text-align: right;
   }
 
+  .broadcast-station {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  /* Force line break before "Channel 25" on mobile */
+  .channel-text::before {
+    content: "\A";
+    white-space: pre;
+  }
+
+  /* Hide bullet on mobile since we're breaking the line */
+  .break-mobile {
+    display: none;
+  }
   .fireplacePanel {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
-
   .button-row {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
-
   .button-row .btn {
     width: 100%;
   }
-
   #fullscreenBtn {
     display: none;
   }
