@@ -155,23 +155,11 @@ html {
 .bar:nth-child(5) {
   height: 24px;
 }
-.signal-label {
-  position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-  white-space: nowrap;
-  text-transform: uppercase;
-}
 /* Broadcast Info */
 .broadcast-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 2px;
 }
 .broadcast-time {
@@ -1000,8 +988,8 @@ video:-webkit-full-screen {
   }
 
   .broadcast-info {
-    align-items: flex-end;
-    text-align: right;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .broadcast-station {

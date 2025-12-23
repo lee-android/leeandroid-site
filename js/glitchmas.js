@@ -148,35 +148,52 @@ document.addEventListener('DOMContentLoaded', () => {
     '/audio/wun_two/Snow, Vol. 10/16 - wun two - kristallin [Snow, Vol. 10].mp3'
   ];
 
-  // Shuffle array in place with better randomization
-  function shuffleArray(array) {
-    // Use crypto.getRandomValues for better randomization if available
-    const getRandomValue = () => {
-      if (window.crypto && window.crypto.getRandomValues) {
-        const arr = new Uint32Array(1);
-        window.crypto.getRandomValues(arr);
-        return arr[0] / (0xffffffff + 1);
-      }
-      return Math.random();
-    };
-
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(getRandomValue() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  // Better randomization using crypto API
+  function getRandomValue() {
+    if (window.crypto && window.crypto.getRandomValues) {
+      const arr = new Uint32Array(1);
+      window.crypto.getRandomValues(arr);
+      return arr[0] / (0xffffffff + 1);
     }
-    return array;
+    return Math.random();
   }
 
-  // Create shuffled playlist
-  const shuffledPlaylist = shuffleArray([...MUSIC_PLAYLIST]);
-  let currentMusicIndex = 0;
+  // Get random track, avoiding recently played tracks
+  const recentTracks = [];
+  const RECENT_LIMIT = 8; // Don't repeat any of the last 8 tracks
 
+  function getRandomTrack() {
+    // Filter out recently played tracks
+    const availableTracks = MUSIC_PLAYLIST.filter(track => !recentTracks.includes(track));
+    
+    // If we've somehow played everything, clear history except last track
+    if (availableTracks.length === 0) {
+      const lastTrack = recentTracks[recentTracks.length - 1];
+      recentTracks.length = 0;
+      recentTracks.push(lastTrack);
+      return getRandomTrack();
+    }
+    
+    // Pick random track from available ones
+    const randomIndex = Math.floor(getRandomValue() * availableTracks.length);
+    const selectedTrack = availableTracks[randomIndex];
+    
+    // Add to recent history
+    recentTracks.push(selectedTrack);
+    if (recentTracks.length > RECENT_LIMIT) {
+      recentTracks.shift(); // Remove oldest
+    }
+    
+    return selectedTrack;
+  }
+
+  // Start with a random track
   const audioMap = {
     fire: new Audio('/audio/fire.mp3'),
     crackle: new Audio('/audio/crackle.mp3'),
     snowfall: new Audio('/audio/snowfall.mp3'),
     tape: new Audio('/audio/tape-noise.mp3'),
-    music: new Audio(shuffledPlaylist[0])
+    music: new Audio(getRandomTrack())
   };
 
   // Set looping for ambient tracks (but NOT music)
@@ -184,17 +201,16 @@ document.addEventListener('DOMContentLoaded', () => {
   audioMap.crackle.loop = true;
   audioMap.snowfall.loop = true;
   audioMap.tape.loop = true;
-  audioMap.music.loop = false; // Music will advance through playlist
+  audioMap.music.loop = false; // Music will pick new random track on end
 
   Object.values(audioMap).forEach(a => {
     a.preload = 'auto';
     a.volume = 0;
   });
 
-  // Handle music track ending - advance to next in playlist
+  // Handle music track ending - pick new random track
   audioMap.music.addEventListener('ended', () => {
-    currentMusicIndex = (currentMusicIndex + 1) % shuffledPlaylist.length;
-    const nextTrack = shuffledPlaylist[currentMusicIndex];
+    const nextTrack = getRandomTrack();
     
     audioMap.music.src = nextTrack;
     audioMap.music.load();
@@ -835,10 +851,10 @@ video.addEventListener('ended', loadNextProgram);
     // Initial fluctuation
     fluctuateSignal();
     
-    // Fluctuate erratically - unstable corrupted signal feel
+    // Fluctuate rapidly - sketchy, unstable connection
     function scheduleNextFluctuation() {
-      // Much shorter, more erratic intervals (0.8s to 3.5s)
-      const delay = 800 + Math.random() * 2700;
+      // Very short, erratic intervals (0.3s to 1.5s)
+      const delay = 300 + Math.random() * 1200;
       setTimeout(() => {
         fluctuateSignal();
         scheduleNextFluctuation();
