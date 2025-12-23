@@ -26,9 +26,16 @@ body {
   min-height: 100vh;
 }
 body {
-  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(249,151,63,1) 0%, rgba(249,210,45,1) 90% );
-  background-size: 200% 200%;
-  animation: gradientMove 25s ease-in-out infinite;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(147, 197, 253, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(253, 186, 116, 0.25) 0%, transparent 50%),
+    linear-gradient(135deg, #e0e7ff 0%, #fce7f3 25%, #fef3c7 50%, #dbeafe 75%, #e0e7ff 100%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 300% 300%;
+  animation: 
+    meshMove1 20s ease-in-out infinite,
+    meshMove2 25s ease-in-out infinite reverse,
+    meshMove3 30s ease-in-out infinite;
   color: var(--text);
   font-family:
     "Chicago",
@@ -42,19 +49,19 @@ body {
   position: relative;
 }
 
-@keyframes gradientMove {
-  0%, 100% {
-    background-position: 50% 50%;
-  }
-  25% {
-    background-position: 30% 40%;
-  }
-  50% {
-    background-position: 70% 60%;
-  }
-  75% {
-    background-position: 40% 70%;
-  }
+@keyframes meshMove1 {
+  0%, 100% { background-position: 0% 50%, 0% 0%, 0% 0%, 0% 0%; }
+  50% { background-position: 100% 50%, 0% 0%, 0% 0%, 0% 0%; }
+}
+
+@keyframes meshMove2 {
+  0%, 100% { background-position: 0% 0%, 100% 100%, 0% 0%, 0% 0%; }
+  50% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%; }
+}
+
+@keyframes meshMove3 {
+  0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 50%; }
+  50% { background-position: 0% 0%, 0% 0%, 0% 0%, 100% 50%; }
 }
 
 /* Frosted glass overlay */
