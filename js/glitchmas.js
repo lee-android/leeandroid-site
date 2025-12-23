@@ -961,4 +961,44 @@ video.addEventListener('ended', loadNextProgram);
       }
     });
   }
+
+  /* ===========================
+     Signal Alert Modal
+  =========================== */
+
+  const signalBarsContainer = document.querySelector('.signal-bars');
+  const signalModal = document.getElementById('signalModal');
+  const signalModalOk = document.getElementById('signalModalOk');
+  const signalModalClose = document.getElementById('signalModalClose');
+
+  if (signalBarsContainer && signalModal && signalModalOk && signalModalClose) {
+    // Show modal when signal bars are clicked
+    signalBarsContainer.addEventListener('click', () => {
+      signalModal.style.display = 'flex';
+    });
+
+    // Hide modal when OK button is clicked
+    signalModalOk.addEventListener('click', () => {
+      signalModal.style.display = 'none';
+    });
+
+    // Hide modal when red close button is clicked
+    signalModalClose.addEventListener('click', () => {
+      signalModal.style.display = 'none';
+    });
+
+    // Hide modal when clicking outside the panel
+    signalModal.addEventListener('click', (e) => {
+      if (e.target === signalModal) {
+        signalModal.style.display = 'none';
+      }
+    });
+
+    // Hide modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && signalModal.style.display === 'flex') {
+        signalModal.style.display = 'none';
+      }
+    });
+  }
 });
