@@ -445,9 +445,16 @@ if (presetSelect) {
     setTimeout(() => sliders.classList.add('hidden'), 220);
   }
 
-  fireToggle.addEventListener('click', () =>
-    fireplaceEnabled ? disableFireplace() : enableFireplace()
-  );
+  fireToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    const performAction = () => {
+      fireplaceEnabled ? disableFireplace() : enableFireplace();
+    };
+    
+    // Move ghost cursor to button and perform action
+    ghostCursorClickElement(fireToggle, performAction);
+  });
 
   sliderIds.forEach(id =>
     document.getElementById(id)?.addEventListener('input', setAllVolumesLive)
@@ -789,6 +796,48 @@ video.addEventListener('ended', loadNextProgram);
   }
 
   /* ===========================
+     Ghost Cursor Click Helper
+  =========================== */
+
+  // Function to move ghost cursor to an element and "click" it
+  function ghostCursorClickElement(element, callback) {
+    if (!ghostCursor) {
+      callback();
+      return;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const targetX = rect.left + rect.width / 2;
+    const targetY = rect.top + rect.height / 2;
+
+    // Move cursor to button
+    ghostCursor.style.transition = 'left 0.6s cubic-bezier(0.4, 0, 0.2, 1), top 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+    ghostCursor.style.left = targetX + 'px';
+    ghostCursor.style.top = targetY + 'px';
+
+    // After cursor arrives, do a "click" animation and execute callback
+    setTimeout(() => {
+      // Quick press animation
+      ghostCursor.style.transition = 'transform 0.1s ease';
+      ghostCursor.style.transform = 'scale(0.9)';
+      
+      setTimeout(() => {
+        ghostCursor.style.transform = 'scale(1)';
+        
+        // Execute the actual action
+        setTimeout(() => {
+          callback();
+          
+          // Reset cursor transition for normal movement
+          setTimeout(() => {
+            ghostCursor.style.transition = 'left 3s cubic-bezier(0.25, 0.1, 0.25, 1), top 3s cubic-bezier(0.25, 0.1, 0.25, 1)';
+          }, 100);
+        }, 100);
+      }, 100);
+    }, 600);
+  }
+
+  /* ===========================
      Broadcast Clock
   =========================== */
 
@@ -862,5 +911,54 @@ video.addEventListener('ended', loadNextProgram);
     }
     
     scheduleNextFluctuation();
+  }
+
+  /* ===========================
+     Chat Panel Minimize Easter Egg
+  =========================== */
+
+  const chatMinimizeBtn = document.getElementById('chatMinimizeBtn');
+  const chatPanelWrap = document.getElementById('chatPanelWrap');
+  const chatHeader = document.getElementById('chatHeader');
+  let chatMinimized = false;
+
+  if (chatMinimizeBtn && chatPanelWrap) {
+    chatMinimizeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const performAction = () => {
+        if (chatMinimized) {
+          // Restore
+          chatPanelWrap.classList.remove('minimized');
+          chatPanelWrap.classList.add('restoring');
+          
+          setTimeout(() => {
+            chatPanelWrap.classList.remove('restoring');
+          }, 400);
+          
+          chatMinimized = false;
+        } else {
+          // Minimize
+          chatPanelWrap.classList.add('minimizing');
+          
+          setTimeout(() => {
+            chatPanelWrap.classList.remove('minimizing');
+            chatPanelWrap.classList.add('minimized');
+          }, 400);
+          
+          chatMinimized = true;
+        }
+      };
+
+      // Move ghost cursor to button and perform action
+      ghostCursorClickElement(chatMinimizeBtn, performAction);
+    });
+
+    // Also allow clicking the header when minimized to restore
+    chatHeader.addEventListener('click', (e) => {
+      if (chatMinimized && e.target !== chatMinimizeBtn) {
+        chatMinimizeBtn.click();
+      }
+    });
   }
 });

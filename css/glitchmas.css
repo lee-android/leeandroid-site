@@ -18,13 +18,17 @@
 * {
   box-sizing: border-box;
 }
-html,
-body {
+html {
   margin: 0;
-  height: 100%;
 }
 body {
-  background: radial-gradient(1200px 700px at 20% 0%, #f6f7fb, var(--bg));
+  margin: 0;
+  min-height: 100vh;
+}
+body {
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(249,151,63,1) 0%, rgba(249,210,45,1) 90% );
+  background-size: 200% 200%;
+  animation: gradientMove 25s ease-in-out infinite;
   color: var(--text);
   font-family:
     "Chicago",
@@ -35,6 +39,57 @@ body {
     "Helvetica Neue",
     Arial,
     sans-serif;
+  position: relative;
+}
+
+@keyframes gradientMove {
+  0%, 100% {
+    background-position: 50% 50%;
+  }
+  25% {
+    background-position: 30% 40%;
+  }
+  50% {
+    background-position: 70% 60%;
+  }
+  75% {
+    background-position: 40% 70%;
+  }
+}
+
+/* Frosted glass overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+  backdrop-filter: blur(2px) saturate(1.2);
+  -webkit-backdrop-filter: blur(2px) saturate(1.2);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Frosted glass texture using noise */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ===============================
@@ -803,6 +858,66 @@ video:-webkit-full-screen {
 /* ===============================
    Chat
 ================================ */
+
+/* Yellow button gets pointer cursor */
+#chatMinimizeBtn {
+  cursor: pointer;
+}
+
+#chatMinimizeBtn:hover {
+  filter: brightness(1.1);
+}
+
+/* Genie minimize effect */
+@keyframes genieOut {
+  0% {
+    transform: scale(1, 1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8, 0.6) translateY(20px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.1, 0.05) translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes genieIn {
+  0% {
+    transform: scale(0.1, 0.05) translateY(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0.8, 0.6) translateY(20px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.chatWrap.minimizing .chatPanel {
+  animation: genieOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+  transform-origin: center bottom;
+}
+
+.chatWrap.restoring .chatPanel {
+  animation: genieIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards;
+  transform-origin: center bottom;
+}
+
+.chatWrap.minimized {
+  height: 22px;
+  overflow: hidden;
+}
+
+.chatWrap.minimized .chatPanel {
+  display: none;
+}
+
 .chatPanel {
   display: flex;
   flex-direction: column;
