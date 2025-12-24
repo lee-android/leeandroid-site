@@ -646,47 +646,52 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'xmas_story',
       title: 'A Christmas Story',
+      synopsis: "A kid learns Christmas is product worship. Love is purchases, manhood is merch, and the house becomes a debt shrine. The corporation wins, quietly and forever.",
       src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
       duration: 5556,
       type: 'family',
       poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
-      synopsis: "A kid learns Christmas is product worship. Love is purchases, manhood is merch, and the house becomes a debt shrine. The corporation wins, quietly and forever."
+      posterStill: ''
     },
     {
       id: 'grinch_2000',
       title: 'How the Grinch Stole Christmas',
+      synopsis: "Whoville turns Christmas into a shopping mandate. The Grinch is the only sane reaction to forced cheer and branded joy. They hug it out, then try to sell the healing.",
       src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
       duration: 6216,
       type: 'family',
       poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
-      synopsis: "Whoville turns Christmas into a shopping mandate. The Grinch is the only sane reaction to forced cheer and branded joy. They hug it out, then try to sell the healing."
+      posterStill: ''
     },
     {
       id: 'guardians',
       title: 'Rise of the Guardians',
+      synopsis: "Mythical beings get drafted into unpaid emotional labor. Belief is currency, fear is market share, and magic has to prove ROI to exist. Even wonder needs a KPI.",
       src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
       duration: 5713,
       type: 'family',
       poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
-      synopsis: "Mythical beings get drafted into unpaid emotional labor. Belief is currency, fear is market share, and magic has to prove ROI to exist. Even wonder needs a KPI."
+      posterStill: ''
     },
     {
       id: 'friday_after_next',
       title: 'Friday After Next',
+      synopsis: "Christmas hits the block like a bill. Every warm moment has a hustle attached, every laugh dodges rent panic. The season is real, and so is the trap.",
       src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
       duration: 5160,
       type: 'mature',
       poster: `${POSTER_CDN}FANGB122425_sm.gif`,
-      synopsis: "Christmas hits the block like a bill. Every warm moment has a hustle attached, every laugh dodges rent panic. The season is real, and so is the trap."
+      posterStill: ''
     },
     {
       id: 'bad_santa',
       title: 'Bad Santa',
+      synopsis: "A man in a mall costume tells the truth by lying for a living. Retail smiles, empty eyes, fluorescent despair. Christmas is a grift, then a mirror.",
       src: 'https://vz-b741991d-4ed.b-cdn.net/d421dafe-724e-4a66-8cd8-d655d717d48f/playlist.m3u8', // Add real URL when available
       duration: 5520,
       type: 'mature',
       poster: `${POSTER_CDN}BSGB122425_sm.gif`,
-      synopsis: "A man in a mall costume tells the truth by lying for a living. Retail smiles, empty eyes, fluorescent despair. Christmas is a grift, then a mirror."
+      posterStill: ''
     }
   ];
 
@@ -775,24 +780,25 @@ document.addEventListener('DOMContentLoaded', () => {
     video.volume = 0;
 
     // Update H1 title
-const titleEl = document.querySelector('.videoPanel .title');
-if (titleEl) {
-  titleEl.textContent = program.title;
-}
+    const titleEl = document.querySelector('.videoPanel .title');
+    if (titleEl) {
+      titleEl.textContent = program.title;
+    }
 
-// Update synopsis paragraph
-const descEl = document.querySelector('.videoPanel .desc');
-if (descEl && program.synopsis) {
-  descEl.textContent = program.synopsis;
-}
+    // Update synopsis paragraph
+    const descEl = document.querySelector('.videoPanel .desc');
+    if (descEl && program.synopsis) {
+      descEl.textContent = program.synopsis;
+    }
 
-    // Update page title to reflect current program
-    document.querySelector('.videoPanel .title').textContent = program.title;
-
-    // Update window header "Now Playing" with program title
+    // Update window header with special rule for Grinch
     const nowPlayingTitle = document.getElementById('nowPlayingTitle');
     if (nowPlayingTitle) {
-      nowPlayingTitle.textContent = program.title;
+      if (program.id === 'grinch_2000') {
+        nowPlayingTitle.textContent = 'Grinch Stole Xmas';
+      } else {
+        nowPlayingTitle.textContent = program.title;
+      }
     }
 
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -1078,22 +1084,27 @@ if (descEl && program.synopsis) {
   }
 
   function glitchmasApplyScheduleUI(state) {
-    // Update window header “Now Playing”
+    // Update window header with special rule for Grinch
     const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-    if (nowPlayingTitle && state.currentProgram?.title) {
-      nowPlayingTitle.textContent = state.currentProgram.title;
+    if (nowPlayingTitle && state.currentProgram) {
+      if (state.currentProgram.id === 'grinch_2000') {
+        nowPlayingTitle.textContent = 'Grinch Stole';
+      } else {
+        nowPlayingTitle.textContent = state.currentProgram.title;
+      }
     }
-    // Update H1 title to match current program
-const titleEl = document.querySelector('.videoPanel .title');
-if (titleEl && state.currentProgram?.title) {
-  titleEl.textContent = state.currentProgram.title;
-}
 
-// Update synopsis paragraph to match current program
-const descEl = document.querySelector('.videoPanel .desc');
-if (descEl && state.currentProgram?.synopsis) {
-  descEl.textContent = state.currentProgram.synopsis;
-}
+    // Update H1 title to match current program
+    const titleEl = document.querySelector('.videoPanel .title');
+    if (titleEl && state.currentProgram?.title) {
+      titleEl.textContent = state.currentProgram.title;
+    }
+
+    // Update synopsis paragraph to match current program
+    const descEl = document.querySelector('.videoPanel .desc');
+    if (descEl && state.currentProgram?.synopsis) {
+      descEl.textContent = state.currentProgram.synopsis;
+    }
 
     // Update next-3 posters
     const posters = document.querySelectorAll('#scheduleCarousel .poster');
