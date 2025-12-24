@@ -667,16 +667,16 @@ const PROGRAMS = [
     src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
     duration: 5556,
     type: 'family',
-    poster: `${POSTER_CDN}ACSGB122425.gif`,
+    poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
     posterStill: ''
   },
   {
     id: 'grinch_2000',
     title: 'How the Grinch Stole Christmas (2000)',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/9b7d2aec-4eb0-47a2-9922-2abd26097a1c/playlist.m3u8',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
     duration: 6216,
     type: 'family',
-    poster: `${POSTER_CDN}GSCGB122425.gif`,
+    poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
     posterStill: ''
   },
   {
@@ -685,7 +685,7 @@ const PROGRAMS = [
     src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
     duration: 5713,
     type: 'family',
-    poster: `${POSTER_CDN}ROTGGM122425.gif`,
+    poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
     posterStill: ''
   },
   {
@@ -694,16 +694,16 @@ const PROGRAMS = [
     src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
     duration: 5160,
     type: 'mature',
-    poster: `${POSTER_CDN}FANGB122425.gif`,
+    poster: `${POSTER_CDN}FANGB122425_sm.gif`,
     posterStill: ''
   },
   {
     id: 'bad_santa',
     title: 'Bad Santa',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+    src: 'https://vz-b741991d-4ed.b-cdn.net/d421dafe-724e-4a66-8cd8-d655d717d48f/playlist.m3u8', // Add real URL when available
     duration: 5520,
     type: 'mature',
-    poster: `${POSTER_CDN}BSGB122425.gif`,
+    poster: `${POSTER_CDN}BSGB122425_sm.gif`,
     posterStill: ''
   }
 ];
@@ -714,54 +714,61 @@ const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
 let currentProgramIndex = 0;
 
 function getLiveProgram(now = new Date()) {
-  // Video selection follows the same deterministic clock schedule as the UI overlay.
-  // This prevents drift and ensures day/night programming matches America/Chicago time.
-  //
-  // NOTE:
-  // - Slot length is 1 hour (GLITCHMAS_SLOT_SECONDS).
-  // - We use elapsed seconds within the current hour as the video offset.
-  // - If a scheduled program has a placeholder stream URL, we fall forward within the
-  //   rotation to the next playable program (so the channel never goes dark).
+  // Video selection follows the same deterministic Chicago schedule as the UI overlay,
+  // BUT advances by the *actual runtime* of each program (not fixed 1-hour slots).
+  // Day/Night still hard-switch at 06:00 / 22:00 America/Chicago for the broadcast illusion.
 
+  const nowUtcMs = Date.now();
   const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
   const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
-  const rotationIds = GLITCHMAS_ROTATIONS[mode] || [];
-
-  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
-  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - windowStartUtc) / 1000));
-
-  const slotIndex = Math.floor(elapsedSeconds / GLITCHMAS_SLOT_SECONDS);
-  const elapsedInSlot = elapsedSeconds % GLITCHMAS_SLOT_SECONDS;
 
   const isPlayable = (prog) => {
     return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
   };
 
-  let scheduledProgram = null;
+  // Use only playable programs for the effective rotation so the guide matches the stream.
+  const baseRotation = GLITCHMAS_ROTATIONS[mode] || [];
+  const rotationIds = baseRotation.filter(id => isPlayable(PROGRAMS_BY_ID[id]));
 
-  if (rotationIds.length) {
-    const currentIdx = slotIndex % rotationIds.length;
+  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
+  const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtc) / 1000));
 
-    // Try scheduled, then fall forward within rotation until we find a playable stream
+  const durationForId = (id) => {
+    const prog = PROGRAMS_BY_ID[id];
+    const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
+    return Math.max(0, d);
+  };
+
+  const cycleSeconds = rotationIds.reduce((sum, id) => sum + durationForId(id), 0);
+
+  let rotationIndex = 0;
+  let offsetInProgram = 0;
+
+  if (rotationIds.length && cycleSeconds > 0) {
+    let t = elapsedSeconds % cycleSeconds;
     for (let i = 0; i < rotationIds.length; i++) {
-      const id = rotationIds[(currentIdx + i) % rotationIds.length];
-      const candidate = PROGRAMS_BY_ID[id];
-      if (isPlayable(candidate)) {
-        scheduledProgram = candidate;
+      const d = durationForId(rotationIds[i]) || 1;
+      if (t < d) {
+        rotationIndex = i;
+        offsetInProgram = t;
         break;
       }
+      t -= d;
     }
   }
 
-  // Last-resort fallback: first playable program in the full PROGRAMS list
+  let scheduledProgram = rotationIds.length ? PROGRAMS_BY_ID[rotationIds[rotationIndex]] : null;
+
+  // Last-resort fallback: first playable program in full PROGRAMS list
   if (!isPlayable(scheduledProgram)) {
     scheduledProgram = PROGRAMS.find(isPlayable) || PROGRAMS[0];
+    offsetInProgram = 0;
   }
 
   const index = Math.max(0, PROGRAMS.findIndex(pgm => pgm.id === scheduledProgram.id));
-
-  return { program: scheduledProgram, offset: elapsedInSlot, index };
+  return { program: scheduledProgram, offset: offsetInProgram, index };
 }
+
 
 
 /* ===========================
@@ -932,28 +939,152 @@ function glitchmasComputeWindowStartUtcMs(now, timeZone) {
 }
 
 function glitchmasGetScheduleState(now = new Date()) {
-  const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
-  const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
-  const rotationIds = GLITCHMAS_ROTATIONS[mode];
+  // Upcoming posters must reflect the *runtime-based* broadcast, including when we are
+  // near a day/night switch (06:00 / 22:00). We calculate which program is live right
+  // now, then walk forward by program runtimes, hard-switching at the boundaries.
 
-  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
-  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - windowStartUtc) / 1000));
+  const isPlayable = (prog) => {
+    return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
+  };
 
-  const slotIndex = Math.floor(elapsedSeconds / GLITCHMAS_SLOT_SECONDS);
-  const currentIdx = rotationIds.length ? (slotIndex % rotationIds.length) : 0;
+  const durationForId = (id) => {
+    const prog = PROGRAMS_BY_ID[id];
+    const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
+    return Math.max(0, d);
+  };
 
-  const currentProgram = PROGRAMS_BY_ID[rotationIds[currentIdx]];
+  const boundaryFor = (mode, atUtcMs) => {
+    const zp = glitchmasGetZonedParts(new Date(atUtcMs), GLITCHMAS_TZ);
 
-  // Next 3 upcoming (wraps; with 3-item rotations this will include the current again as 3rd upcoming)
-  const upcoming = [];
-  for (let i = 1; i <= 3; i++) {
-    const idx = rotationIds.length ? ((currentIdx + i) % rotationIds.length) : 0;
-    const prog = PROGRAMS_BY_ID[rotationIds[idx]];
-    if (prog) upcoming.push(prog);
+    if (mode === 'day') {
+      return glitchmasZonedTimeToUtcMs(
+        { year: zp.year, month: zp.month, day: zp.day, hour: 22, minute: 0, second: 0 },
+        GLITCHMAS_TZ
+      );
+    }
+
+    // night -> boundary at 06:00 (same day if after midnight, next day if >=22:00)
+    if (zp.hour >= 22) {
+      const tomorrow = new Date(atUtcMs + 24 * 3600 * 1000);
+      const tp = glitchmasGetZonedParts(tomorrow, GLITCHMAS_TZ);
+      return glitchmasZonedTimeToUtcMs(
+        { year: tp.year, month: tp.month, day: tp.day, hour: 6, minute: 0, second: 0 },
+        GLITCHMAS_TZ
+      );
+    }
+
+    // 00:00-05:59
+    return glitchmasZonedTimeToUtcMs(
+      { year: zp.year, month: zp.month, day: zp.day, hour: 6, minute: 0, second: 0 },
+      GLITCHMAS_TZ
+    );
+  };
+
+  const runtimeStateAt = (dateObj) => {
+    const nowUtcMs = dateObj.getTime();
+    const p = glitchmasGetZonedParts(dateObj, GLITCHMAS_TZ);
+    const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
+
+    const baseRotation = GLITCHMAS_ROTATIONS[mode] || [];
+    const rotationIds = baseRotation.filter(id => isPlayable(PROGRAMS_BY_ID[id]));
+
+    const windowStartUtcMs = glitchmasComputeWindowStartUtcMs(dateObj, GLITCHMAS_TZ);
+    const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtcMs) / 1000));
+
+    const cycleSeconds = rotationIds.reduce((sum, id) => sum + durationForId(id), 0);
+
+    let rotationIndex = 0;
+    let offsetSeconds = 0;
+
+    if (rotationIds.length && cycleSeconds > 0) {
+      let t = elapsedSeconds % cycleSeconds;
+      for (let i = 0; i < rotationIds.length; i++) {
+        const d = durationForId(rotationIds[i]) || 1;
+        if (t < d) {
+          rotationIndex = i;
+          offsetSeconds = t;
+          break;
+        }
+        t -= d;
+      }
+    }
+
+    const id = rotationIds.length ? rotationIds[rotationIndex] : null;
+    const program = id ? PROGRAMS_BY_ID[id] : null;
+    const dur = id ? durationForId(id) : 0;
+    const startUtcMs = nowUtcMs - (offsetSeconds * 1000);
+    const endUtcMs = startUtcMs + (dur * 1000);
+
+    return {
+      mode,
+      rotationIds,
+      rotationIndex,
+      offsetSeconds,
+      program,
+      startUtcMs,
+      endUtcMs,
+      boundaryUtcMs: boundaryFor(mode, startUtcMs)
+    };
+  };
+
+  // Current program
+  let st = runtimeStateAt(now);
+
+  // If something is off (empty rotation), fall back to first playable in PROGRAMS.
+  if (!st.program || !isPlayable(st.program)) {
+    const fallback = PROGRAMS.find(isPlayable) || PROGRAMS[0];
+    return { mode: st.mode, currentProgram: fallback, upcoming: [fallback, fallback, fallback] };
   }
 
-  return { mode, currentProgram, upcoming };
+  const upcoming = [];
+  let curMode = st.mode;
+  let rotationIds = st.rotationIds;
+  let rotIdx = st.rotationIndex;
+  let curEndUtcMs = st.endUtcMs;
+  let curBoundaryUtcMs = st.boundaryUtcMs;
+
+  for (let i = 0; i < 3; i++) {
+    // If current program would run into the boundary, the next program starts at the boundary.
+    if (curEndUtcMs > curBoundaryUtcMs) {
+      const boundaryStart = curBoundaryUtcMs;
+
+      // Compute the new mode at the boundary time and take the first playable program of that rotation.
+      const boundaryState = runtimeStateAt(new Date(boundaryStart));
+      curMode = boundaryState.mode;
+      rotationIds = boundaryState.rotationIds;
+      rotIdx = 0;
+
+      const nextId = rotationIds.length ? rotationIds[0] : null;
+      const nextProg = nextId ? PROGRAMS_BY_ID[nextId] : null;
+
+      if (nextProg) upcoming.push(nextProg);
+
+      // Advance pointers
+      const d = nextId ? durationForId(nextId) : 0;
+      const startUtcMs = boundaryStart;
+      curEndUtcMs = startUtcMs + d * 1000;
+      curBoundaryUtcMs = boundaryFor(curMode, startUtcMs);
+      continue;
+    }
+
+    // Normal transition within the same rotation
+    const nextIdx = rotationIds.length ? ((rotIdx + 1) % rotationIds.length) : 0;
+    const nextId = rotationIds.length ? rotationIds[nextIdx] : null;
+    const nextProg = nextId ? PROGRAMS_BY_ID[nextId] : null;
+
+    if (nextProg) upcoming.push(nextProg);
+
+    // Advance pointers
+    const d = nextId ? durationForId(nextId) : 0;
+    const startUtcMs = curEndUtcMs;
+    curEndUtcMs = startUtcMs + d * 1000;
+    rotIdx = nextIdx;
+    // boundary doesn't change while staying in the same mode segment
+  }
+
+  return { mode: st.mode, currentProgram: st.program, upcoming };
 }
+
 
 function glitchmasApplyScheduleUI(state) {
   // Update window header “Now Playing”
