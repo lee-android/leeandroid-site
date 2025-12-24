@@ -947,6 +947,34 @@ video:-webkit-full-screen {
   margin-bottom: 10px;
   flex-shrink: 0;
 }
+.chatHeader h2 {
+  margin: 0;
+}
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #ff0000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  animation: pulse-red 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 16px rgba(255, 0, 0, 0.8);
+  }
+}
+
 .chatEmbed {
   flex: 1;
   overflow: hidden;
