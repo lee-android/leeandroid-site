@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function attemptAutoplay() {
     video.muted = true;
     video.playsInline = true;
-    
+
     const playPromise = video.play();
-    
+
     if (playPromise !== undefined) {
       playPromise.catch(() => {
         // Autoplay blocked - add click handler to start
@@ -107,9 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
   //   /audio/wun_two/Snow, Vol. 8/02-wun-two-the-house-snow-vol.-8.mp3
   const MUSIC_ROOT = '/audio/wun_two';
 
-  // Tracks now live at the CDN root with simplified naming (lowercase, hyphens)
+  // Snow, Vol. 10 removed to lighten the load
   const MUSIC_FILES = [
-    // Snow, Vol. 8 (9 tracks)
+    // Snow, Vol. 8 (8 tracks as listed here)
     '02-wun-two-the-house-snow-vol.-8.mp3',
     '03-wun-two-peanut-brigade-feat.-eets-snow-vol.-8.mp3',
     '04-wun-two-pine-snow-vol.-8.mp3',
@@ -131,25 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '09-wun-two-december-shoes-snow-vol.-9.mp3',
     '10-wun-two-winzlig-snow-vol.-9.mp3',
     '11-wun-two-gelid-snow-vol.-9.mp3',
-    '12-wun-two-flakelet-outro-snow-vol.-9.mp3',
-
-    // Snow, Vol. 10 (16 tracks)
-    '01-wun-two-schnee-snow-vol.-10.mp3',
-    '02-wun-two-holli-snow-vol.-10.mp3',
-    '03-wun-two-here-we-are-snow-vol.-10.mp3',
-    '04-wun-two-uoy-snow-vol.-10.mp3',
-    '05-wun-two-candli-snow-vol.-10.mp3',
-    '06-wun-two-snow-drive-snow-vol.-10.mp3',
-    '07-wun-two-herbst-snow-vol.-10.mp3',
-    '08-wun-two-coldzero-snow-vol.-10.mp3',
-    '09-wun-two-laterne-snow-vol.-10.mp3',
-    '10-wun-two-minttea-snow-vol.-10.mp3',
-    '11-wun-two-bergfrost-snow-vol.-10.mp3',
-    '12-wun-two-tog-snow-vol.-10.mp3',
-    '13-wun-two-schneesturm-snow-vol.-10.mp3',
-    '14-wun-two-katz-snow-vol.-10.mp3',
-    '15-wun-two-heimo-snow-vol.-10.mp3',
-    '16-wun-two-kristallin-snow-vol.-10.mp3'
+    '12-wun-two-flakelet-outro-snow-vol.-9.mp3'
   ];
 
   // Infer album folder from the filename suffix (snow-vol.-8 / -9 / -10).
@@ -186,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getRandomTrack() {
     // Filter out recently played tracks
     const availableTracks = MUSIC_PLAYLIST.filter(track => !recentTracks.includes(track));
-    
+
     // If we've somehow played everything, clear history except last track
     if (availableTracks.length === 0) {
       const lastTrack = recentTracks[recentTracks.length - 1];
@@ -194,17 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
       recentTracks.push(lastTrack);
       return getRandomTrack();
     }
-    
+
     // Pick random track from available ones
     const randomIndex = Math.floor(getRandomValue() * availableTracks.length);
     const selectedTrack = availableTracks[randomIndex];
-    
+
     // Add to recent history
     recentTracks.push(selectedTrack);
     if (recentTracks.length > RECENT_LIMIT) {
       recentTracks.shift(); // Remove oldest
     }
-    
+
     return selectedTrack;
   }
 
@@ -232,10 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle music track ending - pick new random track
   audioMap.music.addEventListener('ended', () => {
     const nextTrack = getRandomTrack();
-    
+
     audioMap.music.src = nextTrack;
     audioMap.music.load();
-    
+
     // Play from beginning when track loads
     audioMap.music.addEventListener('loadedmetadata', () => {
       if (fireplaceEnabled && read('musicVol') > 0) {
@@ -340,55 +322,55 @@ document.addEventListener('DOMContentLoaded', () => {
    Presets
 =========================== */
 
-const PRESETS = {
-  videoOnly: {
-    videoVol: 0.5,
-    rumbleVol: 0,
-    crackleVol: 0,
-    snowVol: 0,
-    tapeVol: 0,
-    musicVol: 0
-  },
-  cozy: {
-    videoVol: 0.25,
-    rumbleVol: 0.5,
-    crackleVol: 0.45,
-    snowVol: 0.2,
-    tapeVol: 0.1,
-    musicVol: 0.15
-  },
-  lofi: {
-    videoVol: 0,
-    rumbleVol: 0.3,
-    crackleVol: 0.2,
-    snowVol: 0.35,
-    tapeVol: 0.25,
-    musicVol: 0.4
-  },
-  fireplace: {
-    videoVol: 0,
-    rumbleVol: 0.6,
-    crackleVol: 0.55,
-    snowVol: 0,
-    tapeVol: 0.05,
-    musicVol: 0
+  const PRESETS = {
+    videoOnly: {
+      videoVol: 0.5,
+      rumbleVol: 0,
+      crackleVol: 0,
+      snowVol: 0,
+      tapeVol: 0,
+      musicVol: 0
+    },
+    cozy: {
+      videoVol: 0.25,
+      rumbleVol: 0.5,
+      crackleVol: 0.45,
+      snowVol: 0.2,
+      tapeVol: 0.1,
+      musicVol: 0.15
+    },
+    lofi: {
+      videoVol: 0,
+      rumbleVol: 0.3,
+      crackleVol: 0.2,
+      snowVol: 0.35,
+      tapeVol: 0.25,
+      musicVol: 0.4
+    },
+    fireplace: {
+      videoVol: 0,
+      rumbleVol: 0.6,
+      crackleVol: 0.55,
+      snowVol: 0,
+      tapeVol: 0.05,
+      musicVol: 0
+    }
+  };
+
+  function applyPreset(presetName) {
+    const preset = PRESETS[presetName];
+    if (!preset) return;
+
+    Object.entries(preset).forEach(([id, value]) => {
+      setSlider(id, value);
+    });
+
+    setAllVolumesLive();
   }
-};
 
-function applyPreset(presetName) {
-  const preset = PRESETS[presetName];
-  if (!preset) return;
-
-  Object.entries(preset).forEach(([id, value]) => {
-    setSlider(id, value);
-  });
-
-  setAllVolumesLive();
-}
-
-// Dropdown handler (unified handler is below in mobile section)
-const presetSelect = document.getElementById('presetSelect');
-let currentPreset = 'videoOnly'; // Track current preset
+  // Dropdown handler (unified handler is below in mobile section)
+  const presetSelect = document.getElementById('presetSelect');
+  let currentPreset = 'videoOnly'; // Track current preset
 
   function applyPreset(presetName) {
     const preset = PRESETS[presetName];
@@ -471,7 +453,7 @@ let currentPreset = 'videoOnly'; // Track current preset
 
   fireToggle.addEventListener('click', (e) => {
     e.preventDefault();
-    
+
     // CRITICAL: Unlock audio IMMEDIATELY in the real click handler
     // This must happen before any setTimeout/animation delays
     if (!fireplaceEnabled) {
@@ -482,11 +464,11 @@ let currentPreset = 'videoOnly'; // Track current preset
         a.muted = false;
       });
     }
-    
+
     const performAction = () => {
       fireplaceEnabled ? disableFireplace() : enableFireplace();
     };
-    
+
     // Move ghost cursor to button and perform action
     ghostCursorClickElement(fireToggle, performAction);
   });
@@ -547,7 +529,7 @@ let currentPreset = 'videoOnly'; // Track current preset
       const value = preset[input.id];
       if (value !== undefined) {
         input.value = value;
-        
+
         // Update toggle switch visual state
         if (parseFloat(value) > 0) {
           slider.classList.add('is-on');
@@ -565,7 +547,7 @@ let currentPreset = 'videoOnly'; // Track current preset
     document.querySelectorAll('.slider').forEach(slider => {
       const input = slider.querySelector('input[type="range"]');
       if (!input) return;
-      
+
       if (parseFloat(input.value) > 0) {
         slider.classList.add('is-on');
       } else {
@@ -583,7 +565,7 @@ let currentPreset = 'videoOnly'; // Track current preset
   if (presetSelect) {
     presetSelect.addEventListener('change', (e) => {
       currentPreset = e.target.value;
-      
+
       // Check if mobile at time of change
       if (window.innerWidth <= 899) {
         applyMobilePreset(currentPreset);
@@ -598,23 +580,23 @@ let currentPreset = 'videoOnly'; // Track current preset
   sliders.addEventListener('click', (e) => {
     // Only handle on mobile
     if (window.innerWidth > 899) return;
-    
+
     // Find the slider element that was clicked
     const slider = e.target.closest('.slider');
     if (!slider) return;
-    
+
     // Don't interfere with the preset dropdown
     if (e.target.closest('.preset-select-wrap')) return;
     if (e.target.closest('.preset-select-wrap')) return;
-    
+
     e.preventDefault();
     e.stopPropagation();
-    
+
     const input = slider.querySelector('input[type="range"]');
     if (!input) return;
-    
+
     const isOn = slider.classList.contains('is-on');
-    
+
     if (isOn) {
       slider.classList.remove('is-on');
       input.value = '0';
@@ -622,10 +604,10 @@ let currentPreset = 'videoOnly'; // Track current preset
       slider.classList.add('is-on');
       input.value = '0.5';
     }
-    
+
     // Update volume
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    
+
     console.log('[Mobile] Toggled', input.id, isOn ? 'OFF' : 'ON');
   });
 
@@ -657,344 +639,92 @@ let currentPreset = 'videoOnly'; // Track current preset
    SINGLE CHANNEL BROADCAST
 =========================== */
 
-// CDN for posters
-const POSTER_CDN = 'https://gb--posters.b-cdn.net/';
+  // CDN for posters
+  const POSTER_CDN = 'https://gb--posters.b-cdn.net/';
 
-const PROGRAMS = [
-  {
-    id: 'xmas_story',
-    title: 'A Christmas Story',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
-    duration: 5556,
-    type: 'family',
-    poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
-    posterStill: ''
-  },
-  {
-    id: 'grinch_2000',
-    title: 'How the Grinch Stole Christmas (2000)',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
-    duration: 6216,
-    type: 'family',
-    poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
-    posterStill: ''
-  },
-  {
-    id: 'guardians',
-    title: 'Rise of the Guardians',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
-    duration: 5713,
-    type: 'family',
-    poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
-    posterStill: ''
-  },
-  {
-    id: 'friday_after_next',
-    title: 'Friday After Next',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
-    duration: 5160,
-    type: 'mature',
-    poster: `${POSTER_CDN}FANGB122425_sm.gif`,
-    posterStill: ''
-  },
-  {
-    id: 'bad_santa',
-    title: 'Bad Santa',
-    src: 'https://vz-b741991d-4ed.b-cdn.net/d421dafe-724e-4a66-8cd8-d655d717d48f/playlist.m3u8', // Add real URL when available
-    duration: 5520,
-    type: 'mature',
-    poster: `${POSTER_CDN}BSGB122425_sm.gif`,
-    posterStill: ''
-  }
-];
-
-const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
-const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
-
-let currentProgramIndex = 0;
-
-function getLiveProgram(now = new Date()) {
-  // Video selection follows the same deterministic Chicago schedule as the UI overlay,
-  // BUT advances by the *actual runtime* of each program (not fixed 1-hour slots).
-  // Day/Night still hard-switch at 06:00 / 22:00 America/Chicago for the broadcast illusion.
-
-  const nowUtcMs = Date.now();
-  const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
-  const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
-
-  const isPlayable = (prog) => {
-    return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
-  };
-
-  // Use only playable programs for the effective rotation so the guide matches the stream.
-  const baseRotation = GLITCHMAS_ROTATIONS[mode] || [];
-  const rotationIds = baseRotation.filter(id => isPlayable(PROGRAMS_BY_ID[id]));
-
-  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
-  const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtc) / 1000));
-
-  const durationForId = (id) => {
-    const prog = PROGRAMS_BY_ID[id];
-    const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
-    return Math.max(0, d);
-  };
-
-  const cycleSeconds = rotationIds.reduce((sum, id) => sum + durationForId(id), 0);
-
-  let rotationIndex = 0;
-  let offsetInProgram = 0;
-
-  if (rotationIds.length && cycleSeconds > 0) {
-    let t = elapsedSeconds % cycleSeconds;
-    for (let i = 0; i < rotationIds.length; i++) {
-      const d = durationForId(rotationIds[i]) || 1;
-      if (t < d) {
-        rotationIndex = i;
-        offsetInProgram = t;
-        break;
-      }
-      t -= d;
+  const PROGRAMS = [
+    {
+      id: 'xmas_story',
+      title: 'A Christmas Story',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
+      duration: 5556,
+      type: 'family',
+      poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
+      posterStill: ''
+    },
+    {
+      id: 'grinch_2000',
+      title: 'How the Grinch Stole Christmas (2000)',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
+      duration: 6216,
+      type: 'family',
+      poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
+      posterStill: ''
+    },
+    {
+      id: 'guardians',
+      title: 'Rise of the Guardians',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
+      duration: 5713,
+      type: 'family',
+      poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
+      posterStill: ''
+    },
+    {
+      id: 'friday_after_next',
+      title: 'Friday After Next',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+      duration: 5160,
+      type: 'mature',
+      poster: `${POSTER_CDN}FANGB122425_sm.gif`,
+      posterStill: ''
+    },
+    {
+      id: 'bad_santa',
+      title: 'Bad Santa',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/d421dafe-724e-4a66-8cd8-d655d717d48f/playlist.m3u8', // Add real URL when available
+      duration: 5520,
+      type: 'mature',
+      poster: `${POSTER_CDN}BSGB122425_sm.gif`,
+      posterStill: ''
     }
-  }
+  ];
 
-  let scheduledProgram = rotationIds.length ? PROGRAMS_BY_ID[rotationIds[rotationIndex]] : null;
+  const BROADCAST_START = new Date('2024-12-24T18:00:00-06:00').getTime();
+  const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
 
-  // Last-resort fallback: first playable program in full PROGRAMS list
-  if (!isPlayable(scheduledProgram)) {
-    scheduledProgram = PROGRAMS.find(isPlayable) || PROGRAMS[0];
-    offsetInProgram = 0;
-  }
+  let currentProgramIndex = 0;
 
-  const index = Math.max(0, PROGRAMS.findIndex(pgm => pgm.id === scheduledProgram.id));
-  return { program: scheduledProgram, offset: offsetInProgram, index };
-}
+  function getLiveProgram(now = new Date()) {
+    // Video selection follows the same deterministic Chicago schedule as the UI overlay,
+    // BUT advances by the *actual runtime* of each program (not fixed 1-hour slots).
+    // Day/Night still hard-switch at 06:00 / 22:00 America/Chicago for the broadcast illusion.
 
-
-
-/* ===========================
-   Schedule Panel Sync
-=========================== */
-
-const SCHEDULE_LABELS = ['Up Next', 'After That', 'Then'];
-
-function getUpcomingPrograms(currentIndex) {
-  const upcoming = [];
-  for (let i = 1; i <= 3; i++) {
-    const idx = (currentIndex + i) % PROGRAMS.length;
-    upcoming.push(PROGRAMS[idx]);
-  }
-  return upcoming;
-}
-
-
-/* ===========================
-   Program Loading
-=========================== */
-
-function loadProgram(program, offsetSeconds) {
-  video.muted = true;
-  video.volume = 0;
-
-  // Update page title to reflect current program
-  document.querySelector('.videoPanel .title').textContent = program.title;
-  
-  // Update window header "Now Playing" with program title
-  const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-  if (nowPlayingTitle) {
-    nowPlayingTitle.textContent = program.title;
-  }
-
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = program.src;
-    video.addEventListener(
-      'loadedmetadata',
-      () => {
-        try { video.currentTime = offsetSeconds; } catch {}
-        attemptAutoplay();
-      },
-      { once: true }
-    );
-  } else if (window.Hls && Hls.isSupported()) {
-    if (window.hlsInstance) {
-      window.hlsInstance.destroy();
-    }
-    const hls = new Hls({ enableWorker: true });
-    window.hlsInstance = hls;
-    hls.loadSource(program.src);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      try { video.currentTime = offsetSeconds; } catch {}
-      attemptAutoplay();
-    });
-  }
-
-  setTimeout(attemptAutoplay, 600);
-  
-  // Schedule panel now handled by time-based overlay system
-}
-/* ===========================
-   Time-of-Day Schedule Overlay (UI ONLY)
-   - Clock-based (America/Chicago)
-   - Updates Now Playing + next 3 posters
-   - Does NOT touch video playback
-=========================== */
-
-const GLITCHMAS_TZ = 'America/Chicago';
-
-// Your panel copy says “Replay drops every hour on the hour.”
-// This makes the schedule deterministic without needing movie runtimes.
-const GLITCHMAS_SLOT_SECONDS = 3600;
-
-// Convert PROGRAMS array to lookup object for schedule system
-const PROGRAMS_BY_ID = {};
-PROGRAMS.forEach(p => { PROGRAMS_BY_ID[p.id] = p; });
-
-const GLITCHMAS_ROTATIONS = {
-  day: ['xmas_story', 'grinch_2000', 'guardians'],                 // 06:00–22:00
-  night: ['friday_after_next', 'bad_santa', 'grinch_2000']         // 22:00–06:00
-};
-
-function glitchmasGetZonedParts(date, timeZone) {
-  const dtf = new Intl.DateTimeFormat('en-US', {
-    timeZone,
-    hour12: false,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-
-  const parts = dtf.formatToParts(date);
-  const map = {};
-  for (const p of parts) {
-    if (p.type !== 'literal') map[p.type] = p.value;
-  }
-
-  return {
-    year: Number(map.year),
-    month: Number(map.month),
-    day: Number(map.day),
-    hour: Number(map.hour),
-    minute: Number(map.minute),
-    second: Number(map.second)
-  };
-}
-
-// Returns offset minutes between UTC and target timeZone at a given instant
-function glitchmasGetTimeZoneOffsetMinutes(date, timeZone) {
-  const p = glitchmasGetZonedParts(date, timeZone);
-  const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
-  return (asUTC - date.getTime()) / 60000;
-}
-
-// Convert a “wall clock” time in timeZone into a UTC timestamp (ms)
-function glitchmasZonedTimeToUtcMs({ year, month, day, hour, minute, second }, timeZone) {
-  const baseUtc = Date.UTC(year, month - 1, day, hour, minute, second);
-
-  // Iterate to converge around DST/offset quirks (usually converges in 1–2 steps)
-  let guess = baseUtc;
-  for (let i = 0; i < 3; i++) {
-    const offsetMin = glitchmasGetTimeZoneOffsetMinutes(new Date(guess), timeZone);
-    guess = baseUtc - offsetMin * 60000;
-  }
-  return guess;
-}
-
-function glitchmasComputeWindowStartUtcMs(now, timeZone) {
-  const p = glitchmasGetZonedParts(now, timeZone);
-  const isDay = p.hour >= 6 && p.hour < 22;
-
-  // Day window starts at 06:00 same day.
-  // Night window starts at 22:00 same day, unless it’s after midnight (<06:00),
-  // then it started at 22:00 the previous day.
-  if (isDay) {
-    return glitchmasZonedTimeToUtcMs(
-      { year: p.year, month: p.month, day: p.day, hour: 6, minute: 0, second: 0 },
-      timeZone
-    );
-  }
-
-  // Night mode
-  if (p.hour >= 22) {
-    return glitchmasZonedTimeToUtcMs(
-      { year: p.year, month: p.month, day: p.day, hour: 22, minute: 0, second: 0 },
-      timeZone
-    );
-  }
-
-  // After midnight but before 06:00: use previous day's 22:00
-  const todayMidnightUtc = glitchmasZonedTimeToUtcMs(
-    { year: p.year, month: p.month, day: p.day, hour: 0, minute: 0, second: 0 },
-    timeZone
-  );
-  const prevDay = new Date(todayMidnightUtc - 24 * 3600 * 1000);
-  const prev = glitchmasGetZonedParts(prevDay, timeZone);
-
-  return glitchmasZonedTimeToUtcMs(
-    { year: prev.year, month: prev.month, day: prev.day, hour: 22, minute: 0, second: 0 },
-    timeZone
-  );
-}
-
-function glitchmasGetScheduleState(now = new Date()) {
-  // Upcoming posters must reflect the *runtime-based* broadcast, including when we are
-  // near a day/night switch (06:00 / 22:00). We calculate which program is live right
-  // now, then walk forward by program runtimes, hard-switching at the boundaries.
-
-  const isPlayable = (prog) => {
-    return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
-  };
-
-  const durationForId = (id) => {
-    const prog = PROGRAMS_BY_ID[id];
-    const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
-    return Math.max(0, d);
-  };
-
-  const boundaryFor = (mode, atUtcMs) => {
-    const zp = glitchmasGetZonedParts(new Date(atUtcMs), GLITCHMAS_TZ);
-
-    if (mode === 'day') {
-      return glitchmasZonedTimeToUtcMs(
-        { year: zp.year, month: zp.month, day: zp.day, hour: 22, minute: 0, second: 0 },
-        GLITCHMAS_TZ
-      );
-    }
-
-    // night -> boundary at 06:00 (same day if after midnight, next day if >=22:00)
-    if (zp.hour >= 22) {
-      const tomorrow = new Date(atUtcMs + 24 * 3600 * 1000);
-      const tp = glitchmasGetZonedParts(tomorrow, GLITCHMAS_TZ);
-      return glitchmasZonedTimeToUtcMs(
-        { year: tp.year, month: tp.month, day: tp.day, hour: 6, minute: 0, second: 0 },
-        GLITCHMAS_TZ
-      );
-    }
-
-    // 00:00-05:59
-    return glitchmasZonedTimeToUtcMs(
-      { year: zp.year, month: zp.month, day: zp.day, hour: 6, minute: 0, second: 0 },
-      GLITCHMAS_TZ
-    );
-  };
-
-  const runtimeStateAt = (dateObj) => {
-    const nowUtcMs = dateObj.getTime();
-    const p = glitchmasGetZonedParts(dateObj, GLITCHMAS_TZ);
+    const nowUtcMs = Date.now();
+    const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
     const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
 
+    const isPlayable = (prog) => {
+      return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
+    };
+
+    // Use only playable programs for the effective rotation so the guide matches the stream.
     const baseRotation = GLITCHMAS_ROTATIONS[mode] || [];
     const rotationIds = baseRotation.filter(id => isPlayable(PROGRAMS_BY_ID[id]));
 
-    const windowStartUtcMs = glitchmasComputeWindowStartUtcMs(dateObj, GLITCHMAS_TZ);
-    const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtcMs) / 1000));
+    const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
+    const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtc) / 1000));
+
+    const durationForId = (id) => {
+      const prog = PROGRAMS_BY_ID[id];
+      const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
+      return Math.max(0, d);
+    };
 
     const cycleSeconds = rotationIds.reduce((sum, id) => sum + durationForId(id), 0);
 
     let rotationIndex = 0;
-    let offsetSeconds = 0;
+    let offsetInProgram = 0;
 
     if (rotationIds.length && cycleSeconds > 0) {
       let t = elapsedSeconds % cycleSeconds;
@@ -1002,181 +732,429 @@ function glitchmasGetScheduleState(now = new Date()) {
         const d = durationForId(rotationIds[i]) || 1;
         if (t < d) {
           rotationIndex = i;
-          offsetSeconds = t;
+          offsetInProgram = t;
           break;
         }
         t -= d;
       }
     }
 
-    const id = rotationIds.length ? rotationIds[rotationIndex] : null;
-    const program = id ? PROGRAMS_BY_ID[id] : null;
-    const dur = id ? durationForId(id) : 0;
-    const startUtcMs = nowUtcMs - (offsetSeconds * 1000);
-    const endUtcMs = startUtcMs + (dur * 1000);
+    let scheduledProgram = rotationIds.length ? PROGRAMS_BY_ID[rotationIds[rotationIndex]] : null;
 
-    return {
-      mode,
-      rotationIds,
-      rotationIndex,
-      offsetSeconds,
-      program,
-      startUtcMs,
-      endUtcMs,
-      boundaryUtcMs: boundaryFor(mode, startUtcMs)
-    };
-  };
+    // Last-resort fallback: first playable program in full PROGRAMS list
+    if (!isPlayable(scheduledProgram)) {
+      scheduledProgram = PROGRAMS.find(isPlayable) || PROGRAMS[0];
+      offsetInProgram = 0;
+    }
 
-  // Current program
-  let st = runtimeStateAt(now);
-
-  // If something is off (empty rotation), fall back to first playable in PROGRAMS.
-  if (!st.program || !isPlayable(st.program)) {
-    const fallback = PROGRAMS.find(isPlayable) || PROGRAMS[0];
-    return { mode: st.mode, currentProgram: fallback, upcoming: [fallback, fallback, fallback] };
+    const index = Math.max(0, PROGRAMS.findIndex(pgm => pgm.id === scheduledProgram.id));
+    return { program: scheduledProgram, offset: offsetInProgram, index };
   }
 
-  const upcoming = [];
-  let curMode = st.mode;
-  let rotationIds = st.rotationIds;
-  let rotIdx = st.rotationIndex;
-  let curEndUtcMs = st.endUtcMs;
-  let curBoundaryUtcMs = st.boundaryUtcMs;
+  /* ===========================
+   Schedule Panel Sync
+=========================== */
 
-  for (let i = 0; i < 3; i++) {
-    // If current program would run into the boundary, the next program starts at the boundary.
-    if (curEndUtcMs > curBoundaryUtcMs) {
-      const boundaryStart = curBoundaryUtcMs;
+  const SCHEDULE_LABELS = ['Up Next', 'After That', 'Then'];
 
-      // Compute the new mode at the boundary time and take the first playable program of that rotation.
-      const boundaryState = runtimeStateAt(new Date(boundaryStart));
-      curMode = boundaryState.mode;
-      rotationIds = boundaryState.rotationIds;
-      rotIdx = 0;
+  function getUpcomingPrograms(currentIndex) {
+    const upcoming = [];
+    for (let i = 1; i <= 3; i++) {
+      const idx = (currentIndex + i) % PROGRAMS.length;
+      upcoming.push(PROGRAMS[idx]);
+    }
+    return upcoming;
+  }
 
-      const nextId = rotationIds.length ? rotationIds[0] : null;
+  /* ===========================
+   Program Loading
+=========================== */
+
+  function loadProgram(program, offsetSeconds) {
+    video.muted = true;
+    video.volume = 0;
+
+    // Update page title to reflect current program
+    document.querySelector('.videoPanel .title').textContent = program.title;
+
+    // Update window header "Now Playing" with program title
+    const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+    if (nowPlayingTitle) {
+      nowPlayingTitle.textContent = program.title;
+    }
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = program.src;
+      video.addEventListener(
+        'loadedmetadata',
+        () => {
+          try { video.currentTime = offsetSeconds; } catch {}
+          attemptAutoplay();
+        },
+        { once: true }
+      );
+    } else if (window.Hls && Hls.isSupported()) {
+      if (window.hlsInstance) {
+        window.hlsInstance.destroy();
+      }
+      const hls = new Hls({ enableWorker: true });
+      window.hlsInstance = hls;
+      hls.loadSource(program.src);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        try { video.currentTime = offsetSeconds; } catch {}
+        attemptAutoplay();
+      });
+    }
+
+    setTimeout(attemptAutoplay, 600);
+
+    // Schedule panel now handled by time-based overlay system
+  }
+
+  /* ===========================
+   Time-of-Day Schedule Overlay (UI ONLY)
+   - Clock-based (America/Chicago)
+   - Updates Now Playing + next 3 posters
+   - Does NOT touch video playback
+=========================== */
+
+  const GLITCHMAS_TZ = 'America/Chicago';
+
+  // Your panel copy says “Replay drops every hour on the hour.”
+  // This makes the schedule deterministic without needing movie runtimes.
+  const GLITCHMAS_SLOT_SECONDS = 3600;
+
+  // Convert PROGRAMS array to lookup object for schedule system
+  const PROGRAMS_BY_ID = {};
+  PROGRAMS.forEach(p => { PROGRAMS_BY_ID[p.id] = p; });
+
+  const GLITCHMAS_ROTATIONS = {
+    day: ['xmas_story', 'grinch_2000', 'guardians'],                 // 06:00–22:00
+    night: ['friday_after_next', 'bad_santa', 'grinch_2000']         // 22:00–06:00
+  };
+
+  function glitchmasGetZonedParts(date, timeZone) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+
+    const parts = dtf.formatToParts(date);
+    const map = {};
+    for (const p of parts) {
+      if (p.type !== 'literal') map[p.type] = p.value;
+    }
+
+    return {
+      year: Number(map.year),
+      month: Number(map.month),
+      day: Number(map.day),
+      hour: Number(map.hour),
+      minute: Number(map.minute),
+      second: Number(map.second)
+    };
+  }
+
+  // Returns offset minutes between UTC and target timeZone at a given instant
+  function glitchmasGetTimeZoneOffsetMinutes(date, timeZone) {
+    const p = glitchmasGetZonedParts(date, timeZone);
+    const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+    return (asUTC - date.getTime()) / 60000;
+  }
+
+  // Convert a “wall clock” time in timeZone into a UTC timestamp (ms)
+  function glitchmasZonedTimeToUtcMs({ year, month, day, hour, minute, second }, timeZone) {
+    const baseUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+
+    // Iterate to converge around DST/offset quirks (usually converges in 1–2 steps)
+    let guess = baseUtc;
+    for (let i = 0; i < 3; i++) {
+      const offsetMin = glitchmasGetTimeZoneOffsetMinutes(new Date(guess), timeZone);
+      guess = baseUtc - offsetMin * 60000;
+    }
+    return guess;
+  }
+
+  function glitchmasComputeWindowStartUtcMs(now, timeZone) {
+    const p = glitchmasGetZonedParts(now, timeZone);
+    const isDay = p.hour >= 6 && p.hour < 22;
+
+    // Day window starts at 06:00 same day.
+    // Night window starts at 22:00 same day, unless it’s after midnight (<06:00),
+    // then it started at 22:00 the previous day.
+    if (isDay) {
+      return glitchmasZonedTimeToUtcMs(
+        { year: p.year, month: p.month, day: p.day, hour: 6, minute: 0, second: 0 },
+        timeZone
+      );
+    }
+
+    // Night mode
+    if (p.hour >= 22) {
+      return glitchmasZonedTimeToUtcMs(
+        { year: p.year, month: p.month, day: p.day, hour: 22, minute: 0, second: 0 },
+        timeZone
+      );
+    }
+
+    // After midnight but before 06:00: use previous day's 22:00
+    const todayMidnightUtc = glitchmasZonedTimeToUtcMs(
+      { year: p.year, month: p.month, day: p.day, hour: 0, minute: 0, second: 0 },
+      timeZone
+    );
+    const prevDay = new Date(todayMidnightUtc - 24 * 3600 * 1000);
+    const prev = glitchmasGetZonedParts(prevDay, timeZone);
+
+    return glitchmasZonedTimeToUtcMs(
+      { year: prev.year, month: prev.month, day: prev.day, hour: 22, minute: 0, second: 0 },
+      timeZone
+    );
+  }
+
+  function glitchmasGetScheduleState(now = new Date()) {
+    // Upcoming posters must reflect the *runtime-based* broadcast, including when we are
+    // near a day/night switch (06:00 / 22:00). We calculate which program is live right
+    // now, then walk forward by program runtimes, hard-switching at the boundaries.
+
+    const isPlayable = (prog) => {
+      return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
+    };
+
+    const durationForId = (id) => {
+      const prog = PROGRAMS_BY_ID[id];
+      const d = prog && typeof prog.duration === 'number' ? prog.duration : 0;
+      return Math.max(0, d);
+    };
+
+    const boundaryFor = (mode, atUtcMs) => {
+      const zp = glitchmasGetZonedParts(new Date(atUtcMs), GLITCHMAS_TZ);
+
+      if (mode === 'day') {
+        return glitchmasZonedTimeToUtcMs(
+          { year: zp.year, month: zp.month, day: zp.day, hour: 22, minute: 0, second: 0 },
+          GLITCHMAS_TZ
+        );
+      }
+
+      // night -> boundary at 06:00 (same day if after midnight, next day if >=22:00)
+      if (zp.hour >= 22) {
+        const tomorrow = new Date(atUtcMs + 24 * 3600 * 1000);
+        const tp = glitchmasGetZonedParts(tomorrow, GLITCHMAS_TZ);
+        return glitchmasZonedTimeToUtcMs(
+          { year: tp.year, month: tp.month, day: tp.day, hour: 6, minute: 0, second: 0 },
+          GLITCHMAS_TZ
+        );
+      }
+
+      // 00:00-05:59
+      return glitchmasZonedTimeToUtcMs(
+        { year: zp.year, month: zp.month, day: zp.day, hour: 6, minute: 0, second: 0 },
+        GLITCHMAS_TZ
+      );
+    };
+
+    const runtimeStateAt = (dateObj) => {
+      const nowUtcMs = dateObj.getTime();
+      const p = glitchmasGetZonedParts(dateObj, GLITCHMAS_TZ);
+      const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
+
+      const baseRotation = GLITCHMAS_ROTATIONS[mode] || [];
+      const rotationIds = baseRotation.filter(id => isPlayable(PROGRAMS_BY_ID[id]));
+
+      const windowStartUtcMs = glitchmasComputeWindowStartUtcMs(dateObj, GLITCHMAS_TZ);
+      const elapsedSeconds = Math.max(0, Math.floor((nowUtcMs - windowStartUtcMs) / 1000));
+
+      const cycleSeconds = rotationIds.reduce((sum, id) => sum + durationForId(id), 0);
+
+      let rotationIndex = 0;
+      let offsetSeconds = 0;
+
+      if (rotationIds.length && cycleSeconds > 0) {
+        let t = elapsedSeconds % cycleSeconds;
+        for (let i = 0; i < rotationIds.length; i++) {
+          const d = durationForId(rotationIds[i]) || 1;
+          if (t < d) {
+            rotationIndex = i;
+            offsetSeconds = t;
+            break;
+          }
+          t -= d;
+        }
+      }
+
+      const id = rotationIds.length ? rotationIds[rotationIndex] : null;
+      const program = id ? PROGRAMS_BY_ID[id] : null;
+      const dur = id ? durationForId(id) : 0;
+      const startUtcMs = nowUtcMs - (offsetSeconds * 1000);
+      const endUtcMs = startUtcMs + (dur * 1000);
+
+      return {
+        mode,
+        rotationIds,
+        rotationIndex,
+        offsetSeconds,
+        program,
+        startUtcMs,
+        endUtcMs,
+        boundaryUtcMs: boundaryFor(mode, startUtcMs)
+      };
+    };
+
+    // Current program
+    let st = runtimeStateAt(now);
+
+    // If something is off (empty rotation), fall back to first playable in PROGRAMS.
+    if (!st.program || !isPlayable(st.program)) {
+      const fallback = PROGRAMS.find(isPlayable) || PROGRAMS[0];
+      return { mode: st.mode, currentProgram: fallback, upcoming: [fallback, fallback, fallback] };
+    }
+
+    const upcoming = [];
+    let curMode = st.mode;
+    let rotationIds = st.rotationIds;
+    let rotIdx = st.rotationIndex;
+    let curEndUtcMs = st.endUtcMs;
+    let curBoundaryUtcMs = st.boundaryUtcMs;
+
+    for (let i = 0; i < 3; i++) {
+      // If current program would run into the boundary, the next program starts at the boundary.
+      if (curEndUtcMs > curBoundaryUtcMs) {
+        const boundaryStart = curBoundaryUtcMs;
+
+        // Compute the new mode at the boundary time and take the first playable program of that rotation.
+        const boundaryState = runtimeStateAt(new Date(boundaryStart));
+        curMode = boundaryState.mode;
+        rotationIds = boundaryState.rotationIds;
+        rotIdx = 0;
+
+        const nextId = rotationIds.length ? rotationIds[0] : null;
+        const nextProg = nextId ? PROGRAMS_BY_ID[nextId] : null;
+
+        if (nextProg) upcoming.push(nextProg);
+
+        // Advance pointers
+        const d = nextId ? durationForId(nextId) : 0;
+        const startUtcMs = boundaryStart;
+        curEndUtcMs = startUtcMs + d * 1000;
+        curBoundaryUtcMs = boundaryFor(curMode, startUtcMs);
+        continue;
+      }
+
+      // Normal transition within the same rotation
+      const nextIdx = rotationIds.length ? ((rotIdx + 1) % rotationIds.length) : 0;
+      const nextId = rotationIds.length ? rotationIds[nextIdx] : null;
       const nextProg = nextId ? PROGRAMS_BY_ID[nextId] : null;
 
       if (nextProg) upcoming.push(nextProg);
 
       // Advance pointers
       const d = nextId ? durationForId(nextId) : 0;
-      const startUtcMs = boundaryStart;
+      const startUtcMs = curEndUtcMs;
       curEndUtcMs = startUtcMs + d * 1000;
-      curBoundaryUtcMs = boundaryFor(curMode, startUtcMs);
-      continue;
+      rotIdx = nextIdx;
+      // boundary doesn't change while staying in the same mode segment
     }
 
-    // Normal transition within the same rotation
-    const nextIdx = rotationIds.length ? ((rotIdx + 1) % rotationIds.length) : 0;
-    const nextId = rotationIds.length ? rotationIds[nextIdx] : null;
-    const nextProg = nextId ? PROGRAMS_BY_ID[nextId] : null;
-
-    if (nextProg) upcoming.push(nextProg);
-
-    // Advance pointers
-    const d = nextId ? durationForId(nextId) : 0;
-    const startUtcMs = curEndUtcMs;
-    curEndUtcMs = startUtcMs + d * 1000;
-    rotIdx = nextIdx;
-    // boundary doesn't change while staying in the same mode segment
+    return { mode: st.mode, currentProgram: st.program, upcoming };
   }
 
-  return { mode: st.mode, currentProgram: st.program, upcoming };
-}
-
-
-function glitchmasApplyScheduleUI(state) {
-  // Update window header “Now Playing”
-  const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-  if (nowPlayingTitle && state.currentProgram?.title) {
-    nowPlayingTitle.textContent = state.currentProgram.title;
-  }
-
-  // Update next-3 posters
-  const posters = document.querySelectorAll('#scheduleCarousel .poster');
-  if (!posters.length) return;
-
-  const labels = (typeof SCHEDULE_LABELS !== 'undefined' && Array.isArray(SCHEDULE_LABELS))
-    ? SCHEDULE_LABELS
-    : ['Up Next', 'After That', 'Then'];
-
-  posters.forEach((poster, i) => {
-    const program = state.upcoming[i];
-    if (!program) return;
-
-    const mainImg = poster.querySelector('img:not(.poster-still)');
-    const stillImg = poster.querySelector('.poster-still');
-
-    // Only overwrite images if you’ve provided real poster URLs
-    if (mainImg && program.poster) mainImg.src = program.poster;
-    if (stillImg && program.posterStill) stillImg.src = program.posterStill;
-
-    // Ensure label exists (matches your existing behavior)
-    let label = poster.querySelector('.poster-label');
-    if (!label) {
-      label = document.createElement('span');
-      label.className = 'poster-label';
-      poster.appendChild(label);
+  function glitchmasApplyScheduleUI(state) {
+    // Update window header “Now Playing”
+    const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+    if (nowPlayingTitle && state.currentProgram?.title) {
+      nowPlayingTitle.textContent = state.currentProgram.title;
     }
-    label.textContent = labels[i] || '';
 
-    // Accessibility / metadata
-    poster.setAttribute('data-title', program.title);
-  });
-}
+    // Update next-3 posters
+    const posters = document.querySelectorAll('#scheduleCarousel .poster');
+    if (!posters.length) return;
 
-(function glitchmasInitTimeBasedScheduleOverlay() {
-  // Only run if schedule panel exists
-  if (!document.getElementById('scheduleCarousel')) return;
+    const labels = (typeof SCHEDULE_LABELS !== 'undefined' && Array.isArray(SCHEDULE_LABELS))
+      ? SCHEDULE_LABELS
+      : ['Up Next', 'After That', 'Then'];
 
-  const tick = () => {
+    posters.forEach((poster, i) => {
+      const program = state.upcoming[i];
+      if (!program) return;
+
+      const mainImg = poster.querySelector('img:not(.poster-still)');
+      const stillImg = poster.querySelector('.poster-still');
+
+      // Only overwrite images if you’ve provided real poster URLs
+      if (mainImg && program.poster) mainImg.src = program.poster;
+      if (stillImg && program.posterStill) stillImg.src = program.posterStill;
+
+      // Ensure label exists (matches your existing behavior)
+      let label = poster.querySelector('.poster-label');
+      if (!label) {
+        label = document.createElement('span');
+        label.className = 'poster-label';
+        poster.appendChild(label);
+      }
+      label.textContent = labels[i] || '';
+
+      // Accessibility / metadata
+      poster.setAttribute('data-title', program.title);
+    });
+  }
+
+  (function glitchmasInitTimeBasedScheduleOverlay() {
+    // Only run if schedule panel exists
+    if (!document.getElementById('scheduleCarousel')) return;
+
+    const tick = () => {
+      try {
+        const state = glitchmasGetScheduleState();
+        glitchmasApplyScheduleUI(state);
+      } catch (e) {
+        // Fail silent to avoid breaking the broadcast
+      }
+    };
+
+    tick();
+    // Lightweight polling; avoids coupling to video events
+    setInterval(tick, 15000);
+  })();
+
+  // Initial load
+  const { program, offset, index } = getLiveProgram();
+  currentProgramIndex = index;
+  loadProgram(program, offset);
+
+  // Keep video aligned to the deterministic schedule (hourly + day/night boundaries).
+  // Runs lightweight checks only; reloads the stream only when the scheduled program changes.
+  setInterval(() => {
     try {
-      const state = glitchmasGetScheduleState();
-      glitchmasApplyScheduleUI(state);
+      const live = getLiveProgram();
+      const currentId = PROGRAMS[currentProgramIndex] ? PROGRAMS[currentProgramIndex].id : null;
+
+      if (live.program && live.program.id && live.program.id !== currentId) {
+        currentProgramIndex = live.index;
+        loadProgram(live.program, live.offset);
+      }
     } catch (e) {
       // Fail silent to avoid breaking the broadcast
     }
-  };
+  }, 15000);
 
-  tick();
-  // Lightweight polling; avoids coupling to video events
-  setInterval(tick, 15000);
-})();
-
-
-// Initial load
-const { program, offset, index } = getLiveProgram();
-currentProgramIndex = index;
-loadProgram(program, offset);
-
-// Keep video aligned to the deterministic schedule (hourly + day/night boundaries).
-// Runs lightweight checks only; reloads the stream only when the scheduled program changes.
-setInterval(() => {
-  try {
-    const live = getLiveProgram();
-    const currentId = PROGRAMS[currentProgramIndex] ? PROGRAMS[currentProgramIndex].id : null;
-
-    if (live.program && live.program.id && live.program.id !== currentId) {
-      currentProgramIndex = live.index;
-      loadProgram(live.program, live.offset);
-    }
-  } catch (e) {
-    // Fail silent to avoid breaking the broadcast
-  }
-}, 15000);
-
-/* ===========================
+  /* ===========================
    Program Advancement
 =========================== */
 
-function loadNextProgram() {
-  currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
-  const next = PROGRAMS[currentProgramIndex];
-  loadProgram(next, 0);
-}
+  function loadNextProgram() {
+    currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
+    const next = PROGRAMS[currentProgramIndex];
+    loadProgram(next, 0);
+  }
 
-video.addEventListener('ended', loadNextProgram);
+  video.addEventListener('ended', loadNextProgram);
 
   /* ===========================
      Schedule Carousel (Mobile)
@@ -1275,7 +1253,7 @@ video.addEventListener('ended', loadNextProgram);
   if (ghostCursor) {
     const initX = Math.random() * (window.innerWidth - 50);
     const initY = Math.random() * (window.innerHeight - 50);
-    
+
     ghostCursor.style.left = initX + 'px';
     ghostCursor.style.top = initY + 'px';
 
@@ -1284,16 +1262,16 @@ video.addEventListener('ended', loadNextProgram);
       const cursorSize = 20;
       const maxX = window.innerWidth - padding - cursorSize;
       const maxY = window.innerHeight - padding - cursorSize;
-      
+
       const newX = padding + Math.random() * (maxX - padding);
       const newY = padding + Math.random() * (maxY - padding);
-      
+
       ghostCursor.style.left = newX + 'px';
       ghostCursor.style.top = newY + 'px';
     }
 
     setTimeout(moveGhostCursor, 1000);
-    
+
     function scheduleNextMove() {
       const delay = 3000 + Math.random() * 3000;
       setTimeout(() => {
@@ -1301,7 +1279,7 @@ video.addEventListener('ended', loadNextProgram);
         scheduleNextMove();
       }, delay);
     }
-    
+
     scheduleNextMove();
 
     window.addEventListener('resize', () => {
@@ -1337,14 +1315,14 @@ video.addEventListener('ended', loadNextProgram);
       // Quick press animation
       ghostCursor.style.transition = 'transform 0.1s ease';
       ghostCursor.style.transform = 'scale(0.9)';
-      
+
       setTimeout(() => {
         ghostCursor.style.transform = 'scale(1)';
-        
+
         // Execute the actual action
         setTimeout(() => {
           callback();
-          
+
           // Reset cursor transition for normal movement
           setTimeout(() => {
             ghostCursor.style.transition = 'left 3s cubic-bezier(0.25, 0.1, 0.25, 1), top 3s cubic-bezier(0.25, 0.1, 0.25, 1)';
@@ -1359,25 +1337,25 @@ video.addEventListener('ended', loadNextProgram);
   =========================== */
 
   const clockElement = document.getElementById('broadcastClock');
-  
+
   if (clockElement) {
     function updateClock() {
       const now = new Date();
-      
+
       // Format time as 12-hour with AM/PM
       let hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, '0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12 || 12;
-      
+
       // Get timezone abbreviation
       const timezoneName = new Intl.DateTimeFormat('en-US', {
         timeZoneName: 'short'
       }).format(now).split(' ').pop();
-      
+
       clockElement.textContent = `${hours}:${minutes} ${ampm} ${timezoneName}`;
     }
-    
+
     // Update immediately and then every second
     updateClock();
     setInterval(updateClock, 1000);
@@ -1388,13 +1366,13 @@ video.addEventListener('ended', loadNextProgram);
   =========================== */
 
   const signalBars = document.querySelectorAll('.signal-bars .bar');
-  
+
   if (signalBars.length > 0) {
     function fluctuateSignal() {
       // Randomly choose 2, 3, or 4 bars (with occasional 5)
       const rand = Math.random();
       let activeBars;
-      
+
       if (rand < 0.05) {
         activeBars = 5; // 5% chance for full signal
       } else if (rand < 0.35) {
@@ -1404,7 +1382,7 @@ video.addEventListener('ended', loadNextProgram);
       } else {
         activeBars = 4; // 30% chance for 4 bars
       }
-      
+
       signalBars.forEach((bar, index) => {
         if (index < activeBars) {
           bar.style.opacity = '1';
@@ -1413,10 +1391,10 @@ video.addEventListener('ended', loadNextProgram);
         }
       });
     }
-    
+
     // Initial fluctuation
     fluctuateSignal();
-    
+
     // Fluctuate rapidly - sketchy, unstable connection
     function scheduleNextFluctuation() {
       // Very short, erratic intervals (0.3s to 1.5s)
@@ -1426,7 +1404,7 @@ video.addEventListener('ended', loadNextProgram);
         scheduleNextFluctuation();
       }, delay);
     }
-    
+
     scheduleNextFluctuation();
   }
 
@@ -1442,27 +1420,27 @@ video.addEventListener('ended', loadNextProgram);
   if (chatMinimizeBtn && chatPanelWrap) {
     chatMinimizeBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       const performAction = () => {
         if (chatMinimized) {
           // Restore
           chatPanelWrap.classList.remove('minimized');
           chatPanelWrap.classList.add('restoring');
-          
+
           setTimeout(() => {
             chatPanelWrap.classList.remove('restoring');
           }, 400);
-          
+
           chatMinimized = false;
         } else {
           // Minimize
           chatPanelWrap.classList.add('minimizing');
-          
+
           setTimeout(() => {
             chatPanelWrap.classList.remove('minimizing');
             chatPanelWrap.classList.add('minimized');
           }, 400);
-          
+
           chatMinimized = true;
         }
       };
