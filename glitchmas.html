@@ -76,18 +76,18 @@
                 <option value="fireplace">Fireplace</option>
               </select>
             </div>
-            <label class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01"
-                value="0.5"></label>
-            <label class="slider"><span>Fire</span><input id="rumbleVol" type="range" min="0" max="1" step="0.01"
-                value="0"></label>
-            <label class="slider"><span>Crackle</span><input id="crackleVol" type="range" min="0" max="1" step="0.01"
-                value="0"></label>
-            <label class="slider"><span>Snowfall</span><input id="snowVol" type="range" min="0" max="1" step="0.01"
-                value="0"></label>
-            <label class="slider"><span>Tape Noise</span><input id="tapeVol" type="range" min="0" max="1" step="0.01"
-                value="0"></label>
-            <label class="slider"><span>Music</span><input id="musicVol" type="range" min="0" max="1" step="0.01"
-                value="0"></label>
+            <div class="slider"><span>Video</span><input id="videoVol" type="range" min="0" max="1" step="0.01"
+                value="0.5"><div class="toggle-switch"></div></div>
+            <div class="slider"><span>Fire</span><input id="rumbleVol" type="range" min="0" max="1" step="0.01"
+                value="0"><div class="toggle-switch"></div></div>
+            <div class="slider"><span>Crackle</span><input id="crackleVol" type="range" min="0" max="1" step="0.01"
+                value="0"><div class="toggle-switch"></div></div>
+            <div class="slider"><span>Snowfall</span><input id="snowVol" type="range" min="0" max="1" step="0.01"
+                value="0"><div class="toggle-switch"></div></div>
+            <div class="slider"><span>Tape Noise</span><input id="tapeVol" type="range" min="0" max="1" step="0.01"
+                value="0"><div class="toggle-switch"></div></div>
+            <div class="slider"><span>Music</span><input id="musicVol" type="range" min="0" max="1" step="0.01"
+                value="0"><div class="toggle-switch"></div></div>
           </div>
           </div>
       </section>
@@ -107,9 +107,11 @@
         <p>Replay drops every hour on the hour.</p>
 
         <div class="schedule-posters" id="scheduleCarousel">
-          <div class="poster" data-index="0"><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHJjZ3l6MTZ3ZTl0MWp3dHJsMXBvZ2UyeXI2MTU2bGc1YWpxZDB5NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YRcXl6VfNhCorklI0R/giphy.gif"><img class="poster-still" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjR0aXVlemh1ZGJ1bzZ5eGVtY21zZ3RoNmdkM25hejk4OHYxMmQxMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Xzq4zCg9lFDiw/giphy.gif"></div>
-          <div class="poster" data-index="1"><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHJjZ3l6MTZ3ZTl0MWp3dHJsMXBvZ2UyeXI2MTU2bGc1YWpxZDB5NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YRcXl6VfNhCorklI0R/giphy.gif"><img class="poster-still" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDBqemwwaWVpMGVzano5emo2aGlpdmlyaTdsN280N3I3bzhoNnVmdSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/14ixoD5AoPF3eE/giphy.gif"></div>
-          <div class="poster" data-index="2"><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHJjZ3l6MTZ3ZTl0MWp3dHJsMXBvZ2UyeXI2MTU2bGc1YWpxZDB5NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YRcXl6VfNhCorklI0R/giphy.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster" data-index="0"><img src="imgs/gb-posters/ACSGB122425.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster" data-index="1"><img src="imgs/gb-posters/GSCGB122425.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster" data-index="2"><img src="imgs/gb-posters/ROTGGMB122425.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster" data-index="3"><img src="imgs/gb-posters/FANGB122425.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
+          <div class="poster" data-index="5"><img src="imgs/gb-posters/BSGB122425.gif"><img class="poster-still" src="https://placehold.co/560x315"></div>
         </div>
 
         <div class="carousel-dots" id="carouselDots">
@@ -157,7 +159,9 @@
         <span class="window-title">Signal Alert</span>
       </div>
       <div class="modal-content panel">
-        <p class="modal-message">Signal is fairly weak. Glitches may occur.</p>
+        <p class="modal-message">Signal is fairly weak. Glitches may occur.<br>
+          Please, do not contact support, no one can save&nbsp;this.
+        </p>
         <button class="btn modal-btn" id="signalModalOk">OK</button>
       </div>
     </div>

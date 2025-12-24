@@ -369,12 +369,8 @@ function applyPreset(presetName) {
 const presetSelect = document.getElementById('presetSelect');
 let currentPreset = 'videoOnly'; // Track current preset
 
-if (presetSelect) {
-  presetSelect.addEventListener('change', (e) => {
-    currentPreset = e.target.value;
-    applyPreset(currentPreset);
-  });
-}
+// Note: The actual change handler is added later in "Mobile Toggle Click Handler" section
+// to properly handle both mobile and desktop presets
 
   function applyPreset(presetName) {
     const preset = PRESETS[presetName];
@@ -393,6 +389,98 @@ if (presetSelect) {
       applyPreset(btn.dataset.preset);
     });
   });
+
+  /* ===========================
+     Mobile Detection & Helpers
+  =========================== */
+
+  // Check if mobile (and re-check on resize)
+  function checkIsMobile() {
+    return window.innerWidth <= 899;
+  }
+  
+  let isMobile = checkIsMobile();
+  
+  // Update isMobile on resize
+  window.addEventListener('resize', () => {
+    isMobile = checkIsMobile();
+  });
+
+  // Mobile-specific presets (on/off only, 0.5 when on)
+  const MOBILE_PRESETS = {
+    videoOnly: {
+      videoVol: 0.5,
+      rumbleVol: 0,
+      crackleVol: 0,
+      snowVol: 0,
+      tapeVol: 0,
+      musicVol: 0
+    },
+    cozy: {
+      videoVol: 0.5,
+      rumbleVol: 0.5,
+      crackleVol: 0.5,
+      snowVol: 0.5,
+      tapeVol: 0,
+      musicVol: 0.5
+    },
+    lofi: {
+      videoVol: 0,
+      rumbleVol: 0,
+      crackleVol: 0,
+      snowVol: 0,
+      tapeVol: 0,
+      musicVol: 0.5
+    },
+    fireplace: {
+      videoVol: 0,
+      rumbleVol: 0.5,
+      crackleVol: 0.5,
+      snowVol: 0,
+      tapeVol: 0,
+      musicVol: 0
+    }
+  };
+
+  // Apply mobile preset and update toggle visuals
+  function applyMobilePreset(presetName) {
+    const preset = MOBILE_PRESETS[presetName];
+    if (!preset) return;
+
+    Object.entries(preset).forEach(([id, value]) => {
+      const input = document.getElementById(id);
+      if (!input) return;
+      
+      input.value = value;
+      updateSliderLabel(input);
+      
+      // Update toggle visual state
+      const slider = input.closest('.slider');
+      if (slider) {
+        if (parseFloat(value) > 0) {
+          slider.classList.add('is-on');
+        } else {
+          slider.classList.remove('is-on');
+        }
+      }
+    });
+
+    setAllVolumesLive();
+  }
+
+  // Function to sync toggle visuals with current slider values
+  function syncToggleVisuals() {
+    document.querySelectorAll('.slider').forEach(slider => {
+      const input = slider.querySelector('input[type="range"]');
+      if (!input) return;
+      
+      if (parseFloat(input.value) > 0) {
+        slider.classList.add('is-on');
+      } else {
+        slider.classList.remove('is-on');
+      }
+    });
+  }
 
   /* ===========================
      Fireplace toggles
@@ -414,7 +502,13 @@ if (presetSelect) {
     }
 
     // Apply current preset (preserves user's last selection)
-    applyPreset(currentPreset);
+    // Use mobile presets on mobile, desktop presets on desktop
+    if (checkIsMobile()) {
+      applyMobilePreset(currentPreset);
+      syncToggleVisuals();
+    } else {
+      applyPreset(currentPreset);
+    }
 
     // Start audio elements (they'll be at 0 volume until slider moved)
     Object.values(audioMap).forEach(a => a.play().catch(() => {}));
@@ -459,6 +553,57 @@ if (presetSelect) {
   sliderIds.forEach(id =>
     document.getElementById(id)?.addEventListener('input', setAllVolumesLive)
   );
+
+  /* ===========================
+     Mobile Toggle Click Handler
+  =========================== */
+
+  // Override preset select handler for mobile
+  if (presetSelect) {
+    // Remove the desktop-only handler we added earlier
+    const newHandler = (e) => {
+      currentPreset = e.target.value;
+      if (checkIsMobile()) {
+        applyMobilePreset(currentPreset);
+      } else {
+        applyPreset(currentPreset);
+      }
+    };
+    presetSelect.addEventListener('change', newHandler);
+  }
+
+  // Use event delegation for toggle clicks - attach to sliders container
+  sliders.addEventListener('click', (e) => {
+    // Only handle on mobile
+    if (!checkIsMobile()) return;
+    
+    // Find the slider element that was clicked
+    const slider = e.target.closest('.slider');
+    if (!slider) return;
+    
+    // Don't interfere with the preset dropdown
+    if (e.target.closest('.preset-select-wrap')) return;
+    
+    e.preventDefault();
+    
+    const input = slider.querySelector('input[type="range"]');
+    if (!input) return;
+    
+    const isOn = slider.classList.contains('is-on');
+    
+    if (isOn) {
+      slider.classList.remove('is-on');
+      input.value = '0';
+    } else {
+      slider.classList.add('is-on');
+      input.value = '0.5';
+    }
+    
+    // Update volume
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    
+    console.log('[Mobile] Toggled', input.id, isOn ? 'OFF' : 'ON');
+  });
 
   /* ===========================
      Fullscreen
