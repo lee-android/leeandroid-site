@@ -102,50 +102,51 @@ document.addEventListener('DOMContentLoaded', () => {
      Fireplace audio layers
   =========================== */
 
-  // Define music playlist from wun_two folder
+  // Define music playlist from Bunny CDN
+  const CDN_BASE = 'https://lagb122425.b-cdn.net';
   const MUSIC_PLAYLIST = [
     // Snow, Vol. 8 (9 tracks)
-    '/audio/wun_two/Snow, Vol. 8/01 - wun two - ouverture [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/02 - wun two - the house [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/03 - wun two - peanut brigade feat. Eets [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/04 - wun two - pine [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/05 - wun two - greensleeves [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/06 - wun two - snow telegram [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/07 - wun two - ouverture 2 [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/08 - wun two - glacier express [Snow Vol. 8].mp3',
-    '/audio/wun_two/Snow, Vol. 8/09 - wun two - blue champagne [Snow Vol. 8].mp3',
+    `${CDN_BASE}/Snow%2C%20Vol.%208/01%20-%20wun%20two%20-%20ouverture%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/02%20-%20wun%20two%20-%20the%20house%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/03%20-%20wun%20two%20-%20peanut%20brigade%20feat.%20Eets%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/04%20-%20wun%20two%20-%20pine%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/05%20-%20wun%20two%20-%20greensleeves%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/06%20-%20wun%20two%20-%20snow%20telegram%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/07%20-%20wun%20two%20-%20ouverture%202%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/08%20-%20wun%20two%20-%20glacier%20express%20%5BSnow%20Vol.%208%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%208/09%20-%20wun%20two%20-%20blue%20champagne%20%5BSnow%20Vol.%208%5D.mp3`,
     
     // Snow, Vol. 9 (12 tracks)
-    '/audio/wun_two/Snow, Vol. 9/01 - wun two - frore intro [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/02 - wun two - hibernaculums [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/03 - wun two - piano to snow to [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/04 - wun two - whitetime [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/05 - wun two - aboo the snow giant [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/06 - wun two - brumal [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/07 - wun two - winter overture [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/08 - wun two - riz snow [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/09 - wun two - december shoes [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/10 - wun two - winzlig [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/11 - wun two - gelid [Snow, Vol. 9].mp3',
-    '/audio/wun_two/Snow, Vol. 9/12 - wun two - flakelet outro [Snow, Vol. 9].mp3',
+    `${CDN_BASE}/Snow%2C%20Vol.%209/01%20-%20wun%20two%20-%20frore%20intro%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/02%20-%20wun%20two%20-%20hibernaculums%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/03%20-%20wun%20two%20-%20piano%20to%20snow%20to%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/04%20-%20wun%20two%20-%20whitetime%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/05%20-%20wun%20two%20-%20aboo%20the%20snow%20giant%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/06%20-%20wun%20two%20-%20brumal%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/07%20-%20wun%20two%20-%20winter%20overture%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/08%20-%20wun%20two%20-%20riz%20snow%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/09%20-%20wun%20two%20-%20december%20shoes%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/10%20-%20wun%20two%20-%20winzlig%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/11%20-%20wun%20two%20-%20gelid%20%5BSnow%2C%20Vol.%209%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%209/12%20-%20wun%20two%20-%20flakelet%20outro%20%5BSnow%2C%20Vol.%209%5D.mp3`,
     
     // Snow, Vol. 10 (16 tracks)
-    '/audio/wun_two/Snow, Vol. 10/01 - wun two - schnee [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/02 - wun two - holli [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/03 - wun two - here we are [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/04 - wun two - uoy [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/05 - wun two - candli [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/06 - wun two - snow drive [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/07 - wun two - herbst [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/08 - wun two - coldzero [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/09 - wun two - laterne [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/10 - wun two - minttea [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/11 - wun two - bergfrost [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/12 - wun two - tog [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/13 - wun two - schneesturm [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/14 - wun two - katz [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/15 - wun two - heimo [Snow, Vol. 10].mp3',
-    '/audio/wun_two/Snow, Vol. 10/16 - wun two - kristallin [Snow, Vol. 10].mp3'
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/01%20-%20wun%20two%20-%20schnee%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/02%20-%20wun%20two%20-%20holli%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/03%20-%20wun%20two%20-%20here%20we%20are%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/04%20-%20wun%20two%20-%20uoy%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/05%20-%20wun%20two%20-%20candli%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/06%20-%20wun%20two%20-%20snow%20drive%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/07%20-%20wun%20two%20-%20herbst%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/08%20-%20wun%20two%20-%20coldzero%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/09%20-%20wun%20two%20-%20laterne%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/10%20-%20wun%20two%20-%20minttea%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/11%20-%20wun%20two%20-%20bergfrost%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/12%20-%20wun%20two%20-%20tog%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/13%20-%20wun%20two%20-%20schneesturm%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/14%20-%20wun%20two%20-%20katz%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/15%20-%20wun%20two%20-%20heimo%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
+    `${CDN_BASE}/Snow%2C%20Vol.%2010/16%20-%20wun%20two%20-%20kristallin%20%5BSnow%2C%20Vol.%2010%5D.mp3`
   ];
 
   // Better randomization using crypto API
@@ -369,8 +370,12 @@ function applyPreset(presetName) {
 const presetSelect = document.getElementById('presetSelect');
 let currentPreset = 'videoOnly'; // Track current preset
 
-// Note: The actual change handler is added later in "Mobile Toggle Click Handler" section
-// to properly handle both mobile and desktop presets
+if (presetSelect) {
+  presetSelect.addEventListener('change', (e) => {
+    currentPreset = e.target.value;
+    applyPreset(currentPreset);
+  });
+}
 
   function applyPreset(presetName) {
     const preset = PRESETS[presetName];
@@ -389,98 +394,6 @@ let currentPreset = 'videoOnly'; // Track current preset
       applyPreset(btn.dataset.preset);
     });
   });
-
-  /* ===========================
-     Mobile Detection & Helpers
-  =========================== */
-
-  // Check if mobile (and re-check on resize)
-  function checkIsMobile() {
-    return window.innerWidth <= 899;
-  }
-  
-  let isMobile = checkIsMobile();
-  
-  // Update isMobile on resize
-  window.addEventListener('resize', () => {
-    isMobile = checkIsMobile();
-  });
-
-  // Mobile-specific presets (on/off only, 0.5 when on)
-  const MOBILE_PRESETS = {
-    videoOnly: {
-      videoVol: 0.5,
-      rumbleVol: 0,
-      crackleVol: 0,
-      snowVol: 0,
-      tapeVol: 0,
-      musicVol: 0
-    },
-    cozy: {
-      videoVol: 0.5,
-      rumbleVol: 0.5,
-      crackleVol: 0.5,
-      snowVol: 0.5,
-      tapeVol: 0,
-      musicVol: 0.5
-    },
-    lofi: {
-      videoVol: 0,
-      rumbleVol: 0,
-      crackleVol: 0,
-      snowVol: 0,
-      tapeVol: 0,
-      musicVol: 0.5
-    },
-    fireplace: {
-      videoVol: 0,
-      rumbleVol: 0.5,
-      crackleVol: 0.5,
-      snowVol: 0,
-      tapeVol: 0,
-      musicVol: 0
-    }
-  };
-
-  // Apply mobile preset and update toggle visuals
-  function applyMobilePreset(presetName) {
-    const preset = MOBILE_PRESETS[presetName];
-    if (!preset) return;
-
-    Object.entries(preset).forEach(([id, value]) => {
-      const input = document.getElementById(id);
-      if (!input) return;
-      
-      input.value = value;
-      updateSliderLabel(input);
-      
-      // Update toggle visual state
-      const slider = input.closest('.slider');
-      if (slider) {
-        if (parseFloat(value) > 0) {
-          slider.classList.add('is-on');
-        } else {
-          slider.classList.remove('is-on');
-        }
-      }
-    });
-
-    setAllVolumesLive();
-  }
-
-  // Function to sync toggle visuals with current slider values
-  function syncToggleVisuals() {
-    document.querySelectorAll('.slider').forEach(slider => {
-      const input = slider.querySelector('input[type="range"]');
-      if (!input) return;
-      
-      if (parseFloat(input.value) > 0) {
-        slider.classList.add('is-on');
-      } else {
-        slider.classList.remove('is-on');
-      }
-    });
-  }
 
   /* ===========================
      Fireplace toggles
@@ -503,11 +416,16 @@ let currentPreset = 'videoOnly'; // Track current preset
 
     // Apply current preset (preserves user's last selection)
     // Use mobile presets on mobile, desktop presets on desktop
-    if (checkIsMobile()) {
+    if (isMobile) {
       applyMobilePreset(currentPreset);
-      syncToggleVisuals();
     } else {
       applyPreset(currentPreset);
+    }
+
+    // Initialize mobile toggles when sliders are shown
+    if (isMobile && !window.mobileTogglesInitialized) {
+      initializeMobileToggles();
+      window.mobileTogglesInitialized = true;
     }
 
     // Start audio elements (they'll be at 0 volume until slider moved)
@@ -555,55 +473,150 @@ let currentPreset = 'videoOnly'; // Track current preset
   );
 
   /* ===========================
-     Mobile Toggle Click Handler
+     Mobile Toggles (instead of sliders)
   =========================== */
 
-  // Override preset select handler for mobile
-  if (presetSelect) {
-    // Remove the desktop-only handler we added earlier
-    const newHandler = (e) => {
-      currentPreset = e.target.value;
-      if (checkIsMobile()) {
-        applyMobilePreset(currentPreset);
-      } else {
-        applyPreset(currentPreset);
+  // Check if mobile
+  const isMobile = window.innerWidth <= 899;
+
+  if (isMobile) {
+    // Mobile-specific presets (on/off only, 0.5 when on)
+    const MOBILE_PRESETS = {
+      videoOnly: {
+        videoVol: 0.5,
+        rumbleVol: 0,
+        crackleVol: 0,
+        snowVol: 0,
+        tapeVol: 0,
+        musicVol: 0
+      },
+      cozy: {
+        videoVol: 0.5,
+        rumbleVol: 0.5,
+        crackleVol: 0.5,
+        snowVol: 0.5,
+        tapeVol: 0,
+        musicVol: 0.5
+      },
+      lofi: {
+        videoVol: 0,
+        rumbleVol: 0,
+        crackleVol: 0,
+        snowVol: 0,
+        tapeVol: 0,
+        musicVol: 0.5
+      },
+      fireplace: {
+        videoVol: 0,
+        rumbleVol: 0.5,
+        crackleVol: 0.5,
+        snowVol: 0,
+        tapeVol: 0,
+        musicVol: 0
       }
     };
-    presetSelect.addEventListener('change', newHandler);
-  }
 
-  // Use event delegation for toggle clicks - attach to sliders container
-  sliders.addEventListener('click', (e) => {
-    // Only handle on mobile
-    if (!checkIsMobile()) return;
-    
-    // Find the slider element that was clicked
-    const slider = e.target.closest('.slider');
-    if (!slider) return;
-    
-    // Don't interfere with the preset dropdown
-    if (e.target.closest('.preset-select-wrap')) return;
-    
-    e.preventDefault();
-    
-    const input = slider.querySelector('input[type="range"]');
-    if (!input) return;
-    
-    const isOn = slider.classList.contains('is-on');
-    
-    if (isOn) {
-      slider.classList.remove('is-on');
-      input.value = '0';
-    } else {
-      slider.classList.add('is-on');
-      input.value = '0.5';
+    // Override applyPreset for mobile
+    function applyMobilePreset(presetName) {
+      const preset = MOBILE_PRESETS[presetName];
+      if (!preset) return;
+
+      // Get all sliders
+      const sliders = document.querySelectorAll('.slider');
+      
+      sliders.forEach((slider) => {
+        const input = slider.querySelector('input[type="range"]');
+        if (!input) return;
+
+        const value = preset[input.id];
+        if (value !== undefined) {
+          input.value = value;
+          
+          // Update toggle switch visual state
+          if (parseFloat(value) > 0) {
+            slider.classList.add('is-on');
+          } else {
+            slider.classList.remove('is-on');
+          }
+        }
+      });
+
+      setAllVolumesLive();
     }
-    
-    // Update volume
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    
-    console.log('[Mobile] Toggled', input.id, isOn ? 'OFF' : 'ON');
-  });
+
+    // Override preset select handler for mobile
+    if (presetSelect) {
+      // Remove desktop handler
+      presetSelect.removeEventListener('change', () => {});
+      
+      // Add mobile handler
+      presetSelect.addEventListener('change', (e) => {
+        currentPreset = e.target.value;
+        applyMobilePreset(currentPreset);
+      });
+    }
+
+    // Function to initialize mobile toggles (called when sliders are shown)
+    window.initializeMobileToggles = function() {
+      console.log('[Mobile] Initializing toggles...');
+      
+      const sliderElements = document.querySelectorAll('.slider');
+      
+      console.log('[Mobile] Found', sliderElements.length, 'sliders');
+      
+      sliderElements.forEach((slider, index) => {
+        const input = slider.querySelector('input[type="range"]');
+        if (!input) {
+          console.log('[Mobile] Slider', index, 'has no input');
+          return;
+        }
+
+        // Check if toggle already exists
+        if (slider.querySelector('.toggle-switch')) {
+          console.log('[Mobile] Toggle already exists for', input.id);
+          return;
+        }
+
+        // Create toggle switch element
+        const toggleSwitch = document.createElement('div');
+        toggleSwitch.className = 'toggle-switch';
+        toggleSwitch.style.display = 'block'; // Force display
+        slider.appendChild(toggleSwitch);
+        
+        console.log('[Mobile] Added toggle to', input.id, '- value:', input.value);
+        
+        // Set initial state based on current value
+        if (parseFloat(input.value) > 0) {
+          slider.classList.add('is-on');
+          console.log('[Mobile]', input.id, 'is ON');
+        } else {
+          console.log('[Mobile]', input.id, 'is OFF');
+        }
+
+        // Toggle on click
+        slider.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const isOn = slider.classList.contains('is-on');
+          
+          if (isOn) {
+            // Turn off
+            slider.classList.remove('is-on');
+            input.value = '0';
+          } else {
+            // Turn on to 50%
+            slider.classList.add('is-on');
+            input.value = '0.5';
+          }
+          
+          // Trigger input event to update volumes
+          input.dispatchEvent(new Event('input'));
+        });
+      });
+      
+      console.log('[Mobile] Toggle initialization complete');
+    };
+  }
 
   /* ===========================
      Fullscreen
