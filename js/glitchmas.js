@@ -102,8 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
      Fireplace audio layers
   =========================== */
 
-  // Define music playlist from Bunny CDN
-  const CDN_BASE = 'https://lagb122425.b-cdn.net';
+  // Music (self-hosted). Files live in your repo under /audio/wun_two/...
+  // Example:
+  //   /audio/wun_two/Snow, Vol. 8/02-wun-two-the-house-snow-vol.-8.mp3
+  const MUSIC_ROOT = '/audio/wun_two';
 
   // Tracks now live at the CDN root with simplified naming (lowercase, hyphens)
   const MUSIC_FILES = [
@@ -150,8 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
     '16-wun-two-kristallin-snow-vol.-10.mp3'
   ];
 
-  const MUSIC_PLAYLIST = MUSIC_FILES.map(f => `${CDN_BASE}/${f}`);
+  // Infer album folder from the filename suffix (snow-vol.-8 / -9 / -10).
+  // If you ever pass explicit subpaths into MUSIC_FILES (containing '/'), we respect them.
+  function inferAlbumFolder(fileName) {
+    const m = fileName.match(/snow-vol\.-(\d+)/i);
+    return m ? `Snow, Vol. ${m[1]}` : '';
+  }
 
+  function buildMusicUrl(entry) {
+    // If entry already includes a folder (e.g. "Snow, Vol. 8/01-...mp3"), keep it.
+    if (entry.includes('/')) return `${MUSIC_ROOT}/${entry}`;
+    const folder = inferAlbumFolder(entry);
+    return folder ? `${MUSIC_ROOT}/${folder}/${entry}` : `${MUSIC_ROOT}/${entry}`;
+  }
+
+  // encodeURI is important because folders contain spaces and commas.
+  const MUSIC_PLAYLIST = MUSIC_FILES.map(f => encodeURI(buildMusicUrl(f)));
 
   // Better randomization using crypto API
   function getRandomValue() {
@@ -697,20 +713,56 @@ const TOTAL_DURATION = PROGRAMS.reduce((sum, p) => sum + p.duration, 0);
 
 let currentProgramIndex = 0;
 
-function getLiveProgram() {
-  let elapsed = Math.floor((Date.now() - BROADCAST_START) / 1000);
-  if (elapsed < 0) elapsed = 0;
-  elapsed = TOTAL_DURATION ? elapsed % TOTAL_DURATION : 0;
+function getLiveProgram(now = new Date()) {
+  // Video selection follows the same deterministic clock schedule as the UI overlay.
+  // This prevents drift and ensures day/night programming matches America/Chicago time.
+  //
+  // NOTE:
+  // - Slot length is 1 hour (GLITCHMAS_SLOT_SECONDS).
+  // - We use elapsed seconds within the current hour as the video offset.
+  // - If a scheduled program has a placeholder stream URL, we fall forward within the
+  //   rotation to the next playable program (so the channel never goes dark).
 
-  let index = 0;
-  for (const p of PROGRAMS) {
-    if (elapsed < p.duration) return { program: p, offset: elapsed, index };
-    elapsed -= p.duration;
-    index++;
+  const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
+  const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
+  const rotationIds = GLITCHMAS_ROTATIONS[mode] || [];
+
+  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - windowStartUtc) / 1000));
+
+  const slotIndex = Math.floor(elapsedSeconds / GLITCHMAS_SLOT_SECONDS);
+  const elapsedInSlot = elapsedSeconds % GLITCHMAS_SLOT_SECONDS;
+
+  const isPlayable = (prog) => {
+    return !!(prog && typeof prog.src === 'string' && prog.src && !prog.src.includes('PLACEHOLDER'));
+  };
+
+  let scheduledProgram = null;
+
+  if (rotationIds.length) {
+    const currentIdx = slotIndex % rotationIds.length;
+
+    // Try scheduled, then fall forward within rotation until we find a playable stream
+    for (let i = 0; i < rotationIds.length; i++) {
+      const id = rotationIds[(currentIdx + i) % rotationIds.length];
+      const candidate = PROGRAMS_BY_ID[id];
+      if (isPlayable(candidate)) {
+        scheduledProgram = candidate;
+        break;
+      }
+    }
   }
 
-  return { program: PROGRAMS[0], offset: 0, index: 0 };
+  // Last-resort fallback: first playable program in the full PROGRAMS list
+  if (!isPlayable(scheduledProgram)) {
+    scheduledProgram = PROGRAMS.find(isPlayable) || PROGRAMS[0];
+  }
+
+  const index = Math.max(0, PROGRAMS.findIndex(pgm => pgm.id === scheduledProgram.id));
+
+  return { program: scheduledProgram, offset: elapsedInSlot, index };
 }
+
 
 /* ===========================
    Schedule Panel Sync
@@ -966,6 +1018,22 @@ function glitchmasApplyScheduleUI(state) {
 const { program, offset, index } = getLiveProgram();
 currentProgramIndex = index;
 loadProgram(program, offset);
+
+// Keep video aligned to the deterministic schedule (hourly + day/night boundaries).
+// Runs lightweight checks only; reloads the stream only when the scheduled program changes.
+setInterval(() => {
+  try {
+    const live = getLiveProgram();
+    const currentId = PROGRAMS[currentProgramIndex] ? PROGRAMS[currentProgramIndex].id : null;
+
+    if (live.program && live.program.id && live.program.id !== currentId) {
+      currentProgramIndex = live.index;
+      loadProgram(live.program, live.offset);
+    }
+  } catch (e) {
+    // Fail silent to avoid breaking the broadcast
+  }
+}, 15000);
 
 /* ===========================
    Program Advancement
