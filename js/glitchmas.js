@@ -650,16 +650,16 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 5556,
       type: 'family',
       poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
-      posterStill: ''
+      synopsis: "A kid learns Christmas is product worship. Love is purchases, manhood is merch, and the house becomes a debt shrine. The corporation wins, quietly and forever."
     },
     {
       id: 'grinch_2000',
-      title: 'How the Grinch Stole Christmas (2000)',
+      title: 'How the Grinch Stole Christmas',
       src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
       duration: 6216,
       type: 'family',
       poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
-      posterStill: ''
+      synopsis: "Whoville turns Christmas into a shopping mandate. The Grinch is the only sane reaction to forced cheer and branded joy. They hug it out, then try to sell the healing."
     },
     {
       id: 'guardians',
@@ -668,7 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 5713,
       type: 'family',
       poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
-      posterStill: ''
+      synopsis: "Mythical beings get drafted into unpaid emotional labor. Belief is currency, fear is market share, and magic has to prove ROI to exist. Even wonder needs a KPI."
     },
     {
       id: 'friday_after_next',
@@ -677,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 5160,
       type: 'mature',
       poster: `${POSTER_CDN}FANGB122425_sm.gif`,
-      posterStill: ''
+      synopsis: "Christmas hits the block like a bill. Every warm moment has a hustle attached, every laugh dodges rent panic. The season is real, and so is the trap."
     },
     {
       id: 'bad_santa',
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 5520,
       type: 'mature',
       poster: `${POSTER_CDN}BSGB122425_sm.gif`,
-      posterStill: ''
+      synopsis: "A man in a mall costume tells the truth by lying for a living. Retail smiles, empty eyes, fluorescent despair. Christmas is a grift, then a mirror."
     }
   ];
 
@@ -773,6 +773,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadProgram(program, offsetSeconds) {
     video.muted = true;
     video.volume = 0;
+
+    // Update H1 title
+const titleEl = document.querySelector('.videoPanel .title');
+if (titleEl) {
+  titleEl.textContent = program.title;
+}
+
+// Update synopsis paragraph
+const descEl = document.querySelector('.videoPanel .desc');
+if (descEl && program.synopsis) {
+  descEl.textContent = program.synopsis;
+}
 
     // Update page title to reflect current program
     document.querySelector('.videoPanel .title').textContent = program.title;
@@ -1071,6 +1083,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nowPlayingTitle && state.currentProgram?.title) {
       nowPlayingTitle.textContent = state.currentProgram.title;
     }
+    // Update H1 title to match current program
+const titleEl = document.querySelector('.videoPanel .title');
+if (titleEl && state.currentProgram?.title) {
+  titleEl.textContent = state.currentProgram.title;
+}
+
+// Update synopsis paragraph to match current program
+const descEl = document.querySelector('.videoPanel .desc');
+if (descEl && state.currentProgram?.synopsis) {
+  descEl.textContent = state.currentProgram.synopsis;
+}
 
     // Update next-3 posters
     const posters = document.querySelectorAll('#scheduleCarousel .poster');
