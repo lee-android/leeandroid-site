@@ -103,51 +103,58 @@ document.addEventListener('DOMContentLoaded', () => {
   =========================== */
 
   // Define music playlist from Bunny CDN
+   // Define music playlist from Bunny CDN
   const CDN_BASE = 'https://lagb122425.b-cdn.net';
-  const MUSIC_PLAYLIST = [
+
+  // Tracks now live at the CDN root (no album subfolders).
+  // Keep filenames URL-encoded exactly as they appear on the CDN.
+  const MUSIC_FILES = [
     // Snow, Vol. 8 (9 tracks)
-    `${CDN_BASE}/Snow%2C%20Vol.%208/01%20-%20wun%20two%20-%20ouverture%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/02%20-%20wun%20two%20-%20the%20house%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/03%20-%20wun%20two%20-%20peanut%20brigade%20feat.%20Eets%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/04%20-%20wun%20two%20-%20pine%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/05%20-%20wun%20two%20-%20greensleeves%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/06%20-%20wun%20two%20-%20snow%20telegram%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/07%20-%20wun%20two%20-%20ouverture%202%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/08%20-%20wun%20two%20-%20glacier%20express%20%5BSnow%20Vol.%208%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%208/09%20-%20wun%20two%20-%20blue%20champagne%20%5BSnow%20Vol.%208%5D.mp3`,
-    
+    '01%20-%20wun%20two%20-%20ouverture%20%5BSnow%20Vol.%208%5D.mp3',
+    '02%20-%20wun%20two%20-%20the%20house%20%5BSnow%20Vol.%208%5D.mp3',
+    '03%20-%20wun%20two%20-%20peanut%20brigade%20feat.%20Eets%20%5BSnow%20Vol.%208%5D.mp3',
+    '04%20-%20wun%20two%20-%20pine%20%5BSnow%20Vol.%208%5D.mp3',
+    '05%20-%20wun%20two%20-%20greensleeves%20%5BSnow%20Vol.%208%5D.mp3',
+    '06%20-%20wun%20two%20-%20snow%20telegram%20%5BSnow%20Vol.%208%5D.mp3',
+    '07%20-%20wun%20two%20-%20ouverture%202%20%5BSnow%20Vol.%208%5D.mp3',
+    '08%20-%20wun%20two%20-%20glacier%20express%20%5BSnow%20Vol.%208%5D.mp3',
+    '09%20-%20wun%20two%20-%20blue%20champagne%20%5BSnow%20Vol.%208%5D.mp3',
+
     // Snow, Vol. 9 (12 tracks)
-    `${CDN_BASE}/Snow%2C%20Vol.%209/01%20-%20wun%20two%20-%20frore%20intro%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/02%20-%20wun%20two%20-%20hibernaculums%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/03%20-%20wun%20two%20-%20piano%20to%20snow%20to%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/04%20-%20wun%20two%20-%20whitetime%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/05%20-%20wun%20two%20-%20aboo%20the%20snow%20giant%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/06%20-%20wun%20two%20-%20brumal%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/07%20-%20wun%20two%20-%20winter%20overture%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/08%20-%20wun%20two%20-%20riz%20snow%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/09%20-%20wun%20two%20-%20december%20shoes%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/10%20-%20wun%20two%20-%20winzlig%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/11%20-%20wun%20two%20-%20gelid%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%209/12%20-%20wun%20two%20-%20flakelet%20outro%20%5BSnow%2C%20Vol.%209%5D.mp3`,
-    
+    '01%20-%20wun%20two%20-%20frore%20intro%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '02%20-%20wun%20two%20-%20hibernaculums%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '03%20-%20wun%20two%20-%20piano%20to%20snow%20to%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '04%20-%20wun%20two%20-%20whitetime%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '05%20-%20wun%20two%20-%20aboo%20the%20snow%20giant%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '06%20-%20wun%20two%20-%20brumal%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '07%20-%20wun%20two%20-%20winter%20overture%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '08%20-%20wun%20two%20-%20riz%20snow%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '09%20-%20wun%20two%20-%20december%20shoes%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '10%20-%20wun%20two%20-%20winzlig%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '11%20-%20wun%20two%20-%20gelid%20%5BSnow%2C%20Vol.%209%5D.mp3',
+    '12%20-%20wun%20two%20-%20flakelet%20outro%20%5BSnow%2C%20Vol.%209%5D.mp3',
+
     // Snow, Vol. 10 (16 tracks)
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/01%20-%20wun%20two%20-%20schnee%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/02%20-%20wun%20two%20-%20holli%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/03%20-%20wun%20two%20-%20here%20we%20are%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/04%20-%20wun%20two%20-%20uoy%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/05%20-%20wun%20two%20-%20candli%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/06%20-%20wun%20two%20-%20snow%20drive%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/07%20-%20wun%20two%20-%20herbst%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/08%20-%20wun%20two%20-%20coldzero%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/09%20-%20wun%20two%20-%20laterne%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/10%20-%20wun%20two%20-%20minttea%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/11%20-%20wun%20two%20-%20bergfrost%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/12%20-%20wun%20two%20-%20tog%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/13%20-%20wun%20two%20-%20schneesturm%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/14%20-%20wun%20two%20-%20katz%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/15%20-%20wun%20two%20-%20heimo%20%5BSnow%2C%20Vol.%2010%5D.mp3`,
-    `${CDN_BASE}/Snow%2C%20Vol.%2010/16%20-%20wun%20two%20-%20kristallin%20%5BSnow%2C%20Vol.%2010%5D.mp3`
+    '01%20-%20wun%20two%20-%20schnee%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '02%20-%20wun%20two%20-%20holli%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '03%20-%20wun%20two%20-%20here%20we%20are%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '04%20-%20wun%20two%20-%20uoy%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '05%20-%20wun%20two%20-%20candli%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '06%20-%20wun%20two%20-%20snow%20drive%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '07%20-%20wun%20two%20-%20herbst%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '08%20-%20wun%20two%20-%20coldzero%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '09%20-%20wun%20two%20-%20laterne%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '10%20-%20wun%20two%20-%20minttea%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '11%20-%20wun%20two%20-%20bergfrost%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '12%20-%20wun%20two%20-%20tog%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '13%20-%20wun%20two%20-%20schneesturm%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '14%20-%20wun%20two%20-%20katz%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '15%20-%20wun%20two%20-%20heimo%20%5BSnow%2C%20Vol.%2010%5D.mp3',
+    '16%20-%20wun%20two%20-%20kristallin%20%5BSnow%2C%20Vol.%2010%5D.mp3'
   ];
+
+  const MUSIC_PLAYLIST = MUSIC_FILES.map(f => `${CDN_BASE}/${f}`);
+
 
   // Better randomization using crypto API
   function getRandomValue() {
@@ -789,6 +796,204 @@ function loadProgram(program, offsetSeconds) {
   // Sync schedule panel
   updateSchedulePanel(currentProgramIndex);
 }
+/* ===========================
+   Time-of-Day Schedule Overlay (UI ONLY)
+   - Clock-based (America/Chicago)
+   - Updates Now Playing + next 3 posters
+   - Does NOT touch video playback
+=========================== */
+
+const GLITCHMAS_TZ = 'America/Chicago';
+
+// Your panel copy says “Replay drops every hour on the hour.”
+// This makes the schedule deterministic without needing movie runtimes.
+const GLITCHMAS_SLOT_SECONDS = 3600;
+
+// Canonical program definitions (posters optional; leave blank to keep current images)
+const GLITCHMAS_CDN_BASE = 'https://gb--posters.b-cdn.net/';
+const cdn = (file) => `${GLITCHMAS_CDN_BASE}${file}`;
+
+const GLITCHMAS_PROGRAMS = {
+  xmas_story: { id:'xmas_story', title:'A Christmas Story', type:'family', poster: cdn('ACSGB122425.gif'), posterStill:'' },
+  grinch_2000: { id:'grinch_2000', title:'How the Grinch Stole Christmas (2000)', type:'family', poster: cdn('GSCGB122425.gif'), posterStill:'' },
+  guardians: { id:'guardians', title:'Rise of the Guardians', type:'family', poster: cdn('ROTGGM122425.gif'), posterStill:'' },
+  friday_after_next: { id:'friday_after_next', title:'Friday After Next', type:'mature', poster: cdn('FANGB122425.gif'), posterStill:'' },
+  bad_santa: { id:'bad_santa', title:'Bad Santa', type:'mature', poster: cdn('BSGB122425.gif'), posterStill:'' }
+};
+
+
+
+const GLITCHMAS_ROTATIONS = {
+  day: ['xmas_story', 'grinch_2000', 'guardians'],                 // 06:00–22:00
+  night: ['friday_after_next', 'bad_santa', 'grinch_2000']         // 22:00–06:00
+};
+
+function glitchmasGetZonedParts(date, timeZone) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  const parts = dtf.formatToParts(date);
+  const map = {};
+  for (const p of parts) {
+    if (p.type !== 'literal') map[p.type] = p.value;
+  }
+
+  return {
+    year: Number(map.year),
+    month: Number(map.month),
+    day: Number(map.day),
+    hour: Number(map.hour),
+    minute: Number(map.minute),
+    second: Number(map.second)
+  };
+}
+
+// Returns offset minutes between UTC and target timeZone at a given instant
+function glitchmasGetTimeZoneOffsetMinutes(date, timeZone) {
+  const p = glitchmasGetZonedParts(date, timeZone);
+  const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+  return (asUTC - date.getTime()) / 60000;
+}
+
+// Convert a “wall clock” time in timeZone into a UTC timestamp (ms)
+function glitchmasZonedTimeToUtcMs({ year, month, day, hour, minute, second }, timeZone) {
+  const baseUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+
+  // Iterate to converge around DST/offset quirks (usually converges in 1–2 steps)
+  let guess = baseUtc;
+  for (let i = 0; i < 3; i++) {
+    const offsetMin = glitchmasGetTimeZoneOffsetMinutes(new Date(guess), timeZone);
+    guess = baseUtc - offsetMin * 60000;
+  }
+  return guess;
+}
+
+function glitchmasComputeWindowStartUtcMs(now, timeZone) {
+  const p = glitchmasGetZonedParts(now, timeZone);
+  const isDay = p.hour >= 6 && p.hour < 22;
+
+  // Day window starts at 06:00 same day.
+  // Night window starts at 22:00 same day, unless it’s after midnight (<06:00),
+  // then it started at 22:00 the previous day.
+  if (isDay) {
+    return glitchmasZonedTimeToUtcMs(
+      { year: p.year, month: p.month, day: p.day, hour: 6, minute: 0, second: 0 },
+      timeZone
+    );
+  }
+
+  // Night mode
+  if (p.hour >= 22) {
+    return glitchmasZonedTimeToUtcMs(
+      { year: p.year, month: p.month, day: p.day, hour: 22, minute: 0, second: 0 },
+      timeZone
+    );
+  }
+
+  // After midnight but before 06:00: use previous day's 22:00
+  const todayMidnightUtc = glitchmasZonedTimeToUtcMs(
+    { year: p.year, month: p.month, day: p.day, hour: 0, minute: 0, second: 0 },
+    timeZone
+  );
+  const prevDay = new Date(todayMidnightUtc - 24 * 3600 * 1000);
+  const prev = glitchmasGetZonedParts(prevDay, timeZone);
+
+  return glitchmasZonedTimeToUtcMs(
+    { year: prev.year, month: prev.month, day: prev.day, hour: 22, minute: 0, second: 0 },
+    timeZone
+  );
+}
+
+function glitchmasGetScheduleState(now = new Date()) {
+  const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
+  const mode = (p.hour >= 6 && p.hour < 22) ? 'day' : 'night';
+  const rotationIds = GLITCHMAS_ROTATIONS[mode];
+
+  const windowStartUtc = glitchmasComputeWindowStartUtcMs(now, GLITCHMAS_TZ);
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - windowStartUtc) / 1000));
+
+  const slotIndex = Math.floor(elapsedSeconds / GLITCHMAS_SLOT_SECONDS);
+  const currentIdx = rotationIds.length ? (slotIndex % rotationIds.length) : 0;
+
+  const currentProgram = GLITCHMAS_PROGRAMS[rotationIds[currentIdx]];
+
+  // Next 3 upcoming (wraps; with 3-item rotations this will include the current again as 3rd upcoming)
+  const upcoming = [];
+  for (let i = 1; i <= 3; i++) {
+    const idx = rotationIds.length ? ((currentIdx + i) % rotationIds.length) : 0;
+    const prog = GLITCHMAS_PROGRAMS[rotationIds[idx]];
+    if (prog) upcoming.push(prog);
+  }
+
+  return { mode, currentProgram, upcoming };
+}
+
+function glitchmasApplyScheduleUI(state) {
+  // Update window header “Now Playing”
+  const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+  if (nowPlayingTitle && state.currentProgram?.title) {
+    nowPlayingTitle.textContent = state.currentProgram.title;
+  }
+
+  // Update next-3 posters
+  const posters = document.querySelectorAll('#scheduleCarousel .poster');
+  if (!posters.length) return;
+
+  const labels = (typeof SCHEDULE_LABELS !== 'undefined' && Array.isArray(SCHEDULE_LABELS))
+    ? SCHEDULE_LABELS
+    : ['Up Next', 'After That', 'Then'];
+
+  posters.forEach((poster, i) => {
+    const program = state.upcoming[i];
+    if (!program) return;
+
+    const mainImg = poster.querySelector('img:not(.poster-still)');
+    const stillImg = poster.querySelector('.poster-still');
+
+    // Only overwrite images if you’ve provided real poster URLs
+    if (mainImg && program.poster) mainImg.src = program.poster;
+    if (stillImg && program.posterStill) stillImg.src = program.posterStill;
+
+    // Ensure label exists (matches your existing behavior)
+    let label = poster.querySelector('.poster-label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'poster-label';
+      poster.appendChild(label);
+    }
+    label.textContent = labels[i] || '';
+
+    // Accessibility / metadata
+    poster.setAttribute('data-title', program.title);
+  });
+}
+
+(function glitchmasInitTimeBasedScheduleOverlay() {
+  // Only run if schedule panel exists
+  if (!document.getElementById('scheduleCarousel')) return;
+
+  const tick = () => {
+    try {
+      const state = glitchmasGetScheduleState();
+      glitchmasApplyScheduleUI(state);
+    } catch (e) {
+      // Fail silent to avoid breaking the broadcast
+    }
+  };
+
+  tick();
+  // Lightweight polling; avoids coupling to video events
+  setInterval(tick, 15000);
+})();
+
 
 // Initial load
 const { program, offset, index } = getLiveProgram();
