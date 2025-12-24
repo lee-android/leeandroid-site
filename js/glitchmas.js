@@ -467,6 +467,17 @@ if (presetSelect) {
   fireToggle.addEventListener('click', (e) => {
     e.preventDefault();
     
+    // CRITICAL: Unlock audio IMMEDIATELY in the real click handler
+    // This must happen before any setTimeout/animation delays
+    if (!fireplaceEnabled) {
+      // Touch all audio elements to unlock them on first user gesture
+      Object.values(audioMap).forEach(a => {
+        a.muted = true;
+        a.play().then(() => a.pause()).catch(() => {});
+        a.muted = false;
+      });
+    }
+    
     const performAction = () => {
       fireplaceEnabled ? disableFireplace() : enableFireplace();
     };
@@ -653,36 +664,54 @@ if (presetSelect) {
    SINGLE CHANNEL BROADCAST
 =========================== */
 
+// CDN for posters
+const POSTER_CDN = 'https://gb--posters.b-cdn.net/';
+
 const PROGRAMS = [
   {
-    title: 'A Glitchmas Story',
+    id: 'xmas_story',
+    title: 'A Christmas Story',
     src: 'https://vz-b741991d-4ed.b-cdn.net/dd768fbf-0260-4d51-9e01-98cd864edf1c/playlist.m3u8',
     duration: 5556,
-    poster: 'imgs/posters/glitchmas-story.gif',
-    posterStill: 'imgs/posters/glitchmas-story-still.jpg'
+    type: 'family',
+    poster: `${POSTER_CDN}ACSGB122425_sm.gif`,
+    posterStill: ''
   },
   {
-    title: 'Grinch Stole Grinchmas',
+    id: 'grinch_2000',
+    title: 'How the Grinch Stole Christmas (2000)',
     src: 'https://vz-b741991d-4ed.b-cdn.net/9b7d2aec-4eb0-47a2-9922-2abd26097a1c/playlist.m3u8',
-    duration: 4886,
-    poster: 'imgs/posters/grinch.gif',
-    posterStill: 'imgs/posters/grinch-still.jpg'
+    duration: 6216,
+    type: 'family',
+    poster: `${POSTER_CDN}GSCGB122425_sm.gif`,
+    posterStill: ''
   },
   {
-    // Placeholder - Program 3
-    title: 'Program 3',
-    src: '',
-    duration: 3600,
-    poster: 'https://placehold.co/320x240/1a1a1a/666?text=Coming+Soon',
-    posterStill: 'https://placehold.co/320x240/1a1a1a/444?text=Program+3'
+    id: 'guardians',
+    title: 'Rise of the Guardians',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
+    duration: 5713,
+    type: 'family',
+    poster: `${POSTER_CDN}ROTGGM122425_sm.gif`,
+    posterStill: ''
   },
   {
-    // Placeholder - Program 4
-    title: 'Program 4',
-    src: '',
-    duration: 3600,
-    poster: 'https://placehold.co/320x240/1a1a1a/666?text=Coming+Soon',
-    posterStill: 'https://placehold.co/320x240/1a1a1a/444?text=Program+4'
+    id: 'friday_after_next',
+    title: 'Friday After Next',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+    duration: 5160,
+    type: 'mature',
+    poster: `${POSTER_CDN}FANGB122425_sm.gif`,
+    posterStill: ''
+  },
+  {
+    id: 'bad_santa',
+    title: 'Bad Santa',
+    src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+    duration: 5520,
+    type: 'mature',
+    poster: `${POSTER_CDN}BSGB122425_sm.gif`,
+    posterStill: ''
   }
 ];
 
@@ -721,34 +750,6 @@ function getUpcomingPrograms(currentIndex) {
   return upcoming;
 }
 
-function updateSchedulePanel(currentIndex) {
-  const posters = document.querySelectorAll('#scheduleCarousel .poster');
-  const upcoming = getUpcomingPrograms(currentIndex);
-
-  posters.forEach((poster, i) => {
-    const program = upcoming[i];
-    if (!program) return;
-
-    // Update images
-    const mainImg = poster.querySelector('img:not(.poster-still)');
-    const stillImg = poster.querySelector('.poster-still');
-    
-    if (mainImg) mainImg.src = program.poster;
-    if (stillImg) stillImg.src = program.posterStill;
-
-    // Update or create label
-    let label = poster.querySelector('.poster-label');
-    if (!label) {
-      label = document.createElement('span');
-      label.className = 'poster-label';
-      poster.appendChild(label);
-    }
-    label.textContent = SCHEDULE_LABELS[i];
-
-    // Update data attribute for accessibility
-    poster.setAttribute('data-title', program.title);
-  });
-}
 
 /* ===========================
    Program Loading
@@ -793,8 +794,7 @@ function loadProgram(program, offsetSeconds) {
 
   setTimeout(attemptAutoplay, 600);
   
-  // Sync schedule panel
-  updateSchedulePanel(currentProgramIndex);
+  // Schedule panel now handled by time-based overlay system
 }
 /* ===========================
    Time-of-Day Schedule Overlay (UI ONLY)
@@ -809,19 +809,9 @@ const GLITCHMAS_TZ = 'America/Chicago';
 // This makes the schedule deterministic without needing movie runtimes.
 const GLITCHMAS_SLOT_SECONDS = 3600;
 
-// Canonical program definitions (posters optional; leave blank to keep current images)
-const GLITCHMAS_CDN_BASE = 'https://gb--posters.b-cdn.net/';
-const cdn = (file) => `${GLITCHMAS_CDN_BASE}${file}`;
-
-const GLITCHMAS_PROGRAMS = {
-  xmas_story: { id:'xmas_story', title:'A Christmas Story', type:'family', poster: cdn('ACSGB122425.gif'), posterStill:'' },
-  grinch_2000: { id:'grinch_2000', title:'How the Grinch Stole Christmas (2000)', type:'family', poster: cdn('GSCGB122425.gif'), posterStill:'' },
-  guardians: { id:'guardians', title:'Rise of the Guardians', type:'family', poster: cdn('ROTGGM122425.gif'), posterStill:'' },
-  friday_after_next: { id:'friday_after_next', title:'Friday After Next', type:'mature', poster: cdn('FANGB122425.gif'), posterStill:'' },
-  bad_santa: { id:'bad_santa', title:'Bad Santa', type:'mature', poster: cdn('BSGB122425.gif'), posterStill:'' }
-};
-
-
+// Convert PROGRAMS array to lookup object for schedule system
+const PROGRAMS_BY_ID = {};
+PROGRAMS.forEach(p => { PROGRAMS_BY_ID[p.id] = p; });
 
 const GLITCHMAS_ROTATIONS = {
   day: ['xmas_story', 'grinch_2000', 'guardians'],                 // 06:00–22:00
@@ -923,13 +913,13 @@ function glitchmasGetScheduleState(now = new Date()) {
   const slotIndex = Math.floor(elapsedSeconds / GLITCHMAS_SLOT_SECONDS);
   const currentIdx = rotationIds.length ? (slotIndex % rotationIds.length) : 0;
 
-  const currentProgram = GLITCHMAS_PROGRAMS[rotationIds[currentIdx]];
+  const currentProgram = PROGRAMS_BY_ID[rotationIds[currentIdx]];
 
   // Next 3 upcoming (wraps; with 3-item rotations this will include the current again as 3rd upcoming)
   const upcoming = [];
   for (let i = 1; i <= 3; i++) {
     const idx = rotationIds.length ? ((currentIdx + i) % rotationIds.length) : 0;
-    const prog = GLITCHMAS_PROGRAMS[rotationIds[idx]];
+    const prog = PROGRAMS_BY_ID[rotationIds[idx]];
     if (prog) upcoming.push(prog);
   }
 
@@ -1011,18 +1001,6 @@ function loadNextProgram() {
 }
 
 video.addEventListener('ended', loadNextProgram);
-
-  /* ===========================
-     Program advancement
-  =========================== */
-
-  function loadNextProgram() {
-    currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
-    const next = PROGRAMS[currentProgramIndex];
-    loadProgram(next, 0);
-  }
-
-  video.addEventListener('ended', loadNextProgram);
 
   /* ===========================
      Schedule Carousel (Mobile)
