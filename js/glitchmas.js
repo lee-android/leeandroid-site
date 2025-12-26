@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'guardians',
       title: 'Rise of the Guardians',
       synopsis: "Mythical beings get drafted into unpaid emotional labor. Belief is currency, fear is market share, and magic has to prove ROI to exist. Even wonder needs a KPI.",
-      src: 'https://vz-b741991d-4ed.b-cdn.net/ae27bf3c-1377-4ddf-8ed7-4c5dfbb7c372/playlist.m3u8',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
       duration: 5713,
       type: 'family',
       poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
@@ -677,8 +677,8 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'friday_after_next',
       title: 'Friday After Next',
       synopsis: "Christmas hits the block like a bill. Every warm moment has a hustle attached, every laugh dodges rent panic. The season is real, and so is the trap.",
-      src: 'https://vz-b741991d-4ed.b-cdn.net/2bb993bc-11f4-4071-b93e-9deba9689d8b/playlist.m3u8', // Add real URL when available
-      duration: 4976,
+      src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+      duration: 5160,
       type: 'mature',
       poster: `${POSTER_CDN}FANGB122425_sm.gif`,
       posterStill: ''
@@ -795,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nowPlayingTitle = document.getElementById('nowPlayingTitle');
     if (nowPlayingTitle) {
       if (program.id === 'grinch_2000') {
-        nowPlayingTitle.textContent = 'Grinch Stole Xmas';
+        nowPlayingTitle.textContent = 'Grinch Stole';
       } else {
         nowPlayingTitle.textContent = program.title;
       }
@@ -1179,10 +1179,154 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 15000);
 
   /* ===========================
-   Program Advancement
+   Program Advancement & Offline Mode
 =========================== */
 
+  let offlineModeActive = false;
+
+  function shouldTriggerOfflineMode() {
+    // Offline mode triggers at the end of Grinch when it's the last program before 6am
+    const now = new Date();
+    const p = glitchmasGetZonedParts(now, GLITCHMAS_TZ);
+    
+    // Check if we're in night mode (22:00 - 06:00)
+    const isNight = p.hour >= 22 || p.hour < 6;
+    
+    // Check if current program is Grinch
+    const currentProgram = PROGRAMS[currentProgramIndex];
+    const isGrinch = currentProgram && currentProgram.id === 'grinch_2000';
+    
+    // Check if we're close to 6am (within 2 hours)
+    const hoursUntil6am = p.hour < 6 ? (6 - p.hour) : (24 - p.hour + 6);
+    const closeToSixAm = hoursUntil6am <= 2;
+    
+    return isNight && isGrinch && closeToSixAm;
+  }
+
+  function enableOfflineMode() {
+    offlineModeActive = true;
+    
+    // Create white noise canvas overlay
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '10';
+    canvas.style.pointerEvents = 'none';
+    
+    const playerWrap = document.querySelector('.playerWrap');
+    if (playerWrap) {
+      canvas.width = playerWrap.offsetWidth;
+      canvas.height = playerWrap.offsetHeight;
+      playerWrap.style.position = 'relative';
+      playerWrap.appendChild(canvas);
+      
+      // Animate white noise
+      function drawNoise() {
+        const imageData = ctx.createImageData(canvas.width, canvas.height);
+        const buffer = new Uint32Array(imageData.data.buffer);
+        const len = buffer.length;
+        
+        for (let i = 0; i < len; i++) {
+          buffer[i] = ((Math.random() * 256) | 0) * 0x01010101 | 0xFF000000;
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        
+        if (offlineModeActive) {
+          requestAnimationFrame(drawNoise);
+        }
+      }
+      drawNoise();
+    }
+    
+    // Stop video playback
+    video.pause();
+    video.src = '';
+    
+    // Play static audio if available
+    if (audioMap.tape) {
+      audioMap.tape.volume = 0.2;
+      audioMap.tape.play().catch(() => {});
+    }
+    
+    // Hide fireplace buttons completely
+    const fireplacePanel = document.querySelector('.fireplacePanel');
+    if (fireplacePanel) {
+      fireplacePanel.style.display = 'none';
+    }
+    
+    // Minimize and lock chat panel
+    const chatPanelWrap = document.getElementById('chatPanelWrap');
+    const chatHeader = document.getElementById('chatHeader');
+    if (chatPanelWrap && !chatPanelWrap.classList.contains('minimized')) {
+      // Trigger minimize animation
+      chatPanelWrap.classList.add('minimizing');
+      setTimeout(() => {
+        chatPanelWrap.classList.remove('minimizing');
+        chatPanelWrap.classList.add('minimized', 'offline-locked');
+      }, 400);
+    } else if (chatPanelWrap) {
+      chatPanelWrap.classList.add('offline-locked');
+    }
+    
+    // Update chat window title
+    const chatTitle = chatHeader?.querySelector('.window-title');
+    if (chatTitle) {
+      chatTitle.textContent = 'Chat Offline';
+    }
+    
+    // Minimize and lock schedule panel with genie effect
+    const schedulePanelWrap = document.querySelector('.scheduleWrap');
+    if (schedulePanelWrap) {
+      schedulePanelWrap.classList.add('minimizing');
+      setTimeout(() => {
+        schedulePanelWrap.classList.remove('minimizing');
+        schedulePanelWrap.classList.add('minimized', 'offline-locked');
+      }, 400);
+    }
+    
+    // Turn off all signal bars but keep them visible
+    const signalBars = document.querySelectorAll('.signal-bars .bar');
+    signalBars.forEach(bar => {
+      bar.style.opacity = '0.2'; // Dimmed/off state, still visible
+      bar.style.transition = 'none';
+    });
+    
+    // Update signal modal text
+    const signalModalMessage = document.querySelector('.modal-message');
+    if (signalModalMessage) {
+      signalModalMessage.textContent = "Signal dead. Don't bother.";
+    }
+    
+    // Update page content
+    const titleEl = document.querySelector('.videoPanel .title');
+    if (titleEl) {
+      titleEl.textContent = 'Broadcast Ended';
+    }
+    
+    const descEl = document.querySelector('.videoPanel .desc');
+    if (descEl) {
+      descEl.textContent = 'The broadcast has concluded. Thank you for watching.';
+    }
+    
+    const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+    if (nowPlayingTitle) {
+      nowPlayingTitle.textContent = 'Offline';
+    }
+  }
+
   function loadNextProgram() {
+    // Check if we should trigger offline mode
+    if (shouldTriggerOfflineMode()) {
+      enableOfflineMode();
+      return;
+    }
+    
+    // Normal program advancement
     currentProgramIndex = (currentProgramIndex + 1) % PROGRAMS.length;
     const next = PROGRAMS[currentProgramIndex];
     loadProgram(next, 0);

@@ -934,6 +934,21 @@ video:-webkit-full-screen {
   display: none;
 }
 
+/* Schedule panel minimize (same genie effect) */
+.scheduleWrap.minimizing .schedulePanel {
+  animation: genieOut 0.4s cubic-bezier(0.4, 0, 1, 1) forwards;
+  transform-origin: center bottom;
+}
+
+.scheduleWrap.minimized {
+  height: 22px;
+  overflow: hidden;
+}
+
+.scheduleWrap.minimized .schedulePanel {
+  display: none;
+}
+
 .chatPanel {
   display: flex;
   flex-direction: column;
@@ -1005,6 +1020,14 @@ video:-webkit-full-screen {
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.2s ease;
+}
+
+/* Offline Mode - Locked Minimized Panels */
+.offline-locked.minimized {
+  cursor: not-allowed !important;
+}
+.offline-locked.minimized * {
+  pointer-events: none !important;
 }
 
 @keyframes fadeIn {
