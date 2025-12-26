@@ -677,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'friday_after_next',
       title: 'Friday After Next',
       synopsis: "Christmas hits the block like a bill. Every warm moment has a hustle attached, every laugh dodges rent panic. The season is real, and so is the trap.",
-      src: 'https://vz-b741991d-4ed.b-cdn.net/PLACEHOLDER.m3u8', // Add real URL when available
+      src: 'https://vz-b741991d-4ed.b-cdn.net/2bb993bc-11f4-4071-b93e-9deba9689d8b/playlist.m3u8', // Add real URL when available
       duration: 5160,
       type: 'mature',
       poster: `${POSTER_CDN}FANGB122425_sm.gif`,
