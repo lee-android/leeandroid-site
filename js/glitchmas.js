@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'guardians',
       title: 'Rise of the Guardians',
       synopsis: "Mythical beings get drafted into unpaid emotional labor. Belief is currency, fear is market share, and magic has to prove ROI to exist. Even wonder needs a KPI.",
-      src: 'https://vz-b741991d-4ed.b-cdn.net/307efe9a-2f32-4585-9574-809aa9db6a4f/playlist.m3u8',
+      src: 'https://vz-b741991d-4ed.b-cdn.net/ae27bf3c-1377-4ddf-8ed7-4c5dfbb7c372/playlist.m3u8',
       duration: 5713,
       type: 'family',
       poster: `${POSTER_CDN}ROTGGMB122425_sm.gif`,
